@@ -1,0 +1,186 @@
+CREATE schema bdbanco;
+use bdbanco;
+-- tipos movimiento
+CREATE TABLE `bdbanco`.`tipos_movimiento` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `descripcion` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+-- tipos_cuenta
+CREATE TABLE `bdbanco`.`tipos_cuenta` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `descripcion` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+-- paises
+CREATE TABLE `bdbanco`.`paises` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+-- provincia
+CREATE TABLE `bdbanco`.`provincia` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+-- localidades
+CREATE TABLE `bdbanco`.`localidades` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+-- clientes
+
+CREATE TABLE `bdbanco`.`clientes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `dni` VARCHAR(255) NOT NULL,
+  `cuil` VARCHAR(255) NOT NULL,
+  `nombre` VARCHAR(255) NOT NULL,
+  `apellido` VARCHAR(255) NOT NULL,
+  `sexo` VARCHAR(255) NOT NULL,
+  `id_pais` INT NOT NULL,
+  `fecha_nacimiento` DATE NOT NULL,
+  `direccion` VARCHAR(255) NOT NULL,
+  `id_localidad` INT NOT NULL,
+  `id_provincia` INT NOT NULL,
+  `correo` VARCHAR(255) NOT NULL,
+  `telefono` VARCHAR(255) NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted` BIT NOT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `dni_UNIQUE` (`dni` ASC),
+  UNIQUE INDEX `cuil_UNIQUE` (`cuil` ASC),
+  UNIQUE INDEX `correo_UNIQUE` (`correo` ASC),
+  UNIQUE INDEX `telefono_UNIQUE` (`telefono` ASC));
+
+ALTER TABLE clientes
+ADD CONSTRAINT fk_pais_clientes
+FOREIGN KEY (id_pais)
+REFERENCES paises(id);
+
+ALTER TABLE clientes
+ADD CONSTRAINT fk_provincia_clientes
+FOREIGN KEY (id_provincia)
+REFERENCES provincia(id);
+
+ALTER TABLE clientes
+ADD CONSTRAINT fk_localidad_clientes
+FOREIGN KEY (id_localidad)
+REFERENCES localidades(id);
+
+-- usuarios
+
+CREATE TABLE `bdbanco`.`usuarios` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_cliente` INT NULL,
+  `usuario` VARCHAR(255) NOT NULL,
+  `pass` VARCHAR(255) NOT NULL,
+  `admin` BIT NOT NULL DEFAULT 0,
+  `create_date` DATETIME NOT NULL DEFAULT current_timestamp,
+  `deleted` BIT NOT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_cliente_UNIQUE` (`id_cliente` ASC),
+  UNIQUE INDEX `usuario_UNIQUE` (`usuario` ASC));
+
+ALTER TABLE usuarios
+ADD CONSTRAINT fk_usuarios_clientes
+FOREIGN KEY (id_cliente)
+REFERENCES clientes(id);
+
+-- cuentas
+
+CREATE TABLE `bdbanco`.`cuentas` (
+  `nro_cuenta` INT NOT NULL AUTO_INCREMENT,
+  `id_cliente` INT NOT NULL,
+  `id_tipo_cuenta` INT NOT NULL,
+  `cbu` VARCHAR(255) NOT NULL,
+  `saldo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `create_date` DATETIME NOT NULL DEFAULT current_timestamp,
+  `deleted` BIT NOT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`nro_cuenta`),
+  UNIQUE INDEX `cbu_UNIQUE` (`cbu` ASC));
+
+ALTER TABLE cuentas
+ADD CONSTRAINT fk_cuentas_clientes
+FOREIGN KEY (id_cliente)
+REFERENCES clientes(id);
+
+ALTER TABLE cuentas
+ADD CONSTRAINT fk_cuentas_tipos_cuenta
+FOREIGN KEY (id_tipo_cuenta)
+REFERENCES tipos_cuenta(id);
+
+-- movimientos
+
+CREATE TABLE `bdbanco`.`movimientos` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `detalle` VARCHAR(255) NULL,
+  `importe` DECIMAL(10,2) NOT NULL,
+  `id_tipos_movimiento` INT NOT NULL,
+  `nro_cuenta` INT NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT current_timestamp,
+  `deleted` BIT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE movimientos
+ADD CONSTRAINT fk_movimientos_tipos_movimiento
+FOREIGN KEY (id_tipos_movimiento)
+REFERENCES tipos_movimiento(id);
+
+ALTER TABLE movimientos
+ADD CONSTRAINT fk_cuentas_tipos_movimiento
+FOREIGN KEY (nro_cuenta)
+REFERENCES cuentas(nro_cuenta);
+
+-- prestamos
+
+CREATE TABLE `bdbanco`.`prestamos` (
+  `id` INT NOT NULL,
+  `observaciones` VARCHAR(255) NULL,
+  `id_cliente` INT NOT NULL,
+  `nro_cuenta` INT NOT NULL,
+  `fecha_alta` DATE NULL,
+  `importe` DECIMAL(10,2) NOT NULL,
+  `cuotas` INT NOT NULL,
+  `valor_cuotas` DECIMAL(10,2) NOT NULL,
+  `estado` VARCHAR(255) NOT NULL DEFAULT 'pendiente',
+  `create_date` DATETIME NOT NULL DEFAULT current_timestamp,
+  `deleted` BIT NOT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+
+ALTER TABLE prestamos
+ADD CONSTRAINT fk_prestamos_clientes
+FOREIGN KEY (id_cliente)
+REFERENCES clientes(id);
+
+ALTER TABLE prestamos
+ADD CONSTRAINT fk_cuentas_prestamos
+FOREIGN KEY (nro_cuenta)
+REFERENCES cuentas(nro_cuenta);
+
+-- cuotas
+
+CREATE TABLE `bdbanco`.`cuotas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_prestamo` INT NOT NULL,
+  `nro_cuota` INT NOT NULL,
+  `monto` DECIMAL(10,2) NOT NULL,
+  `fecha_pago` DATE NULL,
+  `estado_pago` BIT NOT NULL DEFAULT 0,
+  `create_date` DATETIME NOT NULL DEFAULT current_timestamp,
+  `deleted` BIT NULL DEFAULT 0,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+
+ALTER TABLE cuotas
+ADD CONSTRAINT fk_prestamos_cuotas
+FOREIGN KEY (id_prestamo)
+REFERENCES prestamos(id);
