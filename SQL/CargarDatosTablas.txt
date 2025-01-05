@@ -1,0 +1,108 @@
+-- Crear la base de datos y usarla
+
+USE bdbanco;
+
+
+-- Insertar todos los países (ejemplo básico)
+INSERT INTO Paises (nombre) VALUES
+('Argentina'),
+('Brasil'),
+('Chile'),
+('Uruguay'),
+('Paraguay'),
+('Bolivia'),
+('Colombia'),
+('Perú'),
+('Ecuador'),
+('Venezuela');
+
+-- Insertar ejemplos en la tabla Provincias
+INSERT INTO Provincias (nombre) VALUES
+('Buenos Aires'),
+('CABA'),
+('Cordoba'),
+('Santa Fe'),
+('Mendoza'),
+('Tucuman'),
+('Misiones'),
+('Entre Rios'),
+('Salta'),
+('Santiago del Estero');
+
+-- Insertar ejemplos en la tabla Localidades
+INSERT INTO Localidades (id_provincia, nombre) VALUES
+(1, 'La Plata'),
+(2, 'Balvanera'),
+(3, 'Córdoba'),
+(4, 'Rosario'),
+(5, 'Mendoza'),
+(6, 'San Miguel de Tucumán'),
+(7, 'Posadas'),
+(8, 'Paraná'),
+(9, 'Salta'),
+(10, 'Santiago del Estero');
+
+-- Insertar ejemplos en la tabla Clientes
+
+INSERT INTO Clientes (direccion, dni, cuil, nombre, apellido, sexo, usuario, password, pais, fecha_nacimiento, correo, Telefono, Celular, admin) 
+VALUES
+('Avenida 1', '12345678', '203123456', 'Juan', 'Pérez', 'Masculino', 'juanp', 'password123', 'Argentina', '1980-01-01', 'juan.perez@example.com', '011-1234-5678', '011-9876-5432', 1),
+('Avenida 2', '23456789', '203234567', 'Maria', 'Gomez', 'Femenino', 'mariag', 'password456', 'Brasil', '1990-02-02', 'maria.gomez@example.com', '022-2345-6789', '022-6789-1234', 0),
+('Avenida 3', '34567890', '203345678', 'Carlos', 'Lopez', 'Masculino', 'carlosl', 'password789', 'Chile', '1985-03-03', 'carlos.lopez@example.com', NULL, '015-1234-5678', 0),
+('Avenida 4', '45678901', '203456789', 'Ana', 'Martinez', 'Femenino', 'anam', 'password101', 'Uruguay', '1992-04-04', 'ana.martinez@example.com', '014-2345-6789', '014-9876-5432', 1),
+('Avenida 5', '56789012', '203567890', 'Pedro', 'Rodriguez', 'Masculino', 'pedror', 'password102', 'Paraguay', '1988-05-05', 'pedro.rodriguez@example.com', '023-3456-7890', '023-5678-1234', 1),
+('Avenida 6', '67890123', '203678901', 'Laura', 'Fernandez', 'Femenino', 'lauraf', 'password103', 'Perú', '1991-06-06', 'laura.fernandez@example.com', '033-4567-8901', '033-6789-2345', 0),
+('Avenida 7', '78901234', '203789012', 'Miguel', 'Sanchez', 'Masculino', 'miguels', 'password104', 'Ecuador', '1987-07-07', 'miguel.sanchez@example.com', '044-5678-9012', '044-7890-3456', 1),
+('Avenida 8', '89012345', '203890123', 'Silvia', 'Perez', 'Femenino', 'silviap', 'password105', 'Colombia', '1993-08-08', 'silvia.perez@example.com', '055-6789-0123', '055-8901-4567', 0),
+('Avenida 9', '90123456', '203901234', 'Eduardo', 'Diaz', 'Masculino', 'eduardod', 'password106', 'Bolivia', '1986-09-09', 'eduardo.diaz@example.com', '066-7890-1234', '066-9012-5678', 1),
+('Avenida 10', '11223344', '201122334', 'Elena', 'Ruiz', 'Femenino', 'elenar', 'password107', 'México', '1989-10-10', 'elena.ruiz@example.com', '077-8901-2345', '077-0123-6789', 0);
+
+
+-- Insertar ejemplos en la tabla TiposCuenta
+INSERT INTO TiposCuenta (descripcion) VALUES
+('Cuenta corriente'),
+('Cuenta de ahorro');
+
+-- Insertar ejemplos en la tabla Cuentas
+INSERT INTO Cuentas (nro_cuenta, id_cliente, fecha_creacion, id_tipo_cuenta, cbu, saldo) VALUES
+(111111111, 1, '2024-01-01', 1, '20-00001-0000', 1000.50),
+(222222222, 2, '2024-02-02', 2, '20-00002-0000', 2000.75),
+(333333333, 3, '2024-03-03', 1, '20-00003-0000', 1500.30),
+(444444444, 4, '2024-04-04', 2, '20-00004-0000', 2500.60),
+(555555555, 5, '2024-05-05', 1, '20-00005-0000', 3000.10),
+(666666666, 6, '2024-06-06', 2, '20-00006-0000', 4000.20),
+(777777777, 7, '2024-07-07', 1, '20-00007-0000', 5000.25),
+(888888888, 8, '2024-08-08', 2, '20-00008-0000', 6000.80),
+(999999999, 9, '2024-09-09', 1, '20-00009-0000', 7000.90),
+(101010101, 10, '2024-10-10', 2, '20-00010-0000', 8000.00);
+
+-- Insertar ejemplos en la tabla Prestamos
+INSERT INTO Prestamos (nro_cuenta, id_cliente, fecha_solicitud, importe, cuotas) VALUES
+(111111111, 1, '2024-01-01', 5000.00, 12),
+(222222222, 2, '2024-02-02', 7000.00, 24),
+(333333333, 3, '2024-03-03', 3000.00, 6),
+(444444444, 4, '2024-04-04', 15000.00, 36),
+(555555555, 5, '2024-05-05', 20000.00, 48),
+(666666666, 6, '2024-06-06', 10000.00, 18),
+(777777777, 7, '2024-07-07', 8000.00, 24),
+(888888888, 8, '2024-08-08', 12000.00, 30),
+(999999999, 9, '2024-09-09', 9000.00, 12),
+(101010101, 10, '2024-10-10', 11000.00, 36);
+
+-- Insertar ejemplos en la tabla Cuotas
+INSERT INTO Cuotas (nro_cuota, monto, fecha_pago, id_prestamo) VALUES
+(1, 500.00, '2024-02-01', 1),
+(2, 700.00, '2024-03-01', 2),
+(3, 300.00, '2024-04-01', 3),
+(4, 1500.00, '2024-05-01', 4),
+(5, 2000.00, '2024-06-01', 5),
+(6, 1000.00, '2024-07-01', 6),
+(7, 800.00, '2024-08-01', 7),
+(8, 1200.00, '2024-09-01', 8),
+(9, 900.00, '2024-10-01', 9),
+(10, 1100.00, '2024-11-01', 10);
+
+INSERT INTO `bdbanco`.`tiposmovimiento` (`descripcion`) VALUES ('Alta de cuenta');
+INSERT INTO `bdbanco`.`tiposmovimiento` (`descripcion`) VALUES ('Alta de un prestamo');
+INSERT INTO `bdbanco`.`tiposmovimiento` (`descripcion`) VALUES ('Pago de prestamo');
+INSERT INTO `bdbanco`.`tiposmovimiento` (`descripcion`) VALUES ('Transferencia');
