@@ -5,7 +5,10 @@ public class Pais {
     private String nombre;
     
     
-    // Constructor  
+    // Constructor vacío
+    public Pais() {}
+    
+    // Constructor con parámetros
 	public Pais(int id, String nombre) {
 		super();
 		this.id = id;

@@ -15,7 +15,10 @@ public class Cuenta {
     private LocalDate deleteDate;
     
     
-    // Constructor 
+    // Constructor vacío
+    public Cuenta() {}
+    
+    // CConstructor con parámetros
 	public Cuenta(int nroCuenta, Cliente cliente, TipoCuenta tipoCuenta, String cbu, BigDecimal saldo,
 			LocalDate createDate, boolean deleted, LocalDate deleteDate) {
 		super();
@@ -67,7 +70,7 @@ public class Cuenta {
 	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 	public void setDeleted(boolean deleted) {

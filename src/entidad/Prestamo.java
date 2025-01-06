@@ -19,7 +19,10 @@ public class Prestamo {
     private LocalDate deleteDate;
     
     
-    // Constructor 
+    // Constructor vacío
+    public Prestamo() {}
+    
+    // Constructor con parámetros
 	public Prestamo(long id, String observaciones, Cliente cliente, Cuenta cuenta, LocalDate fechaAlta,
 			BigDecimal importe, int cuotas, BigDecimal valorCuotas, String estado, LocalDate createDate,
 			boolean deleted, LocalDate deleteDate) {
@@ -100,7 +103,7 @@ public class Prestamo {
 	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 	public void setDeleted(boolean deleted) {

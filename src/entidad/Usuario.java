@@ -14,7 +14,10 @@ public class Usuario {
     private LocalDate deleteDate;
     
     
-    // Constructor   
+    // Constructor vacío
+    public Usuario() {}
+    
+    // Constructor con parámetros
 	public Usuario(int id, Cliente cliente, String usuario, String password, boolean admin, LocalDate createDate,
 			boolean deleted, LocalDate deleteDate) {
 		super();

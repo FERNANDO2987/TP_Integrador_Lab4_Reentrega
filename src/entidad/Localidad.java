@@ -5,7 +5,10 @@ public class Localidad {
 	private String nombre;
 	
 	
-	// Constructor
+	// Constructor vacío
+    public Localidad() {}
+	
+	// Constructor con parámetros
 	public Localidad(int id, String nombre) {
 		super();
 		this.id = id;
