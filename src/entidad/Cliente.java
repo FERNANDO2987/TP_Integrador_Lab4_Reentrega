@@ -22,7 +22,10 @@ public class Cliente {
     private LocalDate deleteDate;
     
     
-    // Constructor   
+	// Constructor vacío
+    public Cliente() {}
+    
+    // Constructor con parámetros   
 	public Cliente(int id, int dni, int cuil, String nombre, String apellido, String sexo, Pais paisNacimiento,
 			LocalDate fechaNacimiento, String direccion, Localidad localidad, Provincia provincia, String correo,
 			String telefono, LocalDate createDate, boolean deleted, LocalDate deleteDate) {
@@ -131,7 +134,7 @@ public class Cliente {
 	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 	public void setDeleted(boolean deleted) {

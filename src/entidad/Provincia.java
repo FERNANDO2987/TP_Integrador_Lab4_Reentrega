@@ -5,7 +5,10 @@ public class Provincia {
 	private String nombre;
 	
 	
-	// Constructor
+	// Constructor vacío
+    public Provincia() {}
+    
+	// Constructor con parámetros
 	public Provincia(int id, String nombre) {
 		super();
 		this.id = id;
