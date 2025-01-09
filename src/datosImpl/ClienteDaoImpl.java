@@ -11,14 +11,18 @@ import entidad.Cliente;
 
 public class ClienteDaoImpl implements ClienteDao {
 	private Conexion cn;
+	public ClienteDaoImpl() {
+		cn = new Conexion();
+	}
 	@Override
 	public Cliente leerUnCliente(int id) {
 		Cliente cliente = new Cliente();
 		cn.Open();
-		final String query = "{CALL SP_ObtenerUnCliente(?)}";
+		String query = "{CALL SP_ObtenerUnCliente(?)}";
 		try
 		{
 			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, id);
 			ResultSet rs = cst.executeQuery();
 			if(rs.next())
 			{
@@ -98,7 +102,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	@Override
 	public boolean modificarCliente(Cliente cliente) {
 		cn.Open();
-		final String query = "{SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		String query = "{SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		boolean exito = false;
 		try
 		{
