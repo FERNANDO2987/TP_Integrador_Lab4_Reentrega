@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class Cliente {
     private int id;
-    private int dni;
-    private int cuil;
+    private String dni;
+    private String cuil;
     private String nombre;
     private String apellido;
     private String sexo;
@@ -26,7 +26,7 @@ public class Cliente {
     public Cliente() {}
     
     // Constructor con parámetros   
-	public Cliente(int id, int dni, int cuil, String nombre, String apellido, String sexo, Pais paisNacimiento,
+	public Cliente(int id, String dni, String cuil, String nombre, String apellido, String sexo, Pais paisNacimiento,
 			LocalDate fechaNacimiento, String direccion, Localidad localidad, Provincia provincia, String correo,
 			String telefono, LocalDate createDate, boolean deleted, LocalDate deleteDate) {
 		super();
@@ -56,16 +56,16 @@ public class Cliente {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getDni() {
+	public String getDni() {
 		return dni;
 	}
-	public void setDni(int dni) {
+	public void setDni(String dni) {
 		this.dni = dni;
 	}
-	public int getCuil() {
+	public String getCuil() {
 		return cuil;
 	}
-	public void setCuil(int cuil) {
+	public void setCuil(String cuil) {
 		this.cuil = cuil;
 	}
 	public String getNombre() {
