@@ -4,7 +4,7 @@
 <html>  
 <head>  
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">  
-    <title>Sistema de Gestión Bancaria</title>  
+    <title>Sistema de Gestión Bancariasssssssss</title>  
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
     <style>  
         body {  
