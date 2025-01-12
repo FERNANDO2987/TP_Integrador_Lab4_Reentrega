@@ -60,7 +60,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	public List<Cliente> leerTodosLosClientes() {
 		List<Cliente> listaClientes = new ArrayList<Cliente>();
 		cn.Open();
-		final String query = "{SELECT * FROM VW_Clientes}";
+		final String query = "SELECT * FROM VW_Clientes";
 		try
 		{
 			CallableStatement cst = cn.connection.prepareCall(query);
@@ -102,7 +102,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	@Override
 	public boolean modificarCliente(Cliente cliente) {
 		cn.Open();
-		String query = "{SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		String query = "CALL SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		boolean exito = false;
 		try
 		{

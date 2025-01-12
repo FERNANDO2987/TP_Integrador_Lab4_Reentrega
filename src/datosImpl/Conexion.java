@@ -23,11 +23,9 @@ public class Conexion {
 		{
 			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(url, user, pass);
-			System.out.println("Conectado ***************");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Error ***************");
 			e.printStackTrace();
 		}
 		return this.connection;
