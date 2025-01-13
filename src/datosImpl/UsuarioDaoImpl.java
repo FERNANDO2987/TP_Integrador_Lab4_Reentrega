@@ -1,6 +1,8 @@
 package datosImpl;
 import java.sql.CallableStatement;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.util.List;
 
 import datos.UsuarioDao;
 import entidad.Usuario;
@@ -45,6 +47,44 @@ public class UsuarioDaoImpl implements UsuarioDao{
 			cn.close();
 		}
 		return exito;
+	}
+	@Override
+	public boolean comprobarUsuarioLogeo(Usuario usuario) {
+		cn.Open();
+		String query = "CALL SP_ComprobarLogeo(?,?)";
+		boolean exito = false;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setString(1, usuario.getUsuario());
+			cst.setString(2, usuario.getPassword());
+			ResultSet rs = cst.executeQuery();
+			if(rs != null)
+			{
+				if(!rs.next())
+				{
+					exito = false;
+				}
+				else
+				{
+					exito = true;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return exito;
+	}
+	@Override
+	public List<Usuario> leerTodosLosClientes() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

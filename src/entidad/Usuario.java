@@ -15,14 +15,16 @@ public class Usuario {
     
     
     // Constructor vacío
-    public Usuario() {}
+    public Usuario() {
+    	this.cliente = new Cliente();
+    }
     
     // Constructor con parámetros
 	public Usuario(int id, Cliente cliente, String usuario, String password, boolean admin, LocalDate createDate,
 			boolean deleted, LocalDate deleteDate) {
 		super();
 		this.id = id;
-		this.cliente = cliente;
+		this.cliente = new Cliente();
 		this.usuario = usuario;
 		this.password = password;
 		this.admin = admin;
