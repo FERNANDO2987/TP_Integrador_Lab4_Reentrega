@@ -23,7 +23,15 @@ public class Cliente {
     
     
 	// Constructor vacío
-    public Cliente() {}
+    public Cliente() {
+    	paisNacimiento = new Pais();
+    	localidad = new Localidad();
+    	provincia = new Provincia();
+    	fechaNacimiento = LocalDate.of(1, 1, 1);
+    	createDate = LocalDate.of(1, 1, 1);
+    	deleteDate = LocalDate.of(1, 1, 1);
+    	
+    }
     
     // Constructor con parámetros   
 	public Cliente(int id, String dni, String cuil, String nombre, String apellido, String sexo, Pais paisNacimiento,
