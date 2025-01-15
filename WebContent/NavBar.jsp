@@ -13,9 +13,9 @@
 		<header>
 			<div class= "row">
 				<nav class="navbar bg-body-tertiary d-flex justify-content-between">
-	        		<img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" />
-	        		<span>Sistema Gestión Banco</span>
-	        		<div class="d-flex">
+	        		<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ6V1k7ua_GJ9vJL24oT-RWu30QRMNxukpQw&s" alt="Logo" height="60" />
+	        		<span>Sistema Gestión de Banco</span>
+	        		<div id="sesion-cuenta">
 	          			<span>Usuario X</span>
 	          			<button class="btn btn-outline-primary ms-2">Cerrar Sesión</button>
 	        		</div>
@@ -28,20 +28,20 @@
 				  	<div class="d-flex flex-column align-items-start h-100"> 
 				    	<div class="nav flex-column nav-pills me-3 w-100" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 				      		<button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</button>
-				      		<button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Clientes</button>
-				      		<button class="nav-link" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false">Cuentas</button>
-				      		<button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Prestamos</button>
-				      		<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Informes</button>
+				      		<button class="nav-link" id="v-pills-clientes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-clientes" type="button" role="tab" aria-controls="v-pills-clientes" aria-selected="false">Clientes</button>
+				      		<button class="nav-link" id="v-pills-cuentas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-cuentas" type="button" role="tab" aria-controls="v-pills-cuentas" aria-selected="false">Cuentas</button>
+				      		<button class="nav-link" id="v-pills-prestamos-tab" data-bs-toggle="pill" data-bs-target="#v-pills-prestamos" type="button" role="tab" aria-controls="v-pills-prestamos" aria-selected="false">Prestamos</button>
+				      		<button class="nav-link" id="v-pills-informes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-informes" type="button" role="tab" aria-controls="v-pills-informes" aria-selected="false">Informes</button>
 				    	</div>			   	 	
 				  	</div>
 				</div>
 				<div class= "col-10">
 					<div class="tab-content flex-grow-1 overflow-auto" id="v-pills-tabContent"> 
-				      	<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">...</div>
-				      	<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">...</div>
-				      	<div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">...</div>
-				      	<div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">...</div>
-				      	<div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
+				      	<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">home</div>
+				      	<div class="tab-pane fade" id="v-pills-clientes" role="tabpanel" aria-labelledby="v-pills-clientes-tab" tabindex="0">clientes</div>
+				      	<div class="tab-pane fade" id="v-pills-cuentas" role="tabpanel" aria-labelledby="v-pills-cuentas-tab" tabindex="0">cuentas</div>
+				      	<div class="tab-pane fade" id="v-pills-prestamos" role="tabpanel" aria-labelledby="v-pills-prestamos-tab" tabindex="0">prestamos</div>
+				      	<div class="tab-pane fade" id="v-pills-informes" role="tabpanel" aria-labelledby="v-pills-informes-tab" tabindex="0">informes</div>
 				    </div>
 				</div>
 			</div>

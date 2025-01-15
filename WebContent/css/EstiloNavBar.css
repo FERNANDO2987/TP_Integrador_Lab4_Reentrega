@@ -1,6 +1,5 @@
 @charset "ISO-8859-1";
 
-	/* Estilos generales */
 html, body {
   height: 100%;
   margin: 0;
@@ -11,19 +10,32 @@ body {
   flex-direction: column;
 }
 
-/* Estilos para elementos comunes */
-header, footer {
-  height: 50px; /* Ajusta la altura según tus necesidades */
+header {
+	height: 60px;
+	margin-bottom: 0.5rem;
+	padding-left: 1rem;
+	padding-right: 2rem;
+}
+
+footer {
+  height: 40px;
+  text-align: center;
   background-color: #f0f0f0;
 }
 
-/* Estilos específicos */
+main {
+  flex: 1;
+}
+
 .navbar {
-  margin-bottom: 2rem;
+  height: 60px;
+  padding-top: 0px;
 }
 
 .nav-link {
   color: #007bff;
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
 }
 
 .nav-link:hover {
@@ -35,6 +47,7 @@ header, footer {
   padding-bottom: 1rem;
 }
 
-main {
-  flex: 1; /* El contenido principal ocupará el espacio restante */
+#sesion-cuenta {
+	display: flex;
+  align-items: center;
 }
