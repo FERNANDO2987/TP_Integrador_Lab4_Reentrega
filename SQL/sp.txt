@@ -1,0 +1,14 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
+BEGIN
+    SELECT 
+        id,
+        id_cliente,
+        usuario,
+        pass,
+        admin
+ 
+    FROM 
+        usuarios
+    WHERE 
+        deleted = 0;
+END
