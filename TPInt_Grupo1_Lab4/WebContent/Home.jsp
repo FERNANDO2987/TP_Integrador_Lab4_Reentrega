@@ -4,9 +4,9 @@
 <html>  
 <head>  
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">  
-    <title>Sistema de Gestión Bancariasssssssss</title>  
+    <title>Sistema de Gestión Bancaria</title>  
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
-    <style>  
+     <style>  
         body {  
             display: flex;  
             min-height: 100vh;  
@@ -17,6 +17,10 @@
             background-color: #343a40;  
             padding: 15px;  
             color: #fff;  
+            position: fixed;  
+            width: 200px; /* Ancho de la barra lateral */  
+            top: 0;  
+            left: 0;  
         }  
         .sidebar a {  
             color: #fff;  
@@ -26,21 +30,23 @@
         }  
         .content {  
             flex: 1;  
-            padding: 20px;  
+            padding: 0.1px;  
+            margin-left: 200px; /* Margen ajustado para alinearse con la barra lateral */  
         }  
         .navbar {  
-            background-color: #007bff; /* Cambia el color de la franja superior */  
+            background-color: #007bff; /* Color de la franja superior */  
         }  
         .navbar-brand, .navbar-nav .nav-link {  
             color: #fff;  
         }  
         .navbar-nav .nav-link:hover {  
-            color: #ffdd57; /* Cambia el color al pasar el ratón */  
+            color: #ffdd57; /* Color al pasar el ratón */  
         }  
         .navbar-nav .nav-item.active .nav-link {  
-            color: #ffdd57; /* Cambia el color del enlace activo */  
+            color: #ffdd57; /* Color del enlace activo */  
         }  
-    </style>  
+    </style> 
+    </style> 
 </head>  
 <body>  
 
@@ -50,7 +56,6 @@
             <span class="navbar-toggler-icon"></span>  
         </button>  
         <div class="collapse navbar-collapse" id="navbarNav">  
-          
             <ul class="navbar-nav ml-auto">  
                 <li class="nav-item">  
                     <a class="nav-link" href="#">Logout</a>  
@@ -59,37 +64,47 @@
         </div>  
     </nav>  
 
-    <div class="d-flex">  
-        <div class="sidebar">  
-            <h4>Administrador</h4>  
-            <ul class="nav flex-column">  
-                <li class="nav-item">  
-                    <a class="nav-link active" href="#">Inicio</a>  
-                </li>  
-                <li class="nav-item">  
-                    <a class="nav-link" href="#">Clientes</a>  
-                </li>  
-                <li class="nav-item">  
-                    <a class="nav-link" href="#">Préstamos</a>  
-                </li>  
-            </ul>  
-        </div>  
-
-        <div class="content container-fluid">  
-            <h2>¡Bienvenido/a admin!</h2>  
-            <!-- Aquí va el contenido principal de la página -->  
-        </div>  
+    <div class="sidebar">  
+        <h4>Administrador</h4>  
+        <ul class="nav flex-column">  
+            <li class="nav-item">  
+                <a class="nav-link active" href="#" onclick="cargarPagina('inicio')">Inicio</a>  
+            </li>  
+            <li class="nav-item">  
+                <a class="nav-link" href="#" onclick="cargarPagina('clientes')">Clientes</a>  
+            </li>  
+            <li class="nav-item">  
+                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>  
+            </li>  
+            <li class="nav-item">  
+                <a class="nav-link" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>  
+            </li>  
+        </ul>  
     </div>  
+
+    <div class="content container-fluid" id="contenidoPrincipal">  
+        <h2>¡Bienvenido/a admin!</h2>  
+      
+    </div>  
+
+    <script>
+        function cargarPagina(pagina) {
+            var contenido = document.getElementById('contenidoPrincipal');
+            if (pagina === 'inicio') {
+                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+            } else if (pagina === 'clientes') {
+                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
+            } else if (pagina === 'prestamos') {
+                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+            } else if (pagina === 'listarUsuarios') {
+                // Enlace al servlet que lista los usuarios
+                contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
+            }
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>  
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
 </body>  
-</html>  
-
-
-
-
-
-
-
+</html>
