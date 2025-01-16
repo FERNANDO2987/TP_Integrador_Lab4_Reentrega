@@ -1,0 +1,150 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>  
+<%@ page import="java.util.List" %>  
+<%@ page import="entidad.Usuario" %>  
+
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+    <meta charset="ISO-8859-1">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Lista de Usuarios</title>  
+    <!-- Bootstrap CSS -->  
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
+    <style>  
+        .dropdown-toggle::after {  
+            display: none; /* Quitar el ícono del dropdown */  
+        }  
+        .dropdown-menu {  
+            min-width: 0; /* Ajustar el ancho del menú */  
+        }  
+        .centered-header {
+    text-align: center; /* Centrar el texto horizontalmente */
+    margin: 0 auto;     /* Asegurar que el margen se maneje correctamente */
+}
+        
+       
+    }
+    
+        /* Eliminar márgenes para el buscador y alinearlo a la izquierda */
+        .search-container {
+            margin-left: 0;
+        }
+    </style>  
+</head>  
+<body>  
+<div class="container mt-5">  
+   <!-- Contenedor centrado para el encabezado -->
+    <div class="row justify-content-center mb-4">
+        <h2 class="text-primary">Lista de Usuarios</h2>
+    </div>
+
+      <!-- Buscador alineado a la izquierda -->
+    <div class="row mb-4">
+        <div class="col-12 col-md-6 search-container">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar usuario..." onkeyup="filterTable()">  
+        </div>
+    </div>
+    <%   
+        // Obtener lista de usuarios y mensaje de error  
+        List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");  
+        String error = (String) request.getAttribute("error");  
+    %>  
+
+    <% if (error != null) { %>  
+        <!-- Mostrar mensaje de error -->  
+        <div class="alert alert-danger" role="alert">  
+            <i class="fas fa-exclamation-circle"></i> <%= error %>  
+        </div>  
+    <% } else if (usuarios != null && !usuarios.isEmpty()) { %>  
+        <!-- Tabla de usuarios -->  
+        <div class="table-responsive">  
+            <table class="table table-hover table-bordered" id="usersTable">  
+                <thead class="thead-light">  
+                    <tr>  
+                        <th>ID</th>  
+                        <th>Usuario</th>  
+                        <th>Cliente</th>  
+                        <th>Admin</th>  
+                        <th>Acciones</th>  
+                    </tr>  
+                </thead>  
+                <tbody>  
+                    <% for (Usuario usuario : usuarios) { %>  
+                    <tr>  
+                        <td><%= usuario.getId() %></td>  
+                        <td><%= usuario.getUsuario() %></td>  
+                        <td><%= usuario.getCliente() != null ? usuario.getCliente().getId() : "N/A" %></td>  
+                        <td>  
+                            <span class="badge <%= usuario.isAdmin() ? "badge-success" : "badge-secondary" %>">  
+                                <%= usuario.isAdmin() ? "Sí" : "No" %>  
+                            </span>  
+                        </td>  
+                        <td>  
+                            <div class="dropdown">  
+                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="accionesUsuario<%= usuario.getId() %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                                    <i class="fas fa-ellipsis-v"></i>  
+                                </button>  
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accionesUsuario<%= usuario.getId() %>">  
+                                    <a class="dropdown-item" href="modificarUsuario?id=<%= usuario.getId() %>">  
+                                        <i class="fas fa-edit"></i> Modificar  
+                                    </a>  
+                                    <a class="dropdown-item text-danger" href="eliminarUsuario?id=<%= usuario.getId() %>" onclick="return confirm('¿Está seguro de que desea eliminar este usuario?');">  
+                                        <i class="fas fa-trash-alt"></i> Eliminar  
+                                    </a>  
+                                    <a class="dropdown-item text-success" href="agregarUsuario">  
+                                        <i class="fas fa-user-plus"></i> Agregar  
+                                    </a>  
+                                </div>  
+                            </div>  
+                        </td>  
+                    </tr>  
+                    <% } %>  
+                </tbody>  
+            </table>  
+        </div>  
+    <% } else { %>  
+        <!-- Mensaje de no hay usuarios -->  
+        <div class="alert alert-info" role="alert">  
+            <i class="fas fa-info-circle"></i> No se encontraron usuarios.  
+        </div>  
+    <% } %>  
+</div>  
+<!-- Bootstrap JS and dependencies -->  
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
+
+<script>
+    // Inicializar dropdowns de Bootstrap
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+
+    // Función para filtrar la tabla en tiempo real
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("usersTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j]) {
+                    const cellText = cells[j].textContent || cells[j].innerText;
+                    if (cellText.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+
+            rows[i].style.display = match ? "" : "none";
+        }
+    }
+</script>
+</body>  
+</html>
