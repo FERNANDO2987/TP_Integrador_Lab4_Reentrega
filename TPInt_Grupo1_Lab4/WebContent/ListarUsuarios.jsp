@@ -26,10 +26,10 @@
        
     }
     
-        /* Eliminar márgenes para el buscador y alinearlo a la izquierda */
-        .search-container {
-            margin-left: 0;
-        }
+   .add-button-container {
+    text-align: center;
+}
+
     </style>  
 </head>  
 <body>  
@@ -38,6 +38,18 @@
     <div class="row justify-content-center mb-4">
         <h2 class="text-primary">Lista de Usuarios</h2>
     </div>
+
+
+    <!-- Botón Agregar alineado a la derecha -->
+<div class="row mb-4" >
+    <div class="col-12" style="text-align: right;">
+        <a href="agregarUsuario" class="btn btn-success">
+            <i class="fas fa-user-plus"></i> Agregar Usuario
+        </a>
+    </div>
+</div>
+
+
 
       <!-- Buscador alineado a la izquierda -->
     <div class="row mb-4">
@@ -92,9 +104,7 @@
                                     <a class="dropdown-item text-danger" href="eliminarUsuario?id=<%= usuario.getId() %>" onclick="return confirm('¿Está seguro de que desea eliminar este usuario?');">  
                                         <i class="fas fa-trash-alt"></i> Eliminar  
                                     </a>  
-                                    <a class="dropdown-item text-success" href="agregarUsuario">  
-                                        <i class="fas fa-user-plus"></i> Agregar  
-                                    </a>  
+                                  
                                 </div>  
                             </div>  
                         </td>  

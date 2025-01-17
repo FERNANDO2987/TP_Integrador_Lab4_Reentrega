@@ -6,47 +6,53 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">  
     <title>Sistema de Gestión Bancaria</title>  
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
-     <style>  
-        body {  
-            display: flex;  
-            min-height: 100vh;  
-            flex-direction: column;  
-        }  
-        .sidebar {  
-            height: 100vh;  
-            background-color: #343a40;  
-            padding: 15px;  
-            color: #fff;  
-            position: fixed;  
-            width: 200px; /* Ancho de la barra lateral */  
-            top: 0;  
-            left: 0;  
-        }  
-        .sidebar a {  
-            color: #fff;  
-        }  
-        .sidebar a:hover {  
-            color: #007bff;  
-        }  
-        .content {  
-            flex: 1;  
-            padding: 0.1px;  
-            margin-left: 200px; /* Margen ajustado para alinearse con la barra lateral */  
-        }  
-        .navbar {  
-            background-color: #007bff; /* Color de la franja superior */  
-        }  
-        .navbar-brand, .navbar-nav .nav-link {  
-            color: #fff;  
-        }  
-        .navbar-nav .nav-link:hover {  
-            color: #ffdd57; /* Color al pasar el ratón */  
-        }  
-        .navbar-nav .nav-item.active .nav-link {  
-            color: #ffdd57; /* Color del enlace activo */  
-        }  
-    </style> 
-    </style> 
+    <style>  
+ body {
+    overflow-x: hidden; /* Desactiva el scroll horizontal */
+}
+    .sidebar {  
+        height: 100vh;  
+        background-color: #343a40;  
+        padding: 15px;  
+        color: #fff;  
+        position: fixed;  
+        width: 200px; /* Ancho de la barra lateral */  
+        top: 0;  
+        left: 0;  
+    }  
+    .sidebar a {  
+        color: #fff;  
+    }  
+    .sidebar a:hover {  
+        color: #007bff;  
+    }  
+    .content {
+        flex: 1;
+        padding: 0.1px;
+        margin-left: calc(150px + 1rem); /* Ajusta dinámicamente según el ancho de la barra lateral */
+        margin-right: 0; /* No es necesario cambiar este valor */
+        
+    }
+
+    .navbar {  
+        background-color: #343a40; /* Color de la franja superior */
+        display: flex; /* Para usar flexbox */
+        justify-content: space-between; /* Esto asegura que los elementos se distribuyan de manera automática */
+        align-items: center; /* Centra los elementos verticalmente */
+         color: #007bff;  
+    }  
+    .navbar-brand, .navbar-nav .nav-link {  
+        color: #343a40;  
+    }  
+    .navbar-nav .nav-link:hover {  
+        color: #007bff; /* Color al pasar el ratón */  
+    }  
+    .navbar-nav .nav-item.active .nav-link {  
+        color: #007bff; /* Color del enlace activo */  
+    }  
+</style>
+
+    
 </head>  
 <body>  
 
