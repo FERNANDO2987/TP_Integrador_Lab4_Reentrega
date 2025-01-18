@@ -57,11 +57,7 @@
                 <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese el password" required>
             </div>
 
-            <!-- Campo Cliente ID -->
-            <div class="form-group">
-                <label for="clienteId" class="form-label">ID del Cliente:</label>
-                <input type="number" id="clienteId" name="clienteId" class="form-control" placeholder="Ingrese el ID del cliente" required>
-            </div>
+        
 
             <!-- Campo Admin -->
             <div class="form-group">

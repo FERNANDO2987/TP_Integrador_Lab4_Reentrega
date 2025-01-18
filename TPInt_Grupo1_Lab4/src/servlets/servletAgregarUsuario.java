@@ -46,7 +46,7 @@ public class servletAgregarUsuario extends HttpServlet {
 
 	            // Validar los parámetros recibidos
 	            if (usuario == null || usuario.isEmpty() || 
-	                password == null || password.isEmpty() 
+	                password == null || password.isEmpty())
 	                {
 	                request.setAttribute("error", "Todos los campos son obligatorios.");
 	                request.getRequestDispatcher("AgregarUsuario.jsp").forward(request, response);
