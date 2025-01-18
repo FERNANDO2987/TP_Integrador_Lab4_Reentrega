@@ -1,36 +1,32 @@
 package principal;
 
-import java.util.List;
 
-import datosImpl.UsuarioDaoImpl;
-import entidad.Cliente;
 import entidad.Usuario;
 import negocioImpl.UsuarioNegImpl;
 
 public class Principal {
 
     public static void main(String[] args) {
-        // Crear instancia del DAO
+
+        
+        // Crear una instancia de Usuario
+        Usuario usuario = new Usuario();
+        usuario.setUsuario("nuevoUsuario");
+        usuario.setPassword("contraseña123");
+
+        // Crear una instancia de UsuarioNegImpl (o UsuarioDaoImpl si es necesario)
         UsuarioNegImpl usuarioDao = new UsuarioNegImpl();
         
-        List<Usuario> usuarios = usuarioDao.ListarUsuarios();
+        // Llamar al método AgregarUsuario
+        boolean resultado = usuarioDao.AgregarUsuario(usuario);
 
-        // Iterar y mostrar los usuarios obtenidos
-        if (usuarios != null && !usuarios.isEmpty()) {
-            for (Usuario usuario : usuarios) {
-                System.out.println("ID: " + usuario.getId());
-                System.out.println("Usuario: " + usuario.getUsuario());
-                System.out.println("Password: " + usuario.getPassword());
-                System.out.println("Admin: " + usuario.isAdmin());
-
-                if (usuario.getCliente() != null) {
-                    System.out.println("ID Cliente: " + usuario.getCliente().getId());
-                }
-                System.out.println("---------------------------");
-            }
+        // Imprimir el resultado
+        if (resultado) {
+            System.out.println("Usuario agregado exitosamente.");
         } else {
-            System.out.println("No se encontraron usuarios.");
+            System.out.println("Hubo un error al agregar el usuario.");
         }
-
+        
+    
     }
 }

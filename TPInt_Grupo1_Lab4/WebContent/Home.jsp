@@ -106,6 +106,7 @@
                 // Enlace al servlet que lista los usuarios
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             }
+            
         }
     </script>
 
