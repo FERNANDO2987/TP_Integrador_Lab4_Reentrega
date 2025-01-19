@@ -86,5 +86,25 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public Usuario obtenerUsuarioPorId(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Usuario> listarUsuarios() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean insertarOActualizarUsuario(Usuario usuario) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean eliminarUsuario(int id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
