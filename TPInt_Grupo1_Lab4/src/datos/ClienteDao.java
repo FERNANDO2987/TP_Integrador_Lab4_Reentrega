@@ -5,6 +5,6 @@ import entidad.Cliente;
 
 public interface ClienteDao {
 	public Cliente leerUnCliente(int id);
-	public List<Cliente> leerTodosLosClientes();
+	public List<Cliente> ObtenerClientes();
 	public boolean modificarCliente(Cliente cliente);
 }

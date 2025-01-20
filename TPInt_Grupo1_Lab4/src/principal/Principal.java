@@ -1,32 +1,32 @@
 package principal;
 
 
-import entidad.Usuario;
-import negocioImpl.UsuarioNegImpl;
+import java.util.List;
+
+import entidad.Cliente;
+
+import negocioImpl.ClienteNegImpl;
+
 
 public class Principal {
 
     public static void main(String[] args) {
 
         
-        // Crear una instancia de Usuario
-        Usuario usuario = new Usuario();
-        usuario.setUsuario("nuevoUsuario");
-        usuario.setPassword("contraseña123");
-
-        // Crear una instancia de UsuarioNegImpl (o UsuarioDaoImpl si es necesario)
-        UsuarioNegImpl usuarioDao = new UsuarioNegImpl();
+    
+        ClienteNegImpl clienteNeg = new ClienteNegImpl();
         
-        // Llamar al método AgregarUsuario
-        boolean resultado = usuarioDao.AgregarUsuario(usuario);
+        List<Cliente> clientes = clienteNeg.ListarClientes();
 
-        // Imprimir el resultado
-        if (resultado) {
-            System.out.println("Usuario agregado exitosamente.");
+        // Verificar e imprimir el resultado
+        if (clientes != null && !clientes.isEmpty()) {
+            System.out.println("Lista de clientes obtenida exitosamente:");
+            for (Cliente cliente : clientes) {
+                System.out.println(cliente);
+            }
         } else {
-            System.out.println("Hubo un error al agregar el usuario.");
+            System.out.println("No se encontraron clientes o hubo un error.");
         }
-        
     
     }
 }

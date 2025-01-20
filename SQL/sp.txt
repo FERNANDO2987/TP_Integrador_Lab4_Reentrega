@@ -1,3 +1,5 @@
+
+--Obtener Usuario
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
 BEGIN
     SELECT 
@@ -11,4 +13,39 @@ BEGIN
         usuarios
     WHERE 
         deleted = 0;
+END
+
+
+--Insertar Usuario
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarOActualizarUsuario`(
+    IN p_id_cliente INT,
+    IN p_usuario VARCHAR(255),
+    IN p_pass VARCHAR(255),
+    IN p_admin BIT
+)
+BEGIN
+    DECLARE v_id INT;
+
+    -- Verificar si el usuario ya existe por id_cliente o usuario
+    SELECT `id` INTO v_id
+    FROM `usuarios`
+    WHERE `id_cliente` = p_id_cliente OR `usuario` = p_usuario;
+
+    -- Si existe, se actualiza el registro
+    IF v_id IS NOT NULL THEN
+        UPDATE `usuarios`
+        SET
+            `id_cliente` = p_id_cliente, -- Actualiza el id_cliente si es necesario
+            `usuario` = p_usuario,
+            `pass` = p_pass,
+            `admin` = p_admin,
+            `create_date` = CURRENT_TIMESTAMP,
+            `deleted` = 0,
+            `delete_date` = NULL
+        WHERE `id` = v_id; -- Asegura que se actualice el registro correcto
+    ELSE
+        -- Si no existe, se inserta un nuevo registro
+        INSERT INTO `usuarios` (`id_cliente`, `usuario`, `pass`, `admin`, `create_date`, `deleted`)
+        VALUES (p_id_cliente, p_usuario, p_pass, p_admin, CURRENT_TIMESTAMP, 0);
+    END IF;
 END

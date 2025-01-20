@@ -8,6 +8,9 @@ import java.util.List;
 
 import datos.ClienteDao;
 import entidad.Cliente;
+import entidad.Localidad;
+import entidad.Pais;
+import entidad.Provincia;
 
 public class ClienteDaoImpl implements ClienteDao {
 	private Conexion cn;
@@ -56,48 +59,61 @@ public class ClienteDaoImpl implements ClienteDao {
 		return cliente;
 	}
 
+
+	
 	@Override
-	public List<Cliente> leerTodosLosClientes() {
-		List<Cliente> listaClientes = new ArrayList<Cliente>();
-		cn.Open();
-		final String query = "{SELECT * FROM VW_Clientes}";
-		try
-		{
-			CallableStatement cst = cn.connection.prepareCall(query);
-			ResultSet rs = cst.executeQuery();
-			while(rs.next())
-			{
-				Cliente cliente = new Cliente();
-				cliente.setId(rs.getInt("id"));
-				cliente.setDni(rs.getString("dni"));
-				cliente.setCuil(rs.getString("cuil"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setSexo(rs.getString("sexo"));
-				cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
-				cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
-				cliente.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
-				cliente.setDireccion(rs.getString("direccion"));
-				cliente.getLocalidad().setId(rs.getInt("id_localidad"));
-				cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
-				cliente.getProvincia().setId(rs.getInt("id_provincia"));
-				cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
-				cliente.setCorreo(rs.getString("correo"));
-				cliente.setTelefono(rs.getString("telefono"));
-			
-				listaClientes.add(cliente);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			cn.close();
-		}
-		return listaClientes;	
+	public List<Cliente> ObtenerClientes() {
+	    List<Cliente> listaClientes = new ArrayList<>();
+	    final String query = "{CALL ObtenerClientes()}";
+	    cn.Open();
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query);
+	         ResultSet rs = cst.executeQuery()) {
+
+	        while (rs.next()) {
+	            Cliente cliente = new Cliente();
+	            cliente.setId(rs.getInt("IdCliente"));
+	            cliente.setDni(rs.getString("DNI"));
+	            cliente.setCuil(rs.getString("CUIL"));
+	            cliente.setNombre(rs.getString("Nombre"));
+	            cliente.setApellido(rs.getString("Apellido"));
+	            cliente.setSexo(rs.getString("Sexo"));
+
+	            // Evitar NullPointerException creando instancias si son necesarias
+	            if (cliente.getPaisNacimiento() == null) {
+	                cliente.setPaisNacimiento(new Pais());
+	            }
+	            cliente.getPaisNacimiento().setNombre(rs.getString("Pais"));
+
+	            if (cliente.getProvincia() == null) {
+	                cliente.setProvincia(new Provincia());
+	            }
+	            cliente.getProvincia().setNombre(rs.getString("Provincia"));
+
+	            if (cliente.getLocalidad() == null) {
+	                cliente.setLocalidad(new Localidad());
+	            }
+	            cliente.getLocalidad().setNombre(rs.getString("Localidad"));
+
+	            cliente.setFechaNacimiento(rs.getDate("FechaNacimiento").toLocalDate());
+	            cliente.setDireccion(rs.getString("Direccion"));
+	            cliente.setCorreo(rs.getString("Correo"));
+	            cliente.setTelefono(rs.getString("Telefono"));
+
+	            listaClientes.add(cliente);
+	        }
+	    } catch (Exception e) {
+	        // Usar un sistema de logging para registrar el error
+	        System.err.println("Error al obtener la lista de clientes: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return listaClientes;
 	}
+
+
 
 	@Override
 	public boolean modificarCliente(Cliente cliente) {

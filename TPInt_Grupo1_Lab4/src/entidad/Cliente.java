@@ -130,11 +130,22 @@ public class Cliente {
 	// ToString
 	@Override
 	public String toString() {
-		return "Cliente [id=" + id + ", dni=" + dni + ", cuil=" + cuil + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", sexo=" + sexo + ", paisNacimiento=" + paisNacimiento + ", fechaNacimiento=" + fechaNacimiento
-				+ ", direccion=" + direccion + ", localidad=" + localidad + ", provincia=" + provincia + ", correo="
-				+ correo + ", telefono=" + telefono + ", createDate=" +
-				 "]";
+	    return "Cliente {" +
+	           "\n  id=" + id +
+	           ",\n  dni='" + dni + '\'' +
+	           ",\n  cuil='" + cuil + '\'' +
+	           ",\n  nombre='" + nombre + '\'' +
+	           ",\n  apellido='" + apellido + '\'' +
+	           ",\n  sexo='" + sexo + '\'' +
+	           ",\n  paisNacimiento=" + paisNacimiento +
+	           ",\n  fechaNacimiento=" + fechaNacimiento +
+	           ",\n  direccion='" + direccion + '\'' +
+	           ",\n  localidad=" + localidad +
+	           ",\n  provincia=" + provincia +
+	           ",\n  correo='" + correo + '\'' +
+	           ",\n  telefono='" + telefono + '\'' +
+	           "\n}";
 	}
+
 }
 

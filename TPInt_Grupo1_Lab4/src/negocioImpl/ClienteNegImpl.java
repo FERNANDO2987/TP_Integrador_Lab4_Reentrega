@@ -41,8 +41,8 @@ private ClienteDao clienteDao = new ClienteDaoImpl();
 	}
 
 	@Override
-	public ArrayList<Cliente> ObtenerClientes() {
-	    List<Cliente> clientes = clienteDao.leerTodosLosClientes();
+	public ArrayList<Cliente> ListarClientes() {
+	    List<Cliente> clientes = clienteDao.ObtenerClientes();
 
         if (clientes == null || clientes.isEmpty()) {
             throw new RuntimeException("No se encontraron clientes.");
