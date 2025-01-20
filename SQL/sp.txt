@@ -1,22 +1,56 @@
-
---Obtener Usuario
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarOModifcarCliente`(
+    IN p_id_cliente INT,        -- ID del cliente (opcional para actualizaciones directas)
+    IN p_dni VARCHAR(255),
+    IN p_cuil VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_apellido VARCHAR(255),
+    IN p_sexo VARCHAR(255),
+    IN p_id_pais INT,
+    IN p_fecha_nacimiento DATE,
+    IN p_direccion VARCHAR(255),
+    IN p_id_localidad INT,
+    IN p_id_provincia INT,
+    IN p_correo VARCHAR(255),
+    IN p_telefono VARCHAR(255)
+)
 BEGIN
-    SELECT 
-        id,
-        id_cliente,
-        usuario,
-        pass,
-        admin
- 
-    FROM 
-        usuarios
-    WHERE 
-        deleted = 0;
+    DECLARE v_cliente_id INT DEFAULT NULL;
+
+    -- Si se proporciona un ID de cliente, usarlo directamente
+    IF p_id_cliente IS NOT NULL THEN
+        SET v_cliente_id = p_id_cliente;
+    ELSE
+        -- Verificar si el cliente ya existe por DNI o CUIL
+        SELECT id INTO v_cliente_id FROM clientes WHERE dni = p_dni OR cuil = p_cuil LIMIT 1;
+    END IF;
+
+    IF v_cliente_id IS NOT NULL THEN
+        -- Actualizar el cliente existente
+        UPDATE clientes
+        SET nombre = p_nombre,
+            apellido = p_apellido,
+            sexo = p_sexo,
+            id_pais = p_id_pais,
+            fecha_nacimiento = p_fecha_nacimiento,
+            direccion = p_direccion,
+            id_localidad = p_id_localidad,
+            id_provincia = p_id_provincia,
+            correo = p_correo,
+            telefono = p_telefono,
+            deleted = 0,
+            delete_date = NULL
+        WHERE id = v_cliente_id;
+    ELSE
+        -- Insertar un nuevo cliente solo si no existe DNI o CUIL
+        INSERT INTO clientes (dni, cuil, nombre, apellido, sexo, id_pais, fecha_nacimiento, direccion, id_localidad, id_provincia, correo, telefono)
+        SELECT p_dni, p_cuil, p_nombre, p_apellido, p_sexo, p_id_pais, p_fecha_nacimiento, p_direccion, p_id_localidad, p_id_provincia, p_correo, p_telefono
+        WHERE NOT EXISTS (
+            SELECT 1 FROM clientes WHERE dni = p_dni OR cuil = p_cuil
+        );
+    END IF;
 END
 
 
---Insertar Usuario
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarOActualizarUsuario`(
     IN p_id_cliente INT,
     IN p_usuario VARCHAR(255),
@@ -48,4 +82,42 @@ BEGIN
         INSERT INTO `usuarios` (`id_cliente`, `usuario`, `pass`, `admin`, `create_date`, `deleted`)
         VALUES (p_id_cliente, p_usuario, p_pass, p_admin, CURRENT_TIMESTAMP, 0);
     END IF;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerClientes`()
+BEGIN
+    SELECT 
+        c.id AS IdCliente,
+        c.dni AS DNI,
+        c.cuil AS CUIL,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        c.sexo AS Sexo,
+        p.nombre AS Pais,
+        pr.nombre AS Provincia,
+        l.nombre AS Localidad,
+        c.fecha_nacimiento AS FechaNacimiento,
+        c.direccion AS Direccion,
+        c.correo AS Correo,
+        c.telefono AS Telefono
+    FROM clientes c
+    INNER JOIN paises p ON c.id_pais = p.id
+    INNER JOIN provincia pr ON c.id_provincia = pr.id
+    INNER JOIN localidades l ON c.id_localidad = l.id
+    WHERE c.deleted = 0; -- Excluye clientes marcados como eliminados
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
+BEGIN
+    SELECT 
+        id,
+        id_cliente,
+        usuario,
+        pass,
+        admin
+ 
+    FROM 
+        usuarios
+    WHERE 
+        deleted = 0;
 END
