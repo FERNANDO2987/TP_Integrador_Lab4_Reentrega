@@ -3,6 +3,7 @@ package datosImpl;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,47 +18,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	public ClienteDaoImpl() {
 		cn = new Conexion();
 	}
-	@Override
-	public Cliente leerUnCliente(int id) {
-		Cliente cliente = new Cliente();
-		cn.Open();
-		String query = "{CALL SP_ObtenerUnCliente(?)}";
-		try
-		{
-			CallableStatement cst = cn.connection.prepareCall(query);
-			cst.setInt(1, id);
-			ResultSet rs = cst.executeQuery();
-			if(rs.next())
-			{
-				cliente.setId(rs.getInt("id"));
-				cliente.setDni(rs.getString("dni"));
-				cliente.setCuil(rs.getString("cuil"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setSexo(rs.getString("sexo"));
-				cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
-				cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
-				cliente.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
-				cliente.setDireccion(rs.getString("direccion"));
-				cliente.getLocalidad().setId(rs.getInt("id_localidad"));
-				cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
-				cliente.getProvincia().setId(rs.getInt("id_provincia"));
-				cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
-				cliente.setCorreo(rs.getString("correo"));
-				cliente.setTelefono(rs.getString("telefono"));
-			
-			}		
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			cn.close();
-		}	
-		return cliente;
-	}
+
 
 
 	
@@ -116,37 +77,53 @@ public class ClienteDaoImpl implements ClienteDao {
 
 
 	@Override
-	public boolean modificarCliente(Cliente cliente) {
-		cn.Open();
-		String query = "{SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-		boolean exito = false;
-		try
-		{
-			CallableStatement cst = cn.connection.prepareCall(query);
-			cst.setInt(1, cliente.getId());
-			cst.setString(2, cliente.getDni());
-			cst.setString(3, cliente.getCuil());
-			cst.setString(4, cliente.getNombre());
-			cst.setString(5, cliente.getApellido());
-			cst.setString(6, cliente.getSexo());
-			cst.setInt(7, cliente.getPaisNacimiento().getId());
-			cst.setDate(8, Date.valueOf(cliente.getFechaNacimiento()));
-			cst.setString(9, cliente.getDireccion());
-			cst.setInt(10, cliente.getLocalidad().getId());
-			cst.setInt(11, cliente.getProvincia().getId());
-			cst.setString(12, cliente.getCorreo());
-			cst.setString(13, cliente.getTelefono());
-			exito = cst.execute();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			cn.close();
-		}
-		return exito;
+	public boolean agregarOmodifcarCliente(Cliente cliente) {
+	    boolean resultado = false;
+	    final String query = "{CALL AgregarOModifcarCliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)}";
+	    
+	    System.out.println("Conectando a la base de datos...");
+	    cn.Open();
+	    
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        // Verificación de parámetros
+	        if (cliente.getId() != 0) {
+	            System.out.println("Cliente con ID existente: " + cliente.getId());
+	            cst.setInt(1, cliente.getId());
+	        } else {
+	            System.out.println("Nuevo cliente, ID es 0 (pasando NULL).");
+	            cst.setNull(1, java.sql.Types.INTEGER); // Pasar NULL si es un nuevo cliente
+	        }
+	        
+	        System.out.println("Estableciendo los otros parámetros...");
+	        // Establecer los otros parámetros de entrada
+	        cst.setString(2, cliente.getDni());
+	        cst.setString(3, cliente.getCuil());
+	        cst.setString(4, cliente.getNombre());
+	        cst.setString(5, cliente.getApellido());
+	        cst.setString(6, cliente.getSexo());
+	        cst.setInt(7, cliente.getPaisNacimiento().getId());
+	        cst.setDate(8, Date.valueOf(cliente.getFechaNacimiento()));
+	        cst.setString(9, cliente.getDireccion());
+	        cst.setInt(10, cliente.getLocalidad().getId());
+	        cst.setInt(11, cliente.getProvincia().getId());
+	        cst.setString(12, cliente.getCorreo());
+	        cst.setString(13, cliente.getTelefono());
+	        
+	        // Ejecutar la consulta y verificar si el resultado fue exitoso
+	        resultado = cst.executeUpdate() > 0;
+	        System.out.println("Resultado de la ejecución: " + resultado);
+	        
+	    } catch (SQLException e) {
+	        System.err.println("Error al agregar o modificar el cliente: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+	    
+	    return resultado;
 	}
+
+
+
 
 }
