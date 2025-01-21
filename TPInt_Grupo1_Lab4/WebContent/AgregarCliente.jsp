@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
+
+<%@ page import="entidad.Pais" %>
+<%@ page import="java.util.List" %> 
+<%@ page import="negocio.PaisNeg" %>
+<%@ page import="negocioImpl.PaisNegImpl" %>
 <html lang="es">
 <head>
     <meta charset="ISO-8859-1">
@@ -75,10 +80,30 @@
                 </select>
             </div>
             
-              <div class="form-group">
-                <label for="pais" class="form-label">Pais:</label>
-                <input type="text" id="pais" name="pais" class="form-control" placeholder="Ingrese el Pais" required>
+                <div class="form-group">
+                <label for="pais">Pais:</label>
+                    <select class="form-control" id="pais" name="pais" required>
+                    <option value="">Seleccionar</option>
+                   <%
+                     // Obtener la lista de países desde la base de datos
+                           PaisNegImpl paisNeg = new PaisNegImpl();
+                           List<Pais> paises = paisNeg.ListarPaises();
+                           if (paises != null && !paises.isEmpty()) {
+                             for (Pais pais : paises) {
+                    %>
+                              <option value="<%= pais.getId() %>"><%= pais.getNombre() %></option>
+                      <%
+                           }
+                           } else {
+                      %>
+                                 <option value="">No hay países disponibles</option>
+                       <%
+                              }
+                         %>
+
+                </select>
             </div>
+
             
              <div class="form-group">
                 <label for="fechaNacimiento" class="form-label">Fecha Nacimiento:</label>

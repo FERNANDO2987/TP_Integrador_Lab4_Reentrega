@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>  
 <%@ page import="java.util.List" %>  
-<%@ page import="entidad.Cliente" %>  
+<%@ page import="entidad.Cliente" %>
+<%@ page import="entidad.Pais" %> 
 
 <!DOCTYPE html>  
 <html lang="es">  
@@ -66,6 +67,7 @@
         // Obtener lista de usuarios y mensaje de error  
         List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");  
         String error = (String) request.getAttribute("error");  
+   
     %>  
 
     <% if (error != null) { %>  

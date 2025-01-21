@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cliente;
-import entidad.Usuario;
-import negocio.ClienteNeg;
 
+import negocio.ClienteNeg;
+import negocio.PaisNeg;
 import negocioImpl.ClienteNegImpl;
+import negocioImpl.PaisNegImpl;
 
 
 /**
@@ -25,10 +26,10 @@ public class servletListarClientes extends HttpServlet {
        
    
 	 ClienteNeg clienteNeg = new ClienteNegImpl();
+    
 	
     public servletListarClientes() {
-        super();
-        // TODO Auto-generated constructor stub
+    	
     }
 
 
@@ -48,6 +49,8 @@ public class servletListarClientes extends HttpServlet {
                  request.setAttribute("error", "No se encontraron clientes.");
              }
 
+       
+             
              // Redirigir a la página JSP para mostrar la lista de usuarios
              request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
          } catch (Exception e) {
