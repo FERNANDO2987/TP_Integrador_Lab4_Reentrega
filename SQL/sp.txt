@@ -1,3 +1,6 @@
+use bdbanco;
+
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarOModifcarCliente`(
     IN p_id_cliente INT,        -- ID del cliente (opcional para actualizaciones directas)
     IN p_dni VARCHAR(255),
@@ -49,8 +52,8 @@ BEGIN
         );
     END IF;
 END
-
-
+//
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarOActualizarUsuario`(
     IN p_id_cliente INT,
     IN p_usuario VARCHAR(255),
@@ -83,7 +86,8 @@ BEGIN
         VALUES (p_id_cliente, p_usuario, p_pass, p_admin, CURRENT_TIMESTAMP, 0);
     END IF;
 END
-
+//
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerClientes`()
 BEGIN
     SELECT 
@@ -106,7 +110,8 @@ BEGIN
     INNER JOIN localidades l ON c.id_localidad = l.id
     WHERE c.deleted = 0; -- Excluye clientes marcados como eliminados
 END
-
+//
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
 BEGIN
     SELECT 
@@ -121,8 +126,8 @@ BEGIN
     WHERE 
         deleted = 0;
 END
-
-
+//
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPaises`()
 BEGIN
     SELECT 
@@ -130,12 +135,10 @@ BEGIN
         nombre
  
     FROM 
-        paises
-    WHERE 
-        deleted = 0;
+        paises;
 END
-
-
+//
+DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerProvincias`()
 BEGIN
     SELECT 
@@ -146,15 +149,4 @@ BEGIN
         provincia;
 
 END
-
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPaises`()
-BEGIN
-    SELECT 
-        id,
-        nombre
- 
-    FROM 
-        paises;
-
-END
+//
