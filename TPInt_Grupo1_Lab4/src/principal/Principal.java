@@ -2,7 +2,6 @@ package principal;
 import java.util.ArrayList;
 
 import entidad.Provincia;
-import negocioImpl.PaisNegImpl;
 import negocioImpl.ProvinciaNegImpl;
 
 
