@@ -121,3 +121,28 @@ BEGIN
     WHERE 
         deleted = 0;
 END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerProvincias`()
+BEGIN
+    SELECT 
+        id,
+        nombre
+ 
+    FROM 
+        provincia
+    WHERE 
+        deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPaises`()
+BEGIN
+    SELECT 
+        id,
+        nombre
+ 
+    FROM 
+        paises
+    WHERE 
+        deleted = 0;
+END
