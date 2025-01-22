@@ -1,11 +1,18 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import entidad.Pais;
+import negocio.PaisNeg;
+import negocioImpl.PaisNegImpl;
 
 /**
  * Servlet implementation class servletAgregarCliente
@@ -14,9 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class servletAgregarCliente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	 PaisNeg paisNeg = new PaisNegImpl();
     public servletAgregarCliente() {
         super();
         // TODO Auto-generated constructor stub
@@ -26,8 +31,13 @@ public class servletAgregarCliente extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		List<Pais> listaPaises = paisNeg.ListarPaises();
+		if (listaPaises == null || listaPaises.isEmpty()) {
+		    listaPaises = new ArrayList<>(); // Para evitar que sea nula
+		}
+		request.setAttribute("paises", listaPaises);
+		request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+
 	}
 
 	/**
