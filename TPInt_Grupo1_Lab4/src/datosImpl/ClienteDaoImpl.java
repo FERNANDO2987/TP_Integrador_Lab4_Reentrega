@@ -123,6 +123,40 @@ public class ClienteDaoImpl implements ClienteDao {
 	    return resultado;
 	}
 
+	@Override
+	public boolean modificarCliente(Cliente cliente) {
+		cn.Open();
+		String query = "CALL SP_ModificarCliente(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		boolean exito = false;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, cliente.getId());
+			cst.setString(2, cliente.getDni());
+			cst.setString(3, cliente.getCuil());
+			cst.setString(4, cliente.getNombre());
+			cst.setString(5, cliente.getApellido());
+			cst.setString(6, cliente.getSexo());
+			cst.setInt(7, cliente.getPaisNacimiento().getId());
+			cst.setDate(8, Date.valueOf(cliente.getFechaNacimiento()));
+			cst.setString(9, cliente.getDireccion());
+			cst.setInt(10, cliente.getLocalidad().getId());
+			cst.setInt(11, cliente.getProvincia().getId());
+			cst.setString(12, cliente.getCorreo());
+			cst.setString(13, cliente.getTelefono());
+			exito = cst.execute();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return exito;
+	}
+
 
 
 

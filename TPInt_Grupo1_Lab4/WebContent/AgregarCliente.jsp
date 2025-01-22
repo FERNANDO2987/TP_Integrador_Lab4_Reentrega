@@ -3,8 +3,8 @@
 
 <%@ page import="entidad.Pais" %>
 <%@ page import="java.util.List" %> 
-<%@ page import="negocio.PaisNeg" %>
-<%@ page import="negocioImpl.PaisNegImpl" %>
+<%@ page import="negocio.PaisNeg" %> 
+<%@ page import="negocioImpl.PaisNegImpl" %> 
 <html lang="es">
 <head>
     <meta charset="ISO-8859-1">
