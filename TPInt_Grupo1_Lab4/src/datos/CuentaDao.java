@@ -9,4 +9,6 @@ public interface CuentaDao {
 	public boolean modificarCuenta(Cuenta cuenta);
 	public List<Cuenta> leerTodasLasCuentas();
 	public Cuenta leerUnaCuenta(Cuenta cuenta);
+	public int CuantasCuentasActivasTieneElCliente(int id_cliente);
+	
 }

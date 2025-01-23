@@ -42,14 +42,36 @@ public class CuentaDaoImpl implements CuentaDao {
 
 	@Override
 	public List<Cuenta> leerTodasLasCuentas() {
-		// TODO Auto-generated method stub
-		return null;
+		cn.Open();
+		String query = "";
 	}
 
 	@Override
 	public Cuenta leerUnaCuenta(Cuenta cuenta) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int CuantasCuentasActivasTieneElCliente(int id_cliente) {
+		cn.Open();
+		String query = "CALL SP_CuantasCuentasActivaTieneElCliente(?)";
+		int resultado = 0;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, id_cliente);
+			cst.execute();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return resultado;
 	}
 
 }
