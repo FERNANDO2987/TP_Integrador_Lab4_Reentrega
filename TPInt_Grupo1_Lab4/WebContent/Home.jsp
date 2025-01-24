@@ -87,7 +87,11 @@
             </li>
               <li class="nav-item">  
                 <a class="nav-link" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>  
-            </li>   
+            </li>
+            <li>
+            	<li class="nav-item">  
+                <a class="nav-link" href="#" onclick="cargarPagina('listarCuentas')">Listar Cuentas</a>  
+            </li> 
         </ul>  
     </div>  
 
@@ -113,6 +117,10 @@
             else if (pagina === 'listarClientes') {
                 // Enlace al servlet que lista los usuarios
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
+            }
+            else if (pagina === 'listarCuentas') {
+            	// Enlace al servlet que lista los usuarios
+                contenido.innerHTML = '<iframe src="servletListarCuentas" width="90%" height="900px"></iframe>';
             }
             
         }

@@ -90,8 +90,7 @@ public class Cuenta {
 	// ToString
 	@Override
 	public String toString() {
-		return "Cuenta [nroCuenta=" + nroCuenta + ", cliente=" + cliente + ", tipoCuenta=" + tipoCuenta + ", cbu=" + cbu
-				+ ", saldo=" + saldo + ", createDate=" + createDate + ", deleted=" + deleted + ", deleteDate="
-				+ deleteDate + "]";
+		return "[ Nro Cuenta: " + this.nroCuenta + " Id Cliente: " + this.cliente.getId() + " Tipo Cuenta: " + this.tipoCuenta.getDescripcion()
+		+ " CBU: "+ this.cbu + " Saldo: $"+this.saldo + " Deleted:"+this.deleted;
 	}
 }
