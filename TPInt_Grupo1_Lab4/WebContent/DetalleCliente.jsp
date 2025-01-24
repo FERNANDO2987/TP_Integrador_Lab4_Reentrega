@@ -68,11 +68,11 @@
             </div>
         </div>
         <div class="row d-flex justify-content-between" style="padding: 2rem;">
-  			<a href="#" class="btn btn-danger">Volver</a>
   			<div class="d-flex">
-    			<a href="#" class="btn btn-primary mx-3"">Ver Movimientos</a>
-    			<a href="#" class="btn btn-primary">Ver Préstamos</a>
+    			<a href="#" class="btn btn-danger">Volver</a>
+    			<a href="#" class="btn btn-primary mx-3">Modificar Detalles</a>
   			</div>
+  			<a href="#" class="btn btn-secondary">Ver Cuenta</a>
 		</div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
