@@ -62,11 +62,11 @@ BEGIN
 	DECLARE ultimoIdMovimiento INT DEFAULT 0;
 	DECLARE saldo INT DEFAULT 0;
 	START TRANSACTION;
-			INSERT INTO cuentas (id_cliente, id_tipo_cuenta, cbu, saldo, createDate)
+			INSERT INTO cuentas (id_cliente, id_tipo_cuenta, cbu, saldo, create_date)
 			VALUES (id_cliente_seleccionado, id_tipo_cuenta_seleccionado, REPLACE(REPLACE(REPLACE(DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'), '-', ''), ':', ''), ' ', ''), 0, CURDATE());
 
 			SELECT LAST_INSERT_ID() INTO ultimoNroCuenta;
-			INSERT INTO movimientos(detalle, importe, id_tipos_movimiento, nro_cuenta, createDate) 
+			INSERT INTO movimientos(detalle, importe, id_tipos_movimiento, nro_cuenta, create_date) 
 			VALUES ('Alta de Cuenta', 10000, 1, ultimoNroCuenta, CURDATE());
 
 			UPDATE cuentas SET saldo = saldo + 10000 WHERE nro_cuenta = ultimoNroCuenta;
@@ -77,6 +77,13 @@ DELIMITER $$
 CREATE PROCEDURE SP_CuantasCuentasActivaTieneElCliente(in id_cliente_input int)
 BEGIN
 	SELECT COUNT(*) FROM cuentas WHERE id_cliente = id_cliente_input AND deleted = 0;
+END;
+$$
+
+DELIMITER $$
+CREATE PROCEDURE SP_LeerUnaCuenta(in nro_cuenta_input int)
+BEGIN
+	SELECT * FROM vw_cuentas WHERE nro_cuenta = nro_cuenta_input;
 END;
 $$
 

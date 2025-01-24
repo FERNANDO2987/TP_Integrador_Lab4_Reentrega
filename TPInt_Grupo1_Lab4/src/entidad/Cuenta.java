@@ -16,7 +16,10 @@ public class Cuenta {
     
     
     // Constructor vacío
-    public Cuenta() {}
+    public Cuenta() {
+    	this.cliente = new Cliente();
+    	this.tipoCuenta = new TipoCuenta();
+    }
     
     // CConstructor con parámetros
 	public Cuenta(int nroCuenta, Cliente cliente, TipoCuenta tipoCuenta, String cbu, BigDecimal saldo,

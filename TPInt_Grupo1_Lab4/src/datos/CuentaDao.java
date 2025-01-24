@@ -8,7 +8,7 @@ public interface CuentaDao {
 	public boolean agregarCuenta(Cuenta cuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
 	public List<Cuenta> leerTodasLasCuentas();
-	public Cuenta leerUnaCuenta(Cuenta cuenta);
+	public Cuenta leerUnaCuenta(int id_cuenta);
 	public int CuantasCuentasActivasTieneElCliente(int id_cliente);
 	
 }
