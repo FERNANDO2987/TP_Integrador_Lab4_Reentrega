@@ -87,4 +87,10 @@ BEGIN
 END;
 $$
 
+DELIMITER $$
+CREATE PROCEDURE SP_LeerCuentasActivasRelacionadasACliente(in id_cliente_input int)
+BEGIN
+	SELECT * FROM vw_cuentas WHERE id_cliente = id_cliente_input and deleted = 0;
+END;
+
 

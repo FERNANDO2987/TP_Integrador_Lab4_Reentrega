@@ -131,4 +131,39 @@ public class CuentaDaoImpl implements CuentaDao {
 		return resultado;
 	}
 
+	@Override
+	public List<Cuenta> leerCuentasActivasRelacionadasACliente(int id_cliente) {
+		cn.Open();
+		String query = "CALL SP_LeerCuentasActivasRelacionadasACliente(?)";
+		List<Cuenta> cuentas = new ArrayList<Cuenta>();
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, id_cliente);
+			ResultSet rs = cst.executeQuery();
+			while(rs.next())
+			{
+				Cuenta aux = new Cuenta();
+				aux.setNroCuenta(rs.getInt("nro_cuenta"));
+				aux.getCliente().setId(rs.getInt("id_cliente"));
+				aux.getTipoCuenta().setId(rs.getInt("id_tipo_cuenta"));
+				aux.getTipoCuenta().setDescripcion(rs.getString("descripcion_tipo_cuenta"));
+				aux.setCbu(rs.getString("cbu"));
+				aux.setSaldo(rs.getBigDecimal("saldo"));
+				aux.setDeleted(rs.getBoolean("deleted"));
+				
+				cuentas.add(aux);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return cuentas;
+	}
+
 }

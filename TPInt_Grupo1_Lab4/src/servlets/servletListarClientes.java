@@ -10,11 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cliente;
-
+import entidad.Cuenta;
+import entidad.TipoCuenta;
 import negocio.ClienteNeg;
+import negocio.CuentaNeg;
 import negocio.PaisNeg;
+import negocio.TipoCuentaNeg;
 import negocioImpl.ClienteNegImpl;
+import negocioImpl.CuentaNegImpl;
 import negocioImpl.PaisNegImpl;
+import negocioImpl.TipoCuentaNegImpl;
 
 
 /**
@@ -65,8 +70,25 @@ public class servletListarClientes extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		if(request.getParameter("btnGestionCuenta") != null)
+		{
+			
+			//recuperar ID de cliente
+			int idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
+			//recolectar las cuentas relacionadas al cliente
+			CuentaNeg cuentaNeg = new CuentaNegImpl();
+			List<Cuenta> cuentasDelCliente = cuentaNeg.leerLasCuentasDelCliente(idCliente);
+			//recolectar los tipos de cuenta existentes
+			TipoCuentaNeg tipoCuentaNeg = new TipoCuentaNegImpl();
+			List<TipoCuenta> tipoCuenta = tipoCuentaNeg.leerTiposCuenta();
+			//comprobar si son mas de 3 para ver si se pone la opcion de agregar cuenta
+			boolean opcAgregarDisponible = cuentaNeg.clienteAptoDeAgregarCuenta(idCliente);
+			//enviar al jsp
+			request.setAttribute("tiposCuenta", tipoCuenta);
+			request.setAttribute("cuentas", cuentasDelCliente);
+			request.setAttribute("opcAgregarDisponible", opcAgregarDisponible);
+			request.getRequestDispatcher("GestionarCuentasAdmin.jsp").forward(request, response);
+		}
 	}
 
 }
