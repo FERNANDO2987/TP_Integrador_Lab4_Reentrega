@@ -104,7 +104,7 @@
             } else if (pagina === 'clientes') {
                 contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
             } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+            	contenido.innerHTML = '<iframe src="servletListarPrestamos" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarUsuarios') {
                 // Enlace al servlet que lista los usuarios
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
