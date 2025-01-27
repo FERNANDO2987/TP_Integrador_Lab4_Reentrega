@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import datosImpl.PrestamoDaoImpl;
 import entidad.Prestamo;
 import entidad.Provincia;
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
 import negocioImpl.ProvinciaNegImpl;
 
 
@@ -13,7 +15,7 @@ public class Principal {
 
     	
     
-        PrestamoDaoImpl impl = new PrestamoDaoImpl();
+        PrestamoNeg impl = new PrestamoNegImpl();
         ArrayList<Prestamo> prestamos = (ArrayList<Prestamo>) impl.ListarPrestamos();
         		
         
