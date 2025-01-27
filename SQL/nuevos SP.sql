@@ -92,4 +92,106 @@ BEGIN
 	COMMIT;
 END; $$
 
+-- Crear Movimiento
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarMovimiento`(
+	IN p_detalle varchar(255),
+    IN p_importe decimal(10,2),
+    IN p_tipoMovimiento int,
+    IN p_nroCuenta int
+)
+BEGIN
+    INSERT INTO `bdbanco`.`movimientos`
+	(`detalle`,
+	`importe`,
+	`id_tipos_movimiento`,
+	`nro_cuenta`)
+	VALUES(
+	p_detalle,
+	p_importe,
+	p_tipoMovimiento,
+	p_nroCuenta);
+END$$
+DELIMITER ;
 
+-- rechazar prestamo
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_RechazarPrestamo`(
+	IN p_id_prestamo int,
+    IN p_observaciones varchar(255)
+)
+BEGIN
+	update prestamos 
+    set estado = 'rechazado', observaciones = p_observaciones
+    where id = p_id_prestamo; 
+END$$
+DELIMITER ;
+
+
+-- aprobar prestamo
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AprobarPrestamo`(
+	IN p_id int,
+    IN p_observaciones varchar(255)
+)
+BEGIN
+	DECLARE v_importe DECIMAL(10,2);
+    DECLARE v_nro_cuenta INT;
+    DECLARE v_estado_prestamo VARCHAR(255); 
+    DECLARE v_cuotas INT;
+    DECLARE v_valor_cuotas decimal(10,2);
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        ROLLBACK; 
+    START TRANSACTION;
+    
+	SELECT 
+		nro_cuenta, 
+		cuotas, 
+		valor_cuotas, 
+		estado, 
+		importe
+	INTO 
+		v_nro_cuenta, 
+		v_cuotas, 
+		v_valor_cuotas, 
+		v_estado_prestamo, 
+		v_importe
+	FROM prestamos
+	WHERE id = p_id;
+
+    IF v_estado_prestamo <> ('pendiente') THEN
+        -- Si el prestamo ya fue gestionado, salir
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR';
+    END IF;
+    
+    -- Agregar movimiento 
+    call SP_AgregarMovimiento('Prestamo aprobado', v_importe, 2, v_nro_cuenta);
+    
+    -- Set estado de prestamo a 'aprobado'
+    UPDATE prestamos
+    SET estado = 'aprobado' , observaciones = p_observaciones -- Cambiar el estado a aprobado
+    WHERE id = p_id;
+    
+    -- Sumar dinero a la cuenta
+    UPDATE cuentas
+    SET saldo = saldo + v_importe
+    WHERE nro_cuenta = v_nro_cuenta;
+    
+    
+    -- Crear cuotas    
+    INSERT INTO cuotas (
+        id_prestamo, 
+        nro_cuota,
+        monto
+    )
+    VALUES (
+        p_id, 
+        v_cuotas,
+        v_valor_cuotas 
+    );
+    COMMIT;
+END$$
+DELIMITER ;
