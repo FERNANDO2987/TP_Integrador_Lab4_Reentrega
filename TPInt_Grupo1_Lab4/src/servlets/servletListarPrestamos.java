@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import datosImpl.PrestamoDaoImpl;
 import entidad.Prestamo;
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
 
 /**
  * Servlet implementation class servletListarPrestamos
@@ -19,7 +21,8 @@ import entidad.Prestamo;
 public class servletListarPrestamos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	PrestamoDaoImpl prestamoNeg = new PrestamoDaoImpl();
+	PrestamoNeg prestamoNeg = new PrestamoNegImpl();
+	//PrestamoDaoImpl prestamoNeg = new PrestamoDaoImpl();
     /**
      * @see HttpServlet#HttpServlet()
      */
