@@ -72,7 +72,7 @@ input[type="submit"] {
                         <label for="contrasenia">Contraseña</label>  
                         <input type="password" class="form-control" id="contrasenia" name="contrasenia" placeholder="Ingresa tu contraseña">  
                     </div>  
-                    <input type="submit" value="Login" class="btn btn-primary btn-block" name="btnAceptar" id="btnAceptar" disabled>  
+                    <input type="submit" value="Login" class="btn btn-primary btn-block" name="btnAceptar" id="btnAceptar" >  
                 </form>  
             </div>  
         </div>  

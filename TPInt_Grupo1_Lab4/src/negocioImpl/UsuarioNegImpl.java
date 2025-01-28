@@ -21,7 +21,22 @@ public class UsuarioNegImpl implements UsuarioNeg {
 	{
 		
 	}
-
+	
+	public Usuario iniciarSesion(String nombreUsuario, String contrasena)
+	{
+	    Usuario usuario = new Usuario();
+	    usuario.setUsuario(nombreUsuario);
+	    usuario.setPassword(contrasena);
+	    
+	    Usuario usuarioValido = usuarioDao.loguear(usuario);
+	    
+	    if (usuarioValido != null) {
+	        return usuarioValido;
+	    } else {
+	    	return null;
+	    }
+	}
+	
 	@Override
 	public boolean AgregarUsuario(Usuario usuario) {
 	    if (usuario == null) {

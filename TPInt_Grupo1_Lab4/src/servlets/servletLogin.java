@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import entidad.Cliente;
+import entidad.Usuario;
 import negocioImpl.ClienteNegImpl;
+import negocioImpl.UsuarioNegImpl;
 
 /**
  * Servlet implementation class servletLogin
@@ -45,9 +47,9 @@ public class servletLogin extends HttpServlet {
 	        String contrasenia = request.getParameter("contrasenia");
 
 	        if (usuario != null && contrasenia != null) {
-	            ClienteNegImpl usuarioNegocio = new ClienteNegImpl();
-	            Cliente usuarioSesion = new Cliente();
-	         //   usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
+	            UsuarioNegImpl usuarioNegocio = new UsuarioNegImpl();
+	            Usuario usuarioSesion = new Usuario();
+	            usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
 
 	            if (usuarioSesion != null) {
 	                HttpSession session = request.getSession();

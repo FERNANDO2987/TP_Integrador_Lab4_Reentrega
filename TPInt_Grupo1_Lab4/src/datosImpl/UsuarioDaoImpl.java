@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	       cn = new Conexion();
 	       ResultSet rs = null;
 	       cn.Open();
-	       String query = "{CALL ValidarUsuario(?, ?)}";
+	       String query = "{CALL SP_ValidarUsuario(?, ?)}";
 	       try (CallableStatement stmt = cn.connection.prepareCall(query)) {
 	           stmt.setString(1, usuario.getUsuario());
 	           stmt.setString(2, usuario.getPassword()); 
@@ -36,22 +37,21 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        	   usuarioBD.setId(rs.getInt("id"));
 	        	   usuarioBD.setUsuario(rs.getString("usuario"));
 	        	   usuarioBD.setPassword(rs.getString("password"));
-	        	   usuarioBD.setNombre(rs.getString("nombre"));
-	        	   usuarioBD.setApellido(rs.getString("apellido"));
+	        	   usuarioBD.getCliente().setNombre(rs.getString("nombre"));
+	        	   usuarioBD.getCliente().setApellido(rs.getString("apellido"));
 	        	   usuarioBD.setAdmin(rs.getBoolean("admin"));
-	        	   usuarioBD.setCelular(rs.getString("Celular"));
-	        	   usuarioBD.setTelefono(rs.getString("Telefono"));
-	        	   usuarioBD.setCuil(rs.getString("cuil"));
-	        	   usuarioBD.getPaisNacimiento().setNombre("pais");
-	        	   usuarioBD.setDni(rs.getString("dni"));
-	        	   usuarioBD.setCorreo(rs.getString("correo"));
-	        	   usuarioBD.setDireccion(rs.getString("direccion"));
-	        	   usuarioBD.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
-	        	   usuarioBD.setSexo(rs.getString("sexo"));
+	        	   usuarioBD.getCliente().setTelefono(rs.getString("telefono"));
+	        	   usuarioBD.getCliente().setCuil(rs.getString("cuil"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setNombre("pais");
+	        	   usuarioBD.getCliente().setDni(rs.getString("dni"));
+	        	   usuarioBD.getCliente().setCorreo(rs.getString("correo"));
+	        	   usuarioBD.getCliente().setDireccion(rs.getString("direccion"));
+	        	   usuarioBD.getCliente().setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+	        	   usuarioBD.getCliente().setSexo(rs.getString("sexo"));
 
 	        	   Pais paisNacimiento = new Pais();
 		            paisNacimiento.setNombre(rs.getString("pais"));
-		            usuarioBD.setPaisNacimiento(paisNacimiento);
+		            usuarioBD.getCliente().setPaisNacimiento(paisNacimiento);
 		            
 		            
 		            System.out.println(usuarioBD.toString());
