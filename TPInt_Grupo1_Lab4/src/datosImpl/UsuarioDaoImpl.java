@@ -3,12 +3,14 @@ package datosImpl;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import datos.UsuarioDao;
 import entidad.Cliente;
+import entidad.Pais;
 import entidad.Usuario;
 
 public class UsuarioDaoImpl implements UsuarioDao {
@@ -17,6 +19,57 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	public UsuarioDaoImpl() {
 		cn = new Conexion();
 	}
+	
+	@Override
+	public Usuario loguear(Usuario usuario) {
+	       Usuario usuarioBD = null;
+	       cn = new Conexion();
+	       ResultSet rs = null;
+	       cn.Open();
+	       String query = "{CALL ValidarUsuario(?, ?)}";
+	       try (CallableStatement stmt = cn.connection.prepareCall(query)) {
+	           stmt.setString(1, usuario.getUsuario());
+	           stmt.setString(2, usuario.getPassword()); 
+	           rs = stmt.executeQuery();
+	           if (rs != null && rs.next()) {
+	        	   usuarioBD = new Usuario();
+	        	   usuarioBD.setId(rs.getInt("id"));
+	        	   usuarioBD.setUsuario(rs.getString("usuario"));
+	        	   usuarioBD.setPassword(rs.getString("password"));
+	        	   usuarioBD.setNombre(rs.getString("nombre"));
+	        	   usuarioBD.setApellido(rs.getString("apellido"));
+	        	   usuarioBD.setAdmin(rs.getBoolean("admin"));
+	        	   usuarioBD.setCelular(rs.getString("Celular"));
+	        	   usuarioBD.setTelefono(rs.getString("Telefono"));
+	        	   usuarioBD.setCuil(rs.getString("cuil"));
+	        	   usuarioBD.getPaisNacimiento().setNombre("pais");
+	        	   usuarioBD.setDni(rs.getString("dni"));
+	        	   usuarioBD.setCorreo(rs.getString("correo"));
+	        	   usuarioBD.setDireccion(rs.getString("direccion"));
+	        	   usuarioBD.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
+	        	   usuarioBD.setSexo(rs.getString("sexo"));
+
+	        	   Pais paisNacimiento = new Pais();
+		            paisNacimiento.setNombre(rs.getString("pais"));
+		            usuarioBD.setPaisNacimiento(paisNacimiento);
+		            
+		            
+		            System.out.println(usuarioBD.toString());
+	           }
+	       } catch (SQLException e) {
+	           e.printStackTrace();
+	       } finally {
+	           try {
+	               if (rs != null) {
+	                   rs.close();
+	               }
+	               cn.close();
+	           } catch (SQLException e) {
+	               e.printStackTrace();
+	           }
+	       }
+	       return usuarioBD;
+	   }
 
 	@Override
 	public Usuario obtenerUsuarioPorId(int id) {
