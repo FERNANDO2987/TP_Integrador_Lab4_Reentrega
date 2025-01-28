@@ -28,6 +28,48 @@ END;
 $$
 
 DELIMITER $$
+CREATE PROCEDURE SP_ValidarUsuario(
+    IN usuarioIngresado VARCHAR(50), 
+    IN contraseniaIngresada VARCHAR(50)
+) 
+BEGIN
+    -- Verificar si el usuario existe y si es administrador
+    IF EXISTS (
+        SELECT 1 
+        FROM usuarios 
+        WHERE usuario = usuarioIngresado 
+          AND pass = contraseniaIngresada 
+          AND admin = 1
+    ) THEN
+        -- Retornar solo los datos del administrador
+        SELECT 
+            usuario, 
+            admin 
+        FROM 
+            usuarios 
+        WHERE 
+            usuario = usuarioIngresado 
+            AND pass = contraseniaIngresada;
+    ELSE
+        -- Retornar datos del cliente si no es administrador
+        SELECT 
+            c.*, 
+            u.admin, 
+            u.usuario 
+        FROM 
+            usuarios u
+        LEFT JOIN 
+            clientes c 
+        ON 
+            u.id_cliente = c.id
+        WHERE 
+            u.usuario = usuarioIngresado 
+            AND u.pass = contraseniaIngresada;
+    END IF;
+END$$
+
+
+DELIMITER $$
 CREATE PROCEDURE SP_AgregarUsuarioCliente (IN dni_input varchar(255), IN cuil_input varchar(255), IN nombre_input varchar(255), IN apellido_input varchar(255), IN sexo_input varchar(255), IN id_pais_input int, IN fecha_nacimiento_input DATE, IN direccion_input varchar(255), IN id_localidad_input int, IN id_provincia_input int, IN correo_input varchar(255), IN telefono_input varchar(255), IN usuario_input varchar(255), IN pass_input varchar(255) )
 BEGIN
 	declare last_id int default 0;

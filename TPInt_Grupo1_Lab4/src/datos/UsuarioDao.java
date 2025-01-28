@@ -10,5 +10,6 @@ public interface UsuarioDao {
 	public List<Usuario> listarUsuarios();
 	public boolean insertarOActualizarUsuario(Usuario usuario);
 	public boolean eliminarUsuario(int id);
+	public Usuario loguear(Usuario usuario);
 	
 }
