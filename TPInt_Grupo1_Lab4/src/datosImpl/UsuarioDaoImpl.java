@@ -24,8 +24,8 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	@Override
 	public Usuario loguear(Usuario usuario) {
 	       Usuario usuarioBD = null;
-	       cn = new Conexion();
 	       ResultSet rs = null;
+	       cn = new Conexion();
 	       cn.Open();
 	       String query = "{CALL SP_ValidarUsuario(?, ?)}";
 	       try (CallableStatement stmt = cn.connection.prepareCall(query)) {
@@ -34,24 +34,23 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	           rs = stmt.executeQuery();
 	           if (rs != null && rs.next()) {
 	        	   usuarioBD = new Usuario();
-	        	   usuarioBD.setId(rs.getInt("id"));
+	        	   usuarioBD.getCliente().setId(rs.getInt("id"));
 	        	   usuarioBD.setUsuario(rs.getString("usuario"));
-	        	   usuarioBD.setPassword(rs.getString("password"));
 	        	   usuarioBD.getCliente().setNombre(rs.getString("nombre"));
 	        	   usuarioBD.getCliente().setApellido(rs.getString("apellido"));
 	        	   usuarioBD.setAdmin(rs.getBoolean("admin"));
 	        	   usuarioBD.getCliente().setTelefono(rs.getString("telefono"));
 	        	   usuarioBD.getCliente().setCuil(rs.getString("cuil"));
-	        	   usuarioBD.getCliente().getPaisNacimiento().setNombre("pais");
+	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
 	        	   usuarioBD.getCliente().setDni(rs.getString("dni"));
 	        	   usuarioBD.getCliente().setCorreo(rs.getString("correo"));
 	        	   usuarioBD.getCliente().setDireccion(rs.getString("direccion"));
 	        	   usuarioBD.getCliente().setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
 	        	   usuarioBD.getCliente().setSexo(rs.getString("sexo"));
 
-	        	   Pais paisNacimiento = new Pais();
-		            paisNacimiento.setNombre(rs.getString("pais"));
-		            usuarioBD.getCliente().setPaisNacimiento(paisNacimiento);
+//	        	   Pais paisNacimiento = new Pais();
+//		            paisNacimiento.setNombre(rs.getString("pais"));
+//		            usuarioBD.getCliente().setPaisNacimiento(paisNacimiento);
 		            
 		            
 		            System.out.println(usuarioBD.toString());

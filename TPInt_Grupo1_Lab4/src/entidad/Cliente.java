@@ -9,7 +9,7 @@ public class Cliente {
     private String nombre;
     private String apellido;
     private String sexo;
-    private Pais paisNacimiento;
+    private Pais paisNacimiento = new Pais();
     private LocalDate fechaNacimiento;
     private String direccion;
     private Localidad localidad;
