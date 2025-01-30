@@ -12,8 +12,8 @@ public class Cliente {
     private Pais paisNacimiento = new Pais();
     private LocalDate fechaNacimiento;
     private String direccion;
-    private Localidad localidad;
-    private Provincia provincia;
+    private Localidad localidad = new Localidad();
+    private Provincia provincia = new Provincia();
     private String correo;
     private String telefono;
     
@@ -137,11 +137,11 @@ public class Cliente {
 	           ",\n  nombre='" + nombre + '\'' +
 	           ",\n  apellido='" + apellido + '\'' +
 	           ",\n  sexo='" + sexo + '\'' +
-	           ",\n  paisNacimiento=" + paisNacimiento +
+	           ",\n  paisNacimiento=" + paisNacimiento.toString() +
 	           ",\n  fechaNacimiento=" + fechaNacimiento +
 	           ",\n  direccion='" + direccion + '\'' +
-	           ",\n  localidad=" + localidad +
-	           ",\n  provincia=" + provincia +
+	           ",\n  localidad=" + localidad.toString() +
+	           ",\n  provincia=" + provincia.toString() +
 	           ",\n  correo='" + correo + '\'' +
 	           ",\n  telefono='" + telefono + '\'' +
 	           "\n}";

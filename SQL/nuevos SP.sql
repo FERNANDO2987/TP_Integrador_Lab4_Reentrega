@@ -33,7 +33,7 @@ CREATE PROCEDURE SP_ValidarUsuario(
     IN contraseniaIngresada VARCHAR(50)
 ) 
 BEGIN
-    -- Verificar si el usuario existe y si es administrador
+    -- Verificar si el usuario existe y es administrador
     IF EXISTS (
         SELECT 1 
         FROM usuarios 
@@ -55,18 +55,35 @@ BEGIN
         SELECT 
             c.*, 
             u.admin, 
-            u.usuario 
+            u.usuario,
+            p.nombre AS nombre_pais,
+            pro.nombre AS nombre_provincia,
+            l.nombre AS nombre_localidad
         FROM 
             usuarios u
         LEFT JOIN 
             clientes c 
         ON 
             u.id_cliente = c.id
+        LEFT JOIN 
+            paises p
+        ON 
+            c.id_pais = p.id
+		LEFT JOIN
+			provincia pro
+		ON
+			c.id_provincia = pro.id
+		LEFT JOIN
+			localidades l
+		ON
+			c.id_localidad = l.id
         WHERE 
             u.usuario = usuarioIngresado 
             AND u.pass = contraseniaIngresada;
     END IF;
 END$$
+DELIMITER ;
+
 
 
 DELIMITER $$

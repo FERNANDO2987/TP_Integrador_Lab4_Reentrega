@@ -47,7 +47,14 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        	   usuarioBD.getCliente().setDireccion(rs.getString("direccion"));
 	        	   usuarioBD.getCliente().setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
 	        	   usuarioBD.getCliente().setSexo(rs.getString("sexo"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
+	        	   usuarioBD.getCliente().getProvincia().setId(rs.getInt("id_provincia"));
+	        	   usuarioBD.getCliente().getProvincia().setNombre(rs.getString("nombre_provincia"));
+	        	   usuarioBD.getCliente().getLocalidad().setId(rs.getInt("id_localidad"));
+	        	   usuarioBD.getCliente().getLocalidad().setNombre(rs.getString("nombre_localidad"));
 
+	        	   
 //	        	   Pais paisNacimiento = new Pais();
 //		            paisNacimiento.setNombre(rs.getString("pais"));
 //		            usuarioBD.getCliente().setPaisNacimiento(paisNacimiento);
