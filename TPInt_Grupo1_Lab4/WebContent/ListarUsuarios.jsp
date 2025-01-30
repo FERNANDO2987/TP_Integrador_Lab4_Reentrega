@@ -40,14 +40,7 @@
     </div>
 
 
-    <!-- Botón Agregar alineado a la derecha -->
-<div class="row mb-4" >
-    <div class="col-12" style="text-align: right;">
-        <a href="AgregarUsuario.jsp" class="btn btn-success">
-            <i class="fas fa-user-plus"></i> Agregar Usuario
-        </a>
-    </div>
-</div>
+
 
 
 

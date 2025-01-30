@@ -2,7 +2,9 @@ package datosImpl;
 
 import java.sql.CallableStatement;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
 import datos.UsuarioDao;
 import entidad.Cliente;
 import entidad.Usuario;
+import entidad.UsuarioCliente;
 
 public class UsuarioDaoImpl implements UsuarioDao {
 	
@@ -99,6 +102,37 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	    }
 
 	    return success;
+	}
+
+
+	
+	@Override
+	public UsuarioCliente obtenerUsuarioPorIdCliente(int idCliente) {
+	    UsuarioCliente usuario = null;
+	    String query = "SELECT * FROM UsuarioCliente WHERE idCliente = ?"; // Consulta SQL para obtener el usuario
+
+	    // Preparar la conexión y consulta
+	    try (PreparedStatement ps = cn.connection.prepareStatement(query)) {
+	        // Establecer el parámetro para la consulta
+	        ps.setInt(1, idCliente);
+
+	        // Ejecutar la consulta
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                // Si encontramos un usuario, lo asignamos a la instancia 'usuario'
+	                usuario = new UsuarioCliente();
+	                usuario.setIdCliente(rs.getInt("idCliente"));
+	                usuario.setUsuario(rs.getString("usuario"));
+	                usuario.setPassword(rs.getString("pass"));
+	                usuario.setAdmin(rs.getBoolean("admin"));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al obtener el usuario por ID: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    return usuario;
 	}
 
 

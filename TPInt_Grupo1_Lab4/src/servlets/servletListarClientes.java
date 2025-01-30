@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import entidad.Cliente;
 
 import negocio.ClienteNeg;
-import negocio.PaisNeg;
+
 import negocioImpl.ClienteNegImpl;
-import negocioImpl.PaisNegImpl;
+
 
 
 /**
@@ -44,12 +44,13 @@ public class servletListarClientes extends HttpServlet {
              if (clientes != null && !clientes.isEmpty()) {
                  // Establecer la lista de usuarios como un atributo en el request
                  request.setAttribute("clientes", clientes);
+                 
              } else {
                  // Si no hay usuarios, establecer un mensaje de error
                  request.setAttribute("error", "No se encontraron clientes.");
+                 //request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
              }
 
-       
              
              // Redirigir a la página JSP para mostrar la lista de usuarios
              request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
@@ -65,8 +66,9 @@ public class servletListarClientes extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		
+	
 	}
 
 }

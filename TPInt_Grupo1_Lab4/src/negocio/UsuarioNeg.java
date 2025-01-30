@@ -10,5 +10,6 @@ public interface UsuarioNeg {
 	public boolean ModificarUsuario(Usuario usuario);
 	public ArrayList<Usuario> ListarUsuarios();
 	public boolean EliminarUsuario(int idUser);
+	
 
 }
