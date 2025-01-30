@@ -1,10 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
 
 <%@ page import="entidad.Pais" %>
+<%@ page import="entidad.Provincia" %>
+<%@ page import="entidad.Localidad" %>
 <%@ page import="java.util.List" %> 
 <%@ page import="negocio.PaisNeg" %>
+<%@ page import="negocio.LocalidadNeg" %>
+<%@ page import="negocio.ProvinciasNeg" %>
 <%@ page import="negocioImpl.PaisNegImpl" %>
+<%@ page import="negocioImpl.LocalidadNegImpl" %>
+<%@ page import="negocioImpl.ProvinciaNegImpl" %>
+
+
 <html lang="es">
 <head>
     <meta charset="ISO-8859-1">
@@ -18,7 +27,7 @@
             text-align: center;
         }
         .form-container {
-            max-width: 500px;
+            max-width: 900px;
             margin: 0 auto;
         }
         .form-label {
@@ -33,112 +42,176 @@
         <h2 class="text-primary centered-header">Agregar Cliente</h2>
     </div>
 
-    <!-- Mostrar mensajes de error o �xito -->
-    <div>
-        <% 
-            String error = (String) request.getAttribute("error");
-            if (error != null) {
-        %>
-            <div class="alert alert-danger" role="alert">
-                <%= error %>
-            </div>
-        <% 
-            }
-        %>
-    </div>
-
+    <!-- Mostrar mensaje de éxito -->  
+        <%  
+            String mensajeExito = (String) request.getAttribute("mensajeExito");  
+            if (mensajeExito != null) {  
+        %>  
+            <div id="successMessage" class="alert alert-success">  
+                <%= mensajeExito %>  
+            </div>  
+        <%  
+            }  
+        %> 
+        
+        <%  
+    String mensajeError = (String) request.getAttribute("mensajeError");  
+    if (mensajeError != null) {  
+%>  
+    <div id="errorMessage" class="alert alert-danger">  
+        <%= mensajeError %>  
+    </div>  
+<%  
+    }  
+%>  
+        
     <!-- Contenedor del formulario -->
     <div class="form-container">
+        <hr>
         <form action="servletAgregarCliente" method="post">
-           
-            <div class="form-group">
-                <label for="dni" class="form-label">DNI:</label>
-                <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese el DNI" required>
-            </div>
+      
+            
 
             
-            <div class="form-group">
-                <label for="cuil" class="form-label">Cuil:</label>
-                <input type="text" id="cuil" name="cuil" class="form-control" placeholder="Ingrese el Cuil" required>
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    <label for="dni" class="form-label">DNI:</label>
+                   
+                    <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese el DNI"   
+                           value="<%= request.getAttribute("dni") != null ? request.getAttribute("dni") : "" %>" required>  
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="cuil" class="form-label">Cuil:</label>
+                    <input type="text" id="cuil" name="cuil" class="form-control" placeholder="Ingrese el Cuil"   
+                           value="<%= request.getAttribute("cuil") != null ? request.getAttribute("cuil") : "" %>" required>  
+                </div>
             </div>
-            
-             <div class="form-group">
-                <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre" required>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre"   
+                           value="<%= request.getAttribute("nombre") != null ? request.getAttribute("nombre") : "" %>" required>  
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                       <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ingrese el Apellido"   
+                           value="<%= request.getAttribute("apellido") != null ? request.getAttribute("apellido") : "" %>" required>
+                </div>
             </div>
-            
-              <div class="form-group">
-                <label for="apellido" class="form-label">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ingrese el Apellido" required>
-            </div>
-            
-               <div class="form-group">
-                <label for="sexo" class="form-label">Sexo</label>
-                <select id="sexo" name="sexo" class="form-control">
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                </select>
-            </div>
-            
-                <div class="form-group">
-                <label for="pais">Pais:</label>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    <label for="sexo" class="form-label">Sexo</label>
+                     <select id="sexo" name="sexo" class="form-control">  
+                        <option value="masculino" <%= "masculino".equals(request.getAttribute("sexo")) ? "selected" : "" %>>Masculino</option>  
+                        <option value="femenino" <%= "femenino".equals(request.getAttribute("sexo")) ? "selected" : "" %>>Femenino</option>  
+                    </select>  
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="pais">Pais:</label>
                     <select class="form-control" id="pais" name="pais" required>
-                    <option value="">Seleccionar</option>
-                   <%
-                     // Obtener la lista de pa�ses desde la base de datos
-                           PaisNegImpl paisNeg = new PaisNegImpl();
-                           List<Pais> paises = paisNeg.ListarPaises();
-                           if (paises != null && !paises.isEmpty()) {
-                             for (Pais pais : paises) {
-                    %>
-                              <option value="<%= pais.getId() %>"><%= pais.getNombre() %></option>
-                      <%
-                           }
-                           } else {
-                      %>
-                                 <option value="">No hay pa�ses disponibles</option>
-                       <%
-                              }
-                         %>
-
-                </select>
+                        <option value="">Seleccionar</option>
+                        <%
+                            // Obtener la lista de países desde la base de datos
+                            PaisNegImpl paisNeg = new PaisNegImpl();
+                            List<Pais> paises = paisNeg.ListarPaises();
+                            if (paises != null && !paises.isEmpty()) {
+                                for (Pais pais : paises) {
+                        %>
+                                    <option value="<%= pais.getId() %>"><%= pais.getNombre() %></option>
+                        <%
+                                }
+                            } else {
+                        %>
+                                    <option value="">No hay países disponibles</option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
             </div>
 
-            
-             <div class="form-group">
-                <label for="fechaNacimiento" class="form-label">Fecha Nacimiento:</label>
-                <input type="text" id="fechaNacimiento" name="fechaNacimiento" class="form-control" placeholder="Ingrese la fecha Nacimeinto" required>
-            </div>
-            
-              <div class="form-group">
-                <label for="direccion" class="form-label">Direccion:</label>
-                <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingrese la direccion" required>
-            </div>
-            
-              <div class="form-group">
-                <label for="localidad" class="form-label">Localidad:</label>
-                <input type="text" id="localidad" name="localidad" class="form-control" placeholder="Ingrese la Localidad" required>
-            </div>
-            
-                <div class="form-group">
-                <label for="provincia" class="form-label">Provincia:</label>
-                <input type="text" id="provincia" name="provincia" class="form-control" placeholder="Ingrese la Provincia" required>
-            </div>
-            
-              <div class="form-group">
-                <label for="email" class="form-label">Email:</label>
-                <input type="text" id="email" name="email" class="form-control" placeholder="Ingrese el email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="telefono" class="form-label">Telefono:</label>
-                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingrese el telefono" required>
-            </div>
-            
+            <div class="row mb-4">
+              <div class="col-12 col-md-6">
+    <label for="fechaNacimiento" class="form-label">Fecha Nacimiento:</label>
+   <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" required   
+                           value="<%= request.getAttribute("fechaNacimiento") != null ? request.getAttribute("fechaNacimiento") : "" %>">  
+</div>
 
-        
+                <div class="col-12 col-md-6">  
+                    <label for="direccion" class="form-label">Direccion:</label>  
+                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingrese la direccion"   
+                           value="<%= request.getAttribute("direccion") != null ? request.getAttribute("direccion") : "" %>" required>  
+                </div> 
+            </div>
 
-          
+            <div class="row mb-4">
+             
+                
+                   <div class="col-12 col-md-6">
+                    <label for="localidad">Localidad:</label>
+                    <select class="form-control" id="localidad" name="localidad" required>
+                        <option value="">Seleccionar</option>
+                        <%
+                            // Obtener la lista de países desde la base de datos
+                            LocalidadNegImpl localidadNeg = new LocalidadNegImpl();
+                            List<Localidad> localidades = localidadNeg.ListarLocalidades();
+                            if (localidades != null && !localidades.isEmpty()) {
+                                for (Localidad localidad : localidades) {
+                        %>
+                                    <option value="<%= localidad.getId() %>"><%= localidad.getNombre() %></option>
+                        <%
+                                }
+                            } else {
+                        %>
+                                    <option value="">No hay localidades disponibles</option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+             
+                
+                
+                  <div class="col-12 col-md-6">
+                    <label for="provincia">Provincia:</label>
+                    <select class="form-control" id="provincia" name="provincia" required>
+                        <option value="">Seleccionar</option>
+                        <%
+                            // Obtener la lista de países desde la base de datos
+                            ProvinciaNegImpl provinciaNeg = new ProvinciaNegImpl();
+                            List<Provincia> provincias = provinciaNeg.ListarProvincias();
+                            if (provincias != null && !provincias.isEmpty()) {
+                                for (Provincia provincia : provincias) {
+                        %>
+                                    <option value="<%= provincia.getId() %>"><%= provincia.getNombre() %></option>
+                        <%
+                                }
+                            } else {
+                        %>
+                                    <option value="">No hay provincia disponibles</option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+                
+                
+            </div>
+
+            <div class="row mb-4">
+                    <div class="col-12 col-md-6">  
+                    <label for="email" class="form-label">Email:</label>  
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Ingrese el email"   
+                           value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" required>  
+                </div> 
+                  <div class="col-12 col-md-6">  
+                    <label for="telefono" class="form-label">Telefono:</label>  
+                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingrese el telefono"   
+                           value="<%= request.getAttribute("telefono") != null ? request.getAttribute("telefono") : "" %>" required>  
+                </div> 
+            </div>
 
             <!-- Botones -->
             <div class="form-group text-center">
@@ -152,6 +225,46 @@
         </form>
     </div>
 </div>
+
+  <script>  
+        // Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error  
+        <% if(request.getAttribute("mensajeExito") != null) { %>  
+            mostrarMensaje("successMessage");  
+        <% } else if(request.getAttribute("mensajeError") != null) { %>  
+            mostrarMensaje("errorMessage");  
+        <% } %>  
+        
+        function ocultarMensaje() {  
+            var mensaje = document.getElementById("successMessage");  
+            if (mensaje) {  
+                setTimeout(function() {  
+                    mensaje.style.display = "none";  
+                }, 9000); 
+            }  
+
+            var errorMensaje = document.getElementById("errorMessage");
+            if (errorMensaje) {
+                setTimeout(function() {
+                    errorMensaje.style.display = "none";
+                }, 9000);
+            }
+        } 
+
+        // Función para mostrar el mensaje y luego ocultarlo  
+        function mostrarMensaje(tipo) {  
+            var mensaje = document.getElementById(tipo);  
+            if (mensaje) {  
+                mensaje.style.display = "block"; // Mostrar el mensaje  
+                // Ocultar el mensaje después de 3 segundos (3000 milisegundos)  
+                setTimeout(function() {  
+                    mensaje.style.display = "none";  
+                }, 9000);  
+            }  
+        } 
+        
+    </script>  
+
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
