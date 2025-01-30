@@ -38,4 +38,10 @@ public class CuentaNegImpl implements CuentaNeg {
 		}
 	}
 
+	@Override
+	public boolean agregarCuenta(Cuenta cuenta) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -64,12 +64,12 @@
 		  </div>
 		  <div class="form-group">
 		    <label for="tipoCuentaSelect">Tipo de Cuenta</label>
-		    <select class="form-control" id="tipoCuentaSelect">
+		    <select class="form-control" id="tipoCuentaSelect" name="tipoCuentaSelect">
 		    
 		    </select>
 		  </div>
 		  <div class="form-group">
-		    <input class="btn-success" type="submit" value="Agregar">
+		    <input class="btn-success" type="submit" value="Agregar" id="btnAgregar" name="btnAgregar">
 		  </div>
 		</form>
 	</div>
