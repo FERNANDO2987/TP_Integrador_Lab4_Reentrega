@@ -1,17 +1,14 @@
 package datosImpl;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import datos.UsuarioDao;
 import entidad.Cliente;
-import entidad.Pais;
 import entidad.Usuario;
 
 public class UsuarioDaoImpl implements UsuarioDao {
@@ -53,12 +50,6 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        	   usuarioBD.getCliente().getProvincia().setNombre(rs.getString("nombre_provincia"));
 	        	   usuarioBD.getCliente().getLocalidad().setId(rs.getInt("id_localidad"));
 	        	   usuarioBD.getCliente().getLocalidad().setNombre(rs.getString("nombre_localidad"));
-
-	        	   
-//	        	   Pais paisNacimiento = new Pais();
-//		            paisNacimiento.setNombre(rs.getString("pais"));
-//		            usuarioBD.getCliente().setPaisNacimiento(paisNacimiento);
-		            
 		            
 		            System.out.println(usuarioBD.toString());
 	           }
