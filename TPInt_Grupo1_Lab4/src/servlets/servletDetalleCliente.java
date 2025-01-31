@@ -42,15 +42,17 @@ public class servletDetalleCliente extends HttpServlet {
         	int id = Integer.parseInt(request.getParameter("id"));
             Cliente cliente = clienteNeg.obtenerCliente(id);
             Usuario usuario = usuarioNeg.obtenerUsuario(id);
-            
-            
-            
-            System.out.println(id);
 
             if (cliente != null) {
                 request.setAttribute("cliente", cliente);
             } else {
                 request.setAttribute("error", "Cliente no encontrado");
+            }
+            
+            if (usuario != null) {
+                request.setAttribute("usuario", usuario);
+            } else {
+                request.setAttribute("error", "Usuario no encontrado");
             }
 
             request.getRequestDispatcher("DetalleCliente.jsp").forward(request, response);

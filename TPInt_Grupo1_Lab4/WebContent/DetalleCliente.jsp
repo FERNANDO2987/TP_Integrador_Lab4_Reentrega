@@ -1,9 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List" %>  
 <%@ page import="entidad.Cliente" %>
+<%@ page import="entidad.Usuario" %> 
 <%@ page import="entidad.Pais" %> 
 <%@ page import="negocio.ClienteNeg" %>
+<%@ page import="negocio.UsuarioNeg" %>
 <%@ page import="negocioImpl.ClienteNegImpl" %>
+<%@ page import="negocioImpl.UsuarioNegImpl" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -22,8 +26,14 @@
             .filter(c -> c.getId() == idCliente)
             .findFirst()
             .orElse(null);
-
-    if (cliente != null) {
+    
+    UsuarioNeg usuarioNeg = new UsuarioNegImpl();
+    Usuario usuario = usuarioNeg.ListarUsuarios().stream()
+    		.filter(c -> c.getId() == idCliente)
+            .findFirst()
+            .orElse(null);
+    
+    if (cliente != null || usuario != null) {
 	%>
 	<form action="servletModificarCliente" method="get">
 		<div class="container">
@@ -111,12 +121,12 @@
 	                	<div class="row">
 	                    		<div class="col">
 	                    			<div class="flex-grow-1 px-2">
-	    								<p><strong>Usuario:</strong> Usuario123</p>
+	    								<p><strong>Usuario: </strong> <%= usuario.getUsuario() %></p>
 	  								</div>
 	                    		</div>
 	                    			<div class="col">
 	                    				<div class="flex-grow-1 px-2">
-	    							<p><strong>Contraseña:</strong> *************</p>
+	    							<p><strong>Contraseña: </strong> <%= usuario.getPassword() %></p>
 	  								</div>
 	                    		</div>
 	                    	</div> 

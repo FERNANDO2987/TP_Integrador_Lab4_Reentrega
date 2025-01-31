@@ -11,6 +11,9 @@ import java.util.List;
 
 import datos.UsuarioDao;
 import entidad.Cliente;
+import entidad.Localidad;
+import entidad.Pais;
+import entidad.Provincia;
 import entidad.Usuario;
 import entidad.UsuarioCliente;
 
@@ -135,7 +138,32 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	    return usuario;
 	}
 
+	public Usuario obtenerUsuario(int idCliente) {
+		Usuario usuario = new Usuario();
+	    final String query = "{CALL ObtenerUsuario(?)}";
+	    cn.Open();
 
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setInt(1, idCliente);
+	        ResultSet rs = cst.executeQuery();
+	        
+            // Evitar NullPointerException creando instancias si son necesarias
+            if (usuario.getCliente() == null) {
+            	usuario.setCliente(new Cliente());
+            }
+            usuario.getCliente().setId(rs.getInt("IdCliente"));         
+            usuario.setUsuario(rs.getString("Usuario"));
+            usuario.setPassword(rs.getString("Pass"));           
+
+	    } catch (Exception e) {
+	    	System.err.println("Error al obtener al usuario: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+		
+		return usuario;
+	}
 
 
 	@Override
