@@ -136,7 +136,7 @@
 	        <div class="row d-flex justify-content-between" style="padding: 2rem;">
 	  			<div class="d-flex">
 	    			<a href="servletListarClientes" class="btn btn-danger">Volver</a>
-	    			<a href="DetalleCliente.jsp?id=<%= cliente.getId() %>" class="btn btn-primary mx-3">Modificar Detalles</a>
+	    			<a href="ModificarCliente.jsp?id=<%= cliente.getId() %>" class="btn btn-primary mx-3">Modificar Detalles</a>
 	  			</div>
 	  			<a href="#" class="btn btn-secondary">Ver Cuenta</a>
 			</div>
