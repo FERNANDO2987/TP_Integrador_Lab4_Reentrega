@@ -64,7 +64,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">  
             <ul class="navbar-nav ml-auto">  
                 <li class="nav-item">  
-                    <a class="nav-link" href="#">Logout</a>  
+                	<form action="<%= request.getContextPath() %>/servletLogout" method="post">
+                	   <button class="btn btn-link" href="#">Logout</button> 
+                	</form>
                 </li>  
             </ul>  
         </div>  
