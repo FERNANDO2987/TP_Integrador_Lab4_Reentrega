@@ -23,8 +23,6 @@ public class ClienteDaoImpl implements ClienteDao {
 		cn = new Conexion();
 	}
 
-
-
 	
 	@Override
 	public List<Cliente> ObtenerClientes() {
@@ -78,6 +76,53 @@ public class ClienteDaoImpl implements ClienteDao {
 	    return listaClientes;
 	}
 
+
+	public Cliente obtenerCliente(int idCliente) {	
+		Cliente cliente = new Cliente();
+	    final String query = "{CALL ObtenerCliente(?)}";
+	    cn.Open();
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setInt(1, idCliente);
+	        ResultSet rs = cst.executeQuery();
+	        		
+	        cliente.setId(rs.getInt("IdCliente"));
+            cliente.setDni(rs.getString("DNI"));
+            cliente.setCuil(rs.getString("CUIL"));
+            cliente.setNombre(rs.getString("Nombre"));
+            cliente.setApellido(rs.getString("Apellido"));
+            cliente.setSexo(rs.getString("Sexo"));
+
+            // Evitar NullPointerException creando instancias si son necesarias
+            if (cliente.getPaisNacimiento() == null) {
+                cliente.setPaisNacimiento(new Pais());
+            }
+            cliente.getPaisNacimiento().setNombre(rs.getString("Pais"));
+
+            if (cliente.getProvincia() == null) {
+                cliente.setProvincia(new Provincia());
+            }
+            cliente.getProvincia().setNombre(rs.getString("Provincia"));
+
+            if (cliente.getLocalidad() == null) {
+                cliente.setLocalidad(new Localidad());
+            }
+            cliente.getLocalidad().setNombre(rs.getString("Localidad"));
+
+            cliente.setFechaNacimiento(rs.getDate("FechaNacimiento").toLocalDate());
+            cliente.setDireccion(rs.getString("Direccion"));
+            cliente.setCorreo(rs.getString("Correo"));
+            cliente.setTelefono(rs.getString("Telefono"));
+	    } catch (Exception e) {
+	    	System.err.println("Error al obtener al cliente: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return cliente;
+	}
+	
 
 	@Override
 	public boolean agregarOmodifcarCliente(Cliente cliente) {
@@ -148,8 +193,6 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	    return resultado;
 	}
-
-
 
 	
 	// Método para generar el nombre de usuario

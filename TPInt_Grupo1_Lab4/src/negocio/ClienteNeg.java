@@ -9,6 +9,7 @@ import entidad.Usuario;
 public interface ClienteNeg {
 
 	public ArrayList<Cliente> ListarClientes();
+	public Cliente obtenerCliente(int idCliente);
 	public boolean agregarCliente(Cliente cliente);
 	public boolean EliminarCliente(int idCliente);
 	public boolean AgregarUsuario(Usuario usuario);

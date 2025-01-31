@@ -31,7 +31,30 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 		
 	}
 	
+	
+	@Override
+	public ArrayList<Cliente> ListarClientes() {
+	    List<Cliente> clientes = clienteDao.ObtenerClientes();
 
+        if (clientes == null || clientes.isEmpty()) {
+            throw new RuntimeException("No se encontraron clientes.");
+        }
+
+        return (ArrayList<Cliente>) clientes;
+	}
+	
+	
+	public Cliente obtenerCliente(int idCliente) {
+		Cliente cliente = new Cliente();
+		cliente = clienteDao.obtenerCliente(idCliente);
+		
+		if (cliente == null) {
+            throw new RuntimeException("No se encontraron clientes.");
+        }
+		
+		return cliente;
+	}
+	
 	@Override
 	public boolean EliminarCliente(int idCliente) {
 	    if (idCliente <= 0) {
@@ -56,8 +79,6 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 	        return false;
 	    }
 	}
-
-
 
 
 	@Override
@@ -113,10 +134,6 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 	    return clienteDao.agregarOmodifcarCliente(cliente);
 	}
 
-	
-	
-
-	
 	@Override
 	public boolean AgregarUsuario(Usuario usuario) {
 	    if (usuario == null) {
@@ -134,18 +151,6 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 	    return usuarioDao.insertarOActualizarUsuario(usuario);
 	}
 	
-	
-	@Override
-	public ArrayList<Cliente> ListarClientes() {
-	    List<Cliente> clientes = clienteDao.ObtenerClientes();
-
-        if (clientes == null || clientes.isEmpty()) {
-            throw new RuntimeException("No se encontraron clientes.");
-        }
-
-        return (ArrayList<Cliente>) clientes;
-	}
-
 	
 	@Override
 	public boolean ExisteDni(String dni) {

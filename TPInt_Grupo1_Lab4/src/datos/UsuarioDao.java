@@ -12,5 +12,6 @@ public interface UsuarioDao {
 	public boolean insertarOActualizarUsuario(Usuario usuario);
 	public boolean eliminarUsuario(int id);
 	public UsuarioCliente obtenerUsuarioPorIdCliente(int idCliente);
+	public Usuario obtenerUsuario(int idCliente);
 	
 }

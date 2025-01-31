@@ -73,7 +73,19 @@ public class UsuarioNegImpl implements UsuarioNeg {
 	    return new ArrayList<>(usuarios);
 	}
 
+	
+	public Usuario obtenerUsuario(int idCliente) {
+		Usuario usuario = new Usuario();
+		usuario = usuarioDao.obtenerUsuario(idCliente);
+		
+		if (usuario == null) {
+            throw new RuntimeException("No se encontró Usuario.");
+        }
+		
+		return usuario;
+	}
 
+	
 	@Override
 	public boolean EliminarUsuario(int idUser) {
 	    if (idUser <= 0) {

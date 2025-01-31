@@ -102,7 +102,7 @@
             if (pagina === 'inicio') {
                 contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
+            	contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
             } else if (pagina === 'prestamos') {
                 contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
             } else if (pagina === 'listarUsuarios') {

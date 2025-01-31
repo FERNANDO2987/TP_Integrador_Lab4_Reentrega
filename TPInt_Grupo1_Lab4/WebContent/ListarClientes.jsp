@@ -90,45 +90,31 @@
                 <thead class="thead-light">  
                     <tr>  
                         <th>ID</th>  
-                        <th>DNI</th>  
-                        <th class="cuil-column">Cuil</th>
-
                         <th>Nombre</th>  
                         <th>Apellido</th>
-                        <th>Pais</th>
+                        <th>DNI</th>
                         <th>FechaNacimiento</th>
-                        <th>Direccion</th>
-                        <th>Localidad</th>
-                        <th>Provincia</th>
                         <th>Correo</th>
-                        <th>Telefono</th>
-                        <th>Acciones</th>  
-                        
+                        <th>Acciones</th>           
                     </tr>  
                 </thead>  
                <tbody>  
     <% for (Cliente cliente : clientes) { %>  
     <tr>  
         <td><%= cliente.getId() %></td>  
-        <td><%= cliente.getDni() %></td>  
-        <td><%= cliente.getCuil() %></td>  
         <td><%= cliente.getNombre() %></td>  
         <td><%= cliente.getApellido() %></td>  
-        <td><%= cliente.getPaisNacimiento().getNombre() %></td>  
+        <td><%= cliente.getDni() %></td>  
         <td><%= cliente.getFechaNacimiento() %></td>  
-        <td><%= cliente.getDireccion() %></td>  
-        <td><%= cliente.getLocalidad().getNombre() %></td>  
-        <td><%= cliente.getProvincia().getNombre() %></td>  
         <td><%= cliente.getCorreo() %></td>  
-        <td><%= cliente.getTelefono() %></td>  
         <td>  
             <div class="dropdown">  
                 <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
                     <i class="fas fa-ellipsis-v"></i>  
                 </button>  
                 <div class="dropdown-menu dropdown-menu-right">  
-                    <a class="dropdown-item" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">  
-                        <i class="fas fa-edit"></i> Modificar  
+                    <a class="dropdown-item" href="DetalleCliente.jsp?id=<%= cliente.getId() %>">  
+                        <i class="fas fa-eye"></i> Ver detalles  
                     </a>  
             
                       <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('¿Estas seguro de que deseas eliminar este cliente?');">
