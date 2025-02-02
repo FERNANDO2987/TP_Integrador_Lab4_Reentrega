@@ -7,7 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.SplittableRandom;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import datos.ClienteDao;
 import entidad.Cliente;
@@ -23,6 +33,41 @@ public class ClienteDaoImpl implements ClienteDao {
 		cn = new Conexion();
 	}
 
+	
+	private static void enviarCorreo(String destinatario, String asunto, String mensaje, String remitente, String password) {
+	        // Configuración del servidor SMTP
+	        Properties props = new Properties();
+	        props.put("mail.smtp.host", "smtp.gmail.com"); // Servidor SMTP
+	        props.put("mail.smtp.port", "587"); // Puerto SMTP
+	        props.put("mail.smtp.auth", "true"); // Autenticación
+	        props.put("mail.smtp.starttls.enable", "true"); // Conexión segura
+
+	        // Credenciales del remitente
+	        final String remitente = "programadoressomos404@gmail.com"; // Cambiar por tu correo
+	        final String password = "opwlysytyzcqgagv"; // Cambiar por tu contraseña
+
+	        // Crear la sesión
+	        Session session = Session.getInstance(props, new Authenticator() {
+	            protected PasswordAuthentication getPasswordAuthentication() {
+	                return new PasswordAuthentication(remitente, password);
+	            }
+	        });
+
+	        try {
+	            // Crear el mensaje
+	            Message message = new MimeMessage(session);
+	            message.setFrom(new InternetAddress(remitente));
+	            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+	            message.setSubject(asunto);
+	            message.setText(mensaje);
+
+	            // Enviar el mensaje
+	            Transport.send(message);
+	            System.out.println("Correo enviado exitosamente a " + destinatario);
+	        } catch (MessagingException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 
 	
@@ -134,6 +179,12 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	            // Llamar a agregarUsuarioCliente solo si el cliente fue agregado exitosamente
 	            resultado = agregarUsuarioCliente(usuario);
+	            
+	         // Enviar el correo después de agregar al cliente
+	            String asunto = "Bienvenido a nuestro Sistema Bancario";
+	            String mensaje = String.format("Hola %s %s, gracias por registrarte. ¡Bienvenido!", cliente.getNombre(), cliente.getApellido());
+	            enviarCorreo(cliente.getCorreo(), asunto, mensaje,nombreUsuario,contrasena);
+	            
 	            System.out.println("Resultado de la ejecución del usuario: " + (resultado ? "Éxito" : "Fallo"));
 	        } else {
 	            System.out.println("No se pudo agregar o modificar el cliente, no se insertó correctamente.");
@@ -213,73 +264,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	}
 
 
-	@Override
-	public int agregarOmodifcarCliente2(Cliente cliente) {
-	    int idGenerado = 0;  // Inicializamos en 0 para indicar que no se ha generado ID
-	    final String query = "{CALL AgregarOModifcarCliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
-	    System.out.println("Conectando a la base de datos...");
-	    cn.Open();
-
-	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
-	        // Verificación de parámetros
-	        if (cliente.getId() != 0) {
-	            System.out.println("Cliente con ID existente: " + cliente.getId());
-	            cst.setInt(1, cliente.getId());
-	        } else {
-	            System.out.println("Nuevo cliente, ID es 0 (pasando NULL).");
-	            cst.setNull(1, java.sql.Types.INTEGER); // Pasar NULL si es un nuevo cliente
-	        }
-
-	        System.out.println("Estableciendo los otros parámetros...");
-	        // Establecer los otros parámetros de entrada
-	        cst.setString(2, cliente.getDni());
-	        cst.setString(3, cliente.getCuil());
-	        cst.setString(4, cliente.getNombre());
-	        cst.setString(5, cliente.getApellido());
-	        cst.setString(6, cliente.getSexo());
-	        cst.setInt(7, cliente.getPaisNacimiento().getId());
-	        cst.setDate(8, Date.valueOf(cliente.getFechaNacimiento()));
-	        cst.setString(9, cliente.getDireccion());
-	        cst.setInt(10, cliente.getLocalidad().getId());
-	        cst.setInt(11, cliente.getProvincia().getId());
-	        cst.setString(12, cliente.getCorreo());
-	        cst.setString(13, cliente.getTelefono());
-
-	        // Registrar el parámetro de salida para obtener el ID del cliente generado
-	        cst.registerOutParameter(14, java.sql.Types.INTEGER);
-
-	        // Ejecutar la consulta y verificar si el resultado fue exitoso
-	        boolean resultado = cst.executeUpdate() > 0;
-	        System.out.println("Resultado de la ejecución: " + resultado);
-
-	        if (resultado) {
-	            // Obtener el ID generado desde el procedimiento almacenado
-	            idGenerado = cst.getInt(14);
-	            cliente.setId(idGenerado);  // Establecer el ID en el objeto cliente
-	            System.out.println("Nuevo ID de cliente obtenido: " + idGenerado);
-
-	            // Crear un usuario asociado al nuevo cliente
-	            UsuarioCliente usuario = new UsuarioCliente();
-	            usuario.setIdCliente(idGenerado);
-	            usuario.setUsuario(generarNombreUsuario(cliente.getNombre(), cliente.getApellido()));
-	            usuario.setPassword(generarContrasenaAleatoria());
-	            usuario.setAdmin(false);
-
-	            // Llamar a la función para agregar el usuario del cliente
-	            resultado = agregarUsuarioCliente(usuario);
-	            System.out.println("Resultado de la ejecución del usuario: " + resultado);
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("Error al agregar o modificar el cliente: " + e.getMessage());
-	        e.printStackTrace();
-	    } finally {
-	        cn.close();
-	    }
-
-	    return idGenerado;  // Devolver el ID generado (0 si no fue exitoso)
-	}
-	
 	
 	public boolean existeDni(String dni) {
 	    boolean existe = false;
@@ -434,6 +419,15 @@ public class ClienteDaoImpl implements ClienteDao {
 		    }
 
 		    return estado; 
+	}
+
+
+
+
+	@Override
+	public boolean ModificarCliente(Cliente cliente) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	
