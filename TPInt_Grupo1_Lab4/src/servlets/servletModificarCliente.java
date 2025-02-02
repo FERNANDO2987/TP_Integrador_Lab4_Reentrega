@@ -62,82 +62,172 @@ public class servletModificarCliente extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		
-		 try {
-			 
-			  System.err.println("Procesando datos de Modificar ");
-	            // Obtener parámetros del formulario
-	            int id = Integer.parseInt(request.getParameter("id"));
-	            String dni = request.getParameter("dni");
-	            String cuil = request.getParameter("cuil");
-	            String nombre = request.getParameter("nombre");
-	            String apellido = request.getParameter("apellido");
-	            String sexo = request.getParameter("sexo");
-	            int idPais = Integer.parseInt(request.getParameter("pais"));
-	            String fechaNacimientoStr = request.getParameter("fechaNacimiento");
-	            String direccion = request.getParameter("direccion");
-	            int idLocalidad = Integer.parseInt(request.getParameter("localidad"));
-	            int idProvincia = Integer.parseInt(request.getParameter("provincia"));
-	            String correo = request.getParameter("email");
-	            String telefono = request.getParameter("telefono");
+	    try {
+	    	
+	    	
+	        // Obtener los parámetros del formulario
+	    	  int id = Integer.parseInt(request.getParameter("id"));
+	        String dni = request.getParameter("dni");
+	        String cuil = request.getParameter("cuil");
+	        String nombre = request.getParameter("nombre");
+	        String apellido = request.getParameter("apellido");
+	        String sexo = request.getParameter("sexo");
+	        String paisNacimientoNombre = request.getParameter("pais");
+	        String fechaNacimientoStr = request.getParameter("fechaNacimiento");
+	        String direccion = request.getParameter("direccion");
+	        String localidadNombre = request.getParameter("localidad");
+	        String provinciaStr = request.getParameter("provincia");
+	        String correo = request.getParameter("email");
+	        String telefono = request.getParameter("telefono");
 
-	            
-	            System.err.println("Procesando datos de Modificar 2");
-	            // Convertir fecha de nacimiento a LocalDate
-	            LocalDate fechaNacimiento = LocalDate.parse(fechaNacimientoStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	     
+	     // Agregar los parámetros al request para mantener los valores si hay error
+	        request.setAttribute("dni", dni);
+	        request.setAttribute("cuil", cuil);
+	        request.setAttribute("nombre", nombre);
+	        request.setAttribute("apellido", apellido);
+	        request.setAttribute("sexo", sexo);
+	        request.setAttribute("pais", paisNacimientoNombre);
+	        request.setAttribute("fechaNacimiento", fechaNacimientoStr);
+	        request.setAttribute("direccion", direccion);
+	        request.setAttribute("localidad", localidadNombre);
+	        request.setAttribute("provincia", provinciaStr);
+	        request.setAttribute("email", correo);
+	        request.setAttribute("telefono", telefono);
+	        
+	      
 
-	            // Obtener objetos de Pais, Provincia y Localidad
-	            Pais paisNacimiento = paisNeg.ListarPaises().stream()
-	                    .filter(p -> p.getId() == idPais)
-	                    .findFirst()
-	                    .orElse(null);
-
-	            Provincia provincia = provinciaNeg.ListarProvincias().stream()
-	                    .filter(p -> p.getId() == idProvincia)
-	                    .findFirst()
-	                    .orElse(null);
-
-	            Localidad localidad = localidadNeg.ListarLocalidades().stream()
-	                    .filter(l -> l.getId() == idLocalidad)
-	                    .findFirst()
-	                    .orElse(null);
-
-	            // Validar que los objetos no sean nulos
-	            if (paisNacimiento == null || provincia == null || localidad == null) {
-	                request.setAttribute("mensajeError", "Error: Datos geográficos no válidos.");
-	                request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
-	                return;
-	            }
-
-	            // Crear el objeto Cliente
-	            Cliente cliente = new Cliente(
-	                    id, dni, cuil, nombre, apellido, sexo,
-	                    paisNacimiento, fechaNacimiento, direccion,
-	                    localidad, provincia, correo, telefono
-	            );
-
-	            // Modificar el cliente
-	            boolean modificado = clienteNeg.agregarCliente(cliente);
-
-	            if (modificado) {
-	                request.setAttribute("mensajeExito", MENSAJE_EXITO);
-	            } else {
-	                request.setAttribute("mensajeError", MENSAJE_ERROR);
-	            }
-
-	            // Redirigir a la página de modificación
-	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
-
-	        } catch (NumberFormatException e) {
-	            request.setAttribute("mensajeError", "Error: Formato de número inválido.");
-	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
+	        // Convertir fechaNacimientoStr de String a LocalDate
+	        LocalDate fechaNacimiento;
+	        try {
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            fechaNacimiento = LocalDate.parse(fechaNacimientoStr, formatter);
 	        } catch (Exception e) {
-	            e.printStackTrace();
-	            request.setAttribute("mensajeError", "Error inesperado: " + e.getMessage());
-	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Formato de fecha inválido.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
 	        }
+
+	        int idPais;
+	        try {
+	            idPais = Integer.parseInt(paisNacimientoNombre);
+	        } catch (NumberFormatException e) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: ID del país inválido.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+
+	        int idProvincia;
+	        try {
+	            idProvincia = Integer.parseInt(provinciaStr);
+	        } catch (NumberFormatException e) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: ID de la provincia inválido.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+	        
+	        int idLocalidad;
+	        try {
+	        	idLocalidad = Integer.parseInt(localidadNombre);
+	        } catch (NumberFormatException e) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: ID de la localidad inválido.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+
+	        // Obtener el país de nacimiento por ID
+	        List<Pais> paises = paisNeg.ListarPaises();
+	        Pais paisNacimiento = paises.stream()
+	            .filter(p -> p.getId() == idPais)
+	            .findFirst()
+	            .orElse(null);
+
+	        if (paisNacimiento == null) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: País de nacimiento no encontrado.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+
+	        // Obtener la provincia por ID
+	        List<Provincia> provincias = provinciaNeg.ListarProvincias();
+	        Provincia provincia = provincias.stream()
+	            .filter(p -> p.getId() == idProvincia)
+	            .findFirst()
+	            .orElse(null);
+
+	        if (provincia == null) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: Provincia no encontrada.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+
+	       
+	        
+	        List<Localidad> localidades = localidadNeg.ListarLocalidades();
+	        Localidad localidad = localidades.stream()
+	            .filter(p -> p.getId() == idLocalidad)
+	            .findFirst()
+	            .orElse(null);
+
+	        if (localidad == null) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            request.setAttribute("mensajeError", "Error: localidad no encontrado.");
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            return;
+	        }
+
+
+	        // Crear el objeto Cliente
+	        Cliente cliente = new Cliente(
+	            id, dni, cuil, nombre, apellido, sexo,
+	            paisNacimiento, fechaNacimiento, direccion,
+	            localidad, provincia, correo, telefono
+	        );
+
+	      
+	        
+	        Map<String, String> errores = clienteNeg.AgregarCliente(cliente);  
+
+	        // Manejo de errores  
+	        if (!errores.isEmpty()) {  
+	            String mensajeError = String.join(", ", errores.values());  
+	            request.setAttribute("mensajeError", mensajeError);  
+	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);  
+	            return;  
+	        }  
+
+	        // Si no hay errores, ya el cliente se ha guardado en el método AgregarCliente  
+	        // Mensaje de éxito  
+	        request.setAttribute("mensajeExito", MENSAJE_EXITO);  
+	     // Limpiar los campos del formulario eliminando los atributos del request  
+	        request.removeAttribute("dni");
+	        request.removeAttribute("cuil");
+	        request.removeAttribute("nombre");
+	        request.removeAttribute("apellido");
+	        request.removeAttribute("sexo");
+	        request.removeAttribute("pais");
+	        request.removeAttribute("fechaNacimiento");
+	        request.removeAttribute("direccion");
+	        request.removeAttribute("localidad");
+	        request.removeAttribute("provincia");
+	        request.removeAttribute("email");
+	        request.removeAttribute("telefono");
+	        request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);  
+
+
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        request.setAttribute("mensajeError", "Error al procesar la solicitud: " + e.getMessage());
+	        request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
 	    }
+	}
 		
 		
 	}
