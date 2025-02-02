@@ -21,7 +21,7 @@
         }  
         .centered-header {
     text-align: center; /* Centrar el texto horizontalmente */
-    margin: 0 auto;     /* Asegurar que el margen se maneje correctamente */
+    margin: 100 auto;     /* Asegurar que el margen se maneje correctamente */
 }
         
        
@@ -95,6 +95,7 @@
 
                         <th>Nombre</th>  
                         <th>Apellido</th>
+                        <th>Sexo</th>
                         <th>Pais</th>
                         <th>FechaNacimiento</th>
                         <th>Direccion</th>
@@ -113,7 +114,8 @@
         <td><%= cliente.getDni() %></td>  
         <td><%= cliente.getCuil() %></td>  
         <td><%= cliente.getNombre() %></td>  
-        <td><%= cliente.getApellido() %></td>  
+        <td><%= cliente.getApellido() %></td>
+         <td><%= cliente.getSexo() %></td> 
         <td><%= cliente.getPaisNacimiento().getNombre() %></td>  
         <td><%= cliente.getFechaNacimiento() %></td>  
         <td><%= cliente.getDireccion() %></td>  
