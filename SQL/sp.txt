@@ -87,18 +87,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarCliente`(
     IN p_id INT
 )
 BEGIN
-    -- Verificar si el cliente existe y no está eliminado
+    -- Verificar que el cliente existe y no está eliminado
     IF EXISTS (SELECT 1 FROM clientes WHERE id = p_id AND deleted = 0) THEN
-        -- Realizar la baja lógica
-        UPDATE clientes
-        SET 
-            deleted = 1,
-            delete_date = NOW()
-        WHERE id = p_id;
+        START TRANSACTION;
+            -- Realizar la baja lógica del cliente
+            UPDATE clientes
+            SET 
+                deleted = 1,
+                delete_date = NOW()
+            WHERE id = p_id;
+            
+            -- Realizar la baja lógica del usuario asociado (si existe)
+            UPDATE usuarios
+            SET 
+                deleted = 1,
+                delete_date = NOW()
+            WHERE id_cliente = p_id;
+        COMMIT;
     ELSE
-        -- Lanzar un error si el cliente ya está eliminado o no existe
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El cliente no existe o ya fue eliminado.';
+            SET MESSAGE_TEXT = 'El cliente no existe o ya fue eliminado.';
     END IF;
 END
 
@@ -208,4 +216,41 @@ BEGIN
     WHERE 
         deleted = 0
         ORDER BY create_date DESC;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarUsuarioYCliente`(
+    IN p_id INT
+)
+BEGIN
+    DECLARE v_id_cliente INT;
+
+    -- Verificar que el usuario exista y no esté eliminado, y obtener su id_cliente
+    SELECT id_cliente
+      INTO v_id_cliente
+      FROM usuarios
+     WHERE id = p_id
+       AND deleted = 0;
+
+    -- Si el usuario no existe o ya está eliminado, se lanza un error.
+    IF v_id_cliente IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El usuario no existe o ya fue eliminado.';
+    ELSE
+        -- Opcional: Iniciar una transacción para asegurar atomicidad
+        START TRANSACTION;
+        
+        -- Dar de baja al usuario (baja lógica)
+        UPDATE usuarios
+           SET deleted = 1,
+               delete_date = NOW()
+         WHERE id = p_id;
+         
+        -- Dar de baja al cliente asociado (baja lógica)
+        UPDATE clientes
+           SET deleted = 1,
+               delete_date = NOW()
+         WHERE id = v_id_cliente;
+        
+        COMMIT;
+    END IF;
 END

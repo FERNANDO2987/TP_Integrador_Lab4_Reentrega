@@ -140,8 +140,28 @@ public class UsuarioDaoImpl implements UsuarioDao {
 
 	@Override
 	public boolean eliminarUsuario(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		  boolean estado = true;
+		    cn.Open(); 
+
+		   
+		    String query = "{CALL EliminarUsuarioYCliente(?)}"; 
+
+		    try (CallableStatement stmt = cn.connection.prepareCall(query)) {
+		    
+		        stmt.setInt(1, id);
+
+		     
+		        stmt.executeUpdate();
+		    } catch (SQLException e) {
+		        
+		        estado = false; 
+		        e.printStackTrace();
+		    } finally {
+		      
+		        cn.close();
+		    }
+
+		    return estado; 
 	}
 
 }

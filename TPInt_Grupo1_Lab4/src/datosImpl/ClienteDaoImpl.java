@@ -34,7 +34,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	}
 
 	
-	private static void enviarCorreo(String destinatario, String asunto, String mensaje, String remitente, String password) {
+	private static void enviarCorreo(String destinatario, String asunto, String mensaje, String usuario, String contrasenia) {
 	        // Configuración del servidor SMTP
 	        Properties props = new Properties();
 	        props.put("mail.smtp.host", "smtp.gmail.com"); // Servidor SMTP
@@ -182,7 +182,11 @@ public class ClienteDaoImpl implements ClienteDao {
 	            
 	         // Enviar el correo después de agregar al cliente
 	            String asunto = "Bienvenido a nuestro Sistema Bancario";
-	            String mensaje = String.format("Hola %s %s, gracias por registrarte. ¡Bienvenido!", cliente.getNombre(), cliente.getApellido());
+	            String mensaje = String.format(
+	            	    "Hola %s %s, gracias por registrarte. ¡Bienvenido! Podrás ingresar con el siguiente Usuario: %s, Contraseña: %s", 
+	            	    cliente.getNombre(), cliente.getApellido(), 
+	            	    nombreUsuario, contrasena);
+
 	            enviarCorreo(cliente.getCorreo(), asunto, mensaje,nombreUsuario,contrasena);
 	            
 	            System.out.println("Resultado de la ejecución del usuario: " + (resultado ? "Éxito" : "Fallo"));
