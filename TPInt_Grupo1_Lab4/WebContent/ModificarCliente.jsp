@@ -84,7 +84,7 @@
 
             if (cliente != null) {
         %>
-        <form action="servletAgregarCliente" method="post">
+        <form action="servletModificarCliente" method="post">
       
                <input type="hidden" name="id" value="<%= cliente.getId() %>"> <!-- Campo oculto para el ID -->
 
@@ -225,13 +225,13 @@
                     <div class="col-12 col-md-6">  
                     <label for="email" class="form-label">Email:</label>  
                     <input type="email" id="email" name="email" class="form-control" placeholder="Ingrese el email"   
-                           value="<%= cliente.getCorreo() != null ? cliente.getCorreo() : "" %>" required> 
+                           value="<%= cliente.getCorreo() != null ? cliente.getCorreo() : "" %>" readonly required> 
                 </div> 
                   <div class="col-12 col-md-6">  
                     <label for="telefono" class="form-label">Telefono:</label>  
                     <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingrese el telefono"   
                          
-                            value="<%= cliente.getTelefono() != null ? cliente.getTelefono() : "" %>" required> 
+                            value="<%= cliente.getTelefono() != null ? cliente.getTelefono() : "" %>" readonly required> 
                 </div> 
             </div>
 

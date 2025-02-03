@@ -9,7 +9,7 @@ public interface ClienteDao {
 
 	public List<Cliente> ObtenerClientes();
 	public boolean agregarOmodifcarCliente(Cliente cliente);
-	public boolean ModificarCliente(Cliente cliente);
+	public boolean modificarCliente(Cliente cliente);
 	public boolean eliminarCliente(int idCliente);
 	public boolean agregarUsuarioCliente(UsuarioCliente usuarioCliente);
 	

@@ -298,6 +298,70 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 	    cliente.setProvincia(null);  
 	}
 
+	@Override
+	public Map<String, String> ModificarCliente(Cliente cliente) {
+		  Map<String, String> errores = new HashMap<>();  
+
+		    if (cliente == null) {  
+		        errores.put("cliente", "El cliente no puede ser nulo.");  
+		        return errores;  
+		    }  
+
+		    if (cliente.getNombre() == null || !cliente.getNombre().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {  
+		        errores.put("nombre", "El nombre solo debe contener letras y espacios.");  
+		    }  
+
+		    if (cliente.getApellido() == null || !cliente.getApellido().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {  
+		        errores.put("apellido", "El apellido solo debe contener letras y espacios.");  
+		    }  
+
+
+		    
+		  
+
+		    if (cliente.getFechaNacimiento() == null || cliente.getFechaNacimiento().isAfter(java.time.LocalDate.now().minusYears(18))) {  
+		        errores.put("fechaNacimiento", "El cliente debe ser mayor de 18 años.");  
+		    }  
+
+		 
+		    //Validacion correo
+	
+
+		   
+		    
+		
+
+		    if (cliente.getDireccion() == null || cliente.getDireccion().trim().isEmpty()) {  
+		        errores.put("direccion", "La dirección del cliente es obligatoria.");  
+		    }  
+
+		    if (cliente.getPaisNacimiento() == null || cliente.getPaisNacimiento().getId() <= 0) {  
+		        errores.put("paisNacimiento", "El país de nacimiento debe ser válido.");  
+		    }  
+
+		    if (cliente.getLocalidad() == null || cliente.getLocalidad().getId() <= 0) {  
+		        errores.put("localidad", "La localidad debe ser válida.");  
+		    }  
+
+		    if (cliente.getProvincia() == null || cliente.getProvincia().getId() <= 0) {  
+		        errores.put("provincia", "La provincia debe ser válida.");  
+		    }  
+
+		    if (!errores.isEmpty()) {  
+		        return errores;  // Si hay errores, los devolvemos sin guardar el cliente.  
+		    }  
+
+		    // Si no hay errores, procedemos a guardar el cliente.  
+		    boolean exito = clienteDao.modificarCliente(cliente);  
+		    if (exito) {  
+		        limpiarCliente(cliente);  
+		    } else {  
+		        errores.put("general", "Error al Modificar el cliente en la base de datos. Intente nuevamente más tarde.");  
+		    }  
+		    return errores; 
+	}
+
+
 
 
 

@@ -10,9 +10,11 @@ public interface ClienteNeg {
 
 	public ArrayList<Cliente> ListarClientes();
 	public boolean agregarCliente(Cliente cliente);
+
 	public boolean EliminarCliente(int idCliente);
 	public boolean AgregarUsuario(Usuario usuario);
 	 public Map<String, String> AgregarCliente(Cliente cliente);
+	 public Map<String, String> ModificarCliente(Cliente cliente);
 	 public boolean ExisteDni(String dni);
 	 public boolean ExisteCuil(String cuil);
 	 public boolean ExisteCorreo(String correo);

@@ -429,9 +429,86 @@ public class ClienteDaoImpl implements ClienteDao {
 
 
 	@Override
-	public boolean ModificarCliente(Cliente cliente) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean modificarCliente(Cliente cliente) {
+	
+		  boolean resultado = false;
+		    final String query = "{CALL ModificarClienteCompleto(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+
+		    System.out.println("Conectando a la base de datos...");
+		    cn.Open();
+
+		    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+		        // Verificación de parámetros
+		        if (cliente.getId() != 0) {
+		            System.out.println("Cliente con ID existente: " + cliente.getId());
+		            cst.setInt(1, cliente.getId());
+		        } else {
+		            System.out.println("Nuevo cliente, ID es 0 (pasando NULL).");
+		            cst.setNull(1, java.sql.Types.INTEGER); // Pasar NULL si es un nuevo cliente
+		        }
+
+		        System.out.println("Estableciendo los otros parámetros...");
+		        // Establecer los otros parámetros de entrada
+		        cst.setString(2, cliente.getDni());
+		        cst.setString(3, cliente.getCuil());
+		        cst.setString(4, cliente.getNombre());
+		        cst.setString(5, cliente.getApellido());
+		        cst.setString(6, cliente.getSexo());
+		        cst.setInt(7, cliente.getPaisNacimiento().getId());
+		        cst.setDate(8, Date.valueOf(cliente.getFechaNacimiento()));
+		        cst.setString(9, cliente.getDireccion());
+		        cst.setInt(10, cliente.getLocalidad().getId());
+		        cst.setInt(11, cliente.getProvincia().getId());
+		        cst.setString(12, cliente.getCorreo());
+		        cst.setString(13, cliente.getTelefono());
+
+		        // Registrar el parámetro de salida para obtener el ID del cliente generado
+		        cst.registerOutParameter(14, java.sql.Types.INTEGER);
+
+		        // Ejecutar la consulta
+		        int filasAfectadas = cst.executeUpdate();
+		        int idGenerado = cst.getInt(14); // Obtener el ID generado del parámetro de salida
+		        System.out.println("Resultado de la ejecución del cliente: " + (filasAfectadas > 0 ? "Éxito" : "Fallo"));
+		        System.out.println("ID generado del cliente: " + idGenerado);
+
+		        // Verificar si la inserción fue exitosa y si el ID generado es válido
+		        if (filasAfectadas > 0 && idGenerado > 0) {
+		            // Código para crear el usuario solo si el cliente fue agregado correctamente
+		            String nombreUsuario = generarNombreUsuario(cliente.getNombre(), cliente.getApellido());
+		            String contrasena = generarContrasenaAleatoria();
+		            UsuarioCliente usuario = new UsuarioCliente();
+		            usuario.setIdCliente(idGenerado); // Asignar el ID generado
+		            usuario.setUsuario(nombreUsuario);
+		            usuario.setPassword(contrasena);
+		            usuario.setAdmin(false); // Establecer si es admin o no
+
+		            // Llamar a agregarUsuarioCliente solo si el cliente fue agregado exitosamente
+		            resultado = agregarUsuarioCliente(usuario);
+		            
+		         // Enviar el correo después de agregar al cliente
+		            String asunto = "Bienvenido a nuestro Sistema Bancario";
+		            String mensaje = String.format(
+		            	    "Hola %s %s, gracias por registrarte. ¡Bienvenido! Podrás ingresar con el siguiente Usuario: %s, Contraseña: %s", 
+		            	    cliente.getNombre(), cliente.getApellido(), 
+		            	    nombreUsuario, contrasena);
+
+		            enviarCorreo(cliente.getCorreo(), asunto, mensaje,nombreUsuario,contrasena);
+		            
+		            System.out.println("Resultado de la ejecución del usuario: " + (resultado ? "Éxito" : "Fallo"));
+		        } else {
+		            System.out.println("No se pudo agregar o modificar el cliente, no se insertó correctamente.");
+		        }
+
+		    } catch (SQLException e) {
+		        System.err.println("Error al agregar o modificar el cliente: " + e.getMessage());
+		        e.printStackTrace();
+		    } finally {
+		        cn.close();
+		    }
+
+		    return resultado;
+		
+		
 	}
 
 	
