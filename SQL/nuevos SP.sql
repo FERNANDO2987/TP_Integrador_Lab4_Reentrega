@@ -142,6 +142,7 @@ BEGIN
     DECLARE v_estado_prestamo VARCHAR(255); 
     DECLARE v_cuotas INT;
     DECLARE v_valor_cuotas decimal(10,2);
+    DECLARE contador INT;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         ROLLBACK; 
@@ -182,16 +183,16 @@ BEGIN
     
     
     -- Crear cuotas    
-    INSERT INTO cuotas (
-        id_prestamo, 
-        nro_cuota,
-        monto
-    )
-    VALUES (
-        p_id, 
-        v_cuotas,
-        v_valor_cuotas 
-    );
+ 
+    SET contador = v_cuotas;
+
+    WHILE contador > 0 DO
+        INSERT INTO cuotas (id_prestamo, nro_cuota, monto)
+        VALUES (p_id, contador, v_valor_cuotas);
+        
+        SET contador = contador - 1;
+    END WHILE;
+    
     COMMIT;
 END$$
 DELIMITER ;
