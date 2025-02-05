@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%> 
 <%@ page import="entidad.Cuenta" %>
+<%@ page import="entidad.TipoCuenta" %>
 <%@ page import="java.util.List" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="es">
@@ -58,14 +59,23 @@
 	</div>
 	
 	<div class = "row card">
-		<form class = "card-body m-4">
+		<form action="servletGestionarCuentas" method="post" class = "card-body m-4">
+		<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
 		  <div class="form-group">
 		    <h4>Agregar Nueva Cuenta</h4>
 		  </div>
 		  <div class="form-group">
 		    <label for="tipoCuentaSelect">Tipo de Cuenta</label>
 		    <select class="form-control" id="tipoCuentaSelect" name="tipoCuentaSelect">
+		    <%List<TipoCuenta> tiposCuenta = (List<TipoCuenta>) request.getAttribute("tiposCuenta");
+		    		if (tiposCuenta != null && tiposCuenta.size() > 0)
+		    		{
+		    			for(TipoCuenta tipo : tiposCuenta)
+		    			{%>
+		    				<option value= "<%=tipo.getId()%>"><%=tipo.getDescripcion() %></option>
 		    
+		    			 <%}
+		    		} %>
 		    </select>
 		  </div>
 		  <div class="form-group">

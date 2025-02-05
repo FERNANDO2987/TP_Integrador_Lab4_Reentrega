@@ -99,7 +99,6 @@
                 </thead>  
                <tbody>  
     <% for (Cliente cliente : clientes) { %>  
-    <form action="servletListarClientes" method="post">
     <tr>
     	<input type="hidden" name="InputIdCliente" value="<%= cliente.getId() %>">
         <td><%= cliente.getId() %></td>  
@@ -127,13 +126,15 @@
                         onclick="return confirm('¿Está seguro de que desea eliminar este cliente?');">  
                         <i class="fas fa-trash-alt"></i> Eliminar  
                     </a>
-                    <input class="dropdown-item" id="btnGestionCuenta" name="btnGestionCuenta" value="Gestionar Cuentas" type="submit"> 
+                    <a class="dropdown-item" href="servletGestionarCuentas?id=<%= cliente.getId() %>">  
+                        <i class="fas fa-edit"></i> Gestionar Cuentas  
+                    </a>
+                     
                 </div>  
             </div>  
         </td>
       
     </tr>
-    </form> 
     <% } %>  
 </tbody>  
 
