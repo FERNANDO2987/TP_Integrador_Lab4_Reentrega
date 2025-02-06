@@ -59,7 +59,6 @@ public class servletGestionarCuentas extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Agregar Cuenta
 		int idCliente = 0;
 		if(request.getParameter("btnAgregar") != null)
 		{
@@ -71,7 +70,7 @@ public class servletGestionarCuentas extends HttpServlet {
 			cuenta.getTipoCuenta().setId(idTipoCuenta);
 			negocioCuenta.agregarCuenta(cuenta);
 		}
-		request.getRequestDispatcher("servletGestionarCuentas?id="+ idCliente);
+		response.sendRedirect("servletGestionarCuentas?id=" + idCliente);
 		
 		
 	}

@@ -57,7 +57,7 @@
 	
 	<%  }%>
 	</div>
-	
+	<% if(cuentas.size() >= 3){ %>
 	<div class = "row card">
 		<form action="servletGestionarCuentas" method="post" class = "card-body m-4">
 		<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
@@ -83,7 +83,7 @@
 		  </div>
 		</form>
 	</div>
-	
+	<%} %>
 	
 </div>	
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

@@ -40,7 +40,12 @@ public class CuentaNegImpl implements CuentaNeg {
 
 	@Override
 	public boolean agregarCuenta(Cuenta cuenta) {
-		// TODO Auto-generated method stub
+		CuentaDao cuentaDao =  new CuentaDaoImpl();
+		if (clienteAptoDeAgregarCuenta(cuenta.getCliente().getId()))
+		{
+			cuentaDao.agregarCuenta(cuenta);
+			return true;
+		}
 		return false;
 	}
 
