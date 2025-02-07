@@ -38,8 +38,25 @@ public class CuentaDaoImpl implements CuentaDao {
 
 	@Override
 	public boolean modificarCuenta(Cuenta cuenta) {
-		// TODO Auto-generated method stub
-		return false;
+		cn.Open();
+		String query = "";
+		boolean exito = false;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, cuenta.getNroCuenta());
+			cst.setInt(2, cuenta.getTipoCuenta().getId());
+			exito = cst.execute();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return exito;
 	}
 
 	@Override

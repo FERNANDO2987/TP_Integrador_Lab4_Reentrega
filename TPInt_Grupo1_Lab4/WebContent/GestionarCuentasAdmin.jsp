@@ -29,24 +29,41 @@
 <div class="container mt-5">
 	<div class = "row">
 	<%
+		List<TipoCuenta> tiposCuenta = (List<TipoCuenta>) request.getAttribute("tiposCuenta");
 		List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentas");
 		if(cuentas != null && cuentas.size() > 0)
 		{
 			for(Cuenta cuenta : cuentas)
 			{
-	%>			<div class="col-md-4 d-flex align-items-stretch mb-4">
+				
+	%>			<!--  CARTA DE CUENTA -->
+				<form action="servletGestionarCuentas" method="post">
+				<div class="col-md-4 d-flex align-items-stretch mb-4">
 				<!-- Card -->
 				<div class="card" style="width: 18rem;">
 			  	<div class="card-body">
+			  	<input type="hidden" id="idCuenta" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
 			    <h5 class="card-title">CBU: <%=cuenta.getCbu() %></h5>
-			    <h6 class="card-subtitle mb-2 text-muted"><%=cuenta.getTipoCuenta().getDescripcion() %></h6>
-			    <p class="card-text">$<%=cuenta.getSaldo() %></p>
-			    <a href="#" class="card-link"><i class="fas fa-edit"></i></a>
-			    <a href="#" class="card-link"><i class="fas fa-trash-alt"></i></a>
-			    <a href="#" class="card-link">Movimientos</a>
+			    <select name="selectCuenta" id="selectCuenta" class="text-muted bold">
+			    <%
+		    		if (tiposCuenta != null && tiposCuenta.size() > 0)
+		    		{
+		    			for(TipoCuenta tipo : tiposCuenta)
+		    			{%>
+		    				<option <%if (tipo.getId() == cuenta.getTipoCuenta().getId()) {%> selected<%}%>
+		    				 value= "<%=tipo.getId()%>"><%=tipo.getDescripcion() %></option>
+		    
+		    			 <%}
+		    		} %>
+			    </select>
+			    
+			    <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
+			    <input type="submit" class="btn btn-success btn-sm" value="Modificar" id="btnModificar" name="btnModificar">
 			  	</div>
 				</div>
 				</div>
+				</form>
+				<!-- FIN CARTA DE CUENTA -->
 	<% 		}	
 		}
 		else
@@ -57,7 +74,8 @@
 	
 	<%  }%>
 	</div>
-	<% if(cuentas.size() >= 3){ %>
+	<% if(cuentas.size() < 3){ %>
+	<!-- FORMULARIO DE NUEVA CUENTA -->
 	<div class = "row card">
 		<form action="servletGestionarCuentas" method="post" class = "card-body m-4">
 		<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
@@ -67,7 +85,7 @@
 		  <div class="form-group">
 		    <label for="tipoCuentaSelect">Tipo de Cuenta</label>
 		    <select class="form-control" id="tipoCuentaSelect" name="tipoCuentaSelect">
-		    <%List<TipoCuenta> tiposCuenta = (List<TipoCuenta>) request.getAttribute("tiposCuenta");
+		    <%
 		    		if (tiposCuenta != null && tiposCuenta.size() > 0)
 		    		{
 		    			for(TipoCuenta tipo : tiposCuenta)
@@ -79,7 +97,7 @@
 		    </select>
 		  </div>
 		  <div class="form-group">
-		    <input class="btn-success" type="submit" value="Agregar" id="btnAgregar" name="btnAgregar">
+		    <input class="btn btn-success" type="submit" value="Agregar" id="btnAgregar" name="btnAgregar">
 		  </div>
 		</form>
 	</div>

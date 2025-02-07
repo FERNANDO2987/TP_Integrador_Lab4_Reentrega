@@ -59,19 +59,45 @@ public class servletGestionarCuentas extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int idCliente = 0;
-		if(request.getParameter("btnAgregar") != null)
+		try
 		{
-			int idTipoCuenta = Integer.parseInt(request.getParameter("tipoCuentaSelect"));
-			idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
+			//inicializar una variable idCliente
+			int idCliente = 0;
 			CuentaNeg negocioCuenta = new CuentaNegImpl();
-			Cuenta cuenta = new Cuenta();
-			cuenta.getCliente().setId(idCliente);
-			cuenta.getTipoCuenta().setId(idTipoCuenta);
-			negocioCuenta.agregarCuenta(cuenta);
+			//detectar si se pulso el boton de agregar
+			if(request.getParameter("btnAgregar") != null)
+			{
+				//traer los datos del form
+				int idTipoCuenta = Integer.parseInt(request.getParameter("tipoCuentaSelect"));
+				idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
+				//pasar los datos a un objeto cuenta
+				Cuenta cuenta = new Cuenta();
+				cuenta.getCliente().setId(idCliente);
+				cuenta.getTipoCuenta().setId(idTipoCuenta);
+				
+				negocioCuenta.agregarCuenta(cuenta);
+			}
+			// detectar si se pulso el boton de modificar
+			if(request.getParameter("btnModificar") != null)
+			{
+				//traer los datos del form
+				int idSelectTipoCuenta = Integer.parseInt(request.getParameter("selectCuenta"));
+				int idCuenta = Integer.parseInt(request.getParameter("idCuenta"));
+				//pasar los datos a un objeto cuenta
+				Cuenta cuenta = new Cuenta();
+				cuenta.setNroCuenta(idCuenta);
+				cuenta.getTipoCuenta().setId(idSelectTipoCuenta);
+				
+				negocioCuenta.modificarCuenta(cuenta);
+			}
+			//actualizar la pagina volviendo a llamar a un doGet
+			response.sendRedirect("servletGestionarCuentas?id=" + idCliente);
 		}
-		response.sendRedirect("servletGestionarCuentas?id=" + idCliente);
-		
+		catch(Exception e)
+		{
+			request.setAttribute("excepcionMsg", e.getMessage());
+			request.getRequestDispatcher("error.jsp").forward(request, response);
+		}		
 		
 	}
 

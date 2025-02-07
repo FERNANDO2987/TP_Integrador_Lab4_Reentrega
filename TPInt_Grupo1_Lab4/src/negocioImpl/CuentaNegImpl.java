@@ -49,4 +49,11 @@ public class CuentaNegImpl implements CuentaNeg {
 		return false;
 	}
 
+	@Override
+	public boolean modificarCuenta(Cuenta cuenta) {
+		CuentaDao cuentaDao = new CuentaDaoImpl();
+		cuentaDao.modificarCuenta(cuenta);
+		return false;
+	}
+
 }
