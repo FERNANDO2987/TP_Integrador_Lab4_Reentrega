@@ -92,5 +92,12 @@ CREATE PROCEDURE SP_LeerCuentasActivasRelacionadasACliente(in id_cliente_input i
 BEGIN
 	SELECT * FROM vw_cuentas WHERE id_cliente = id_cliente_input and deleted = 0;
 END;
+$$
 
+DELIMITER $$
+CREATE PROCEDURE SP_ModificarCuenta(in nro_cuenta_input int, in id_tipo_cuenta_input int)
+BEGIN
+	UPDATE cuentas SET 
+END;
+$$
 
