@@ -101,3 +101,10 @@ BEGIN
 END;
 $$
 
+DELIMITER $$
+CREATE PROCEDURE SP_EliminarCuenta(in nro_cuenta_input int)
+BEGIN
+	UPDATE cuentas SET deleted = 1 WHERE nro_cuenta = nro_cuenta_input;
+END;
+$$
+

@@ -38,6 +38,7 @@
 				
 	%>			<!--  CARTA DE CUENTA -->
 				<form action="servletGestionarCuentas" method="post">
+				<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
 				<div class="container-fluid">
 			    <div class="row justify-content-center">
 			        <div class="col">
@@ -55,6 +56,8 @@
 			                    </select>
 			                    <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
 			                    <input type="submit" class="btn btn-success btn-sm" value="Modificar" id="btnModificar" name="btnModificar">
+			                    <input type="submit" class="btn btn-info btn-sm" value="Movimientos" id="btnMovimientos" name="btnMovimientos">
+			                    <input type="submit" class="btn btn-danger btn-sm" value="Eliminar" id="btnEliminar" name="btnEliminar">
 			                </div>
 			            </div>
 			        </div>

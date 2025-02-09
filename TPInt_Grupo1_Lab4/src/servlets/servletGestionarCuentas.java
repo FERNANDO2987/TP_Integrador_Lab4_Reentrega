@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cuenta;
 import entidad.TipoCuenta;
+import negocio.ClienteNeg;
 import negocio.CuentaNeg;
 import negocio.TipoCuentaNeg;
+import negocioImpl.ClienteNegImpl;
 import negocioImpl.CuentaNegImpl;
 import negocioImpl.TipoCuentaNegImpl;
 
@@ -38,6 +40,10 @@ public class servletGestionarCuentas extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//recuperar ID de cliente
 		int idCliente = Integer.parseInt(request.getParameter("id"));
+		//recuperar nombre del cliente
+		ClienteNeg clienteNeg = new ClienteNegImpl();
+		//FALTA DESARROLLAR
+		
 		//recolectar las cuentas relacionadas al cliente
 		CuentaNeg cuentaNeg = new CuentaNegImpl();
 		List<Cuenta> cuentasDelCliente = cuentaNeg.leerLasCuentasDelCliente(idCliente);
@@ -61,10 +67,14 @@ public class servletGestionarCuentas extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try
 		{
+			
+			
 			//inicializar una variable idCliente
 			int idCliente = 0;
 			CuentaNeg negocioCuenta = new CuentaNegImpl();
-			//detectar si se pulso el boton de agregar
+			
+			
+			//detectar si se pulso el boton de AGREGAR
 			if(request.getParameter("btnAgregar") != null)
 			{
 				//traer los datos del form
@@ -77,12 +87,15 @@ public class servletGestionarCuentas extends HttpServlet {
 				
 				negocioCuenta.agregarCuenta(cuenta);
 			}
-			// detectar si se pulso el boton de modificar
+			
+			
+			// detectar si se pulso el boton de MODIFICAR
 			if(request.getParameter("btnModificar") != null)
 			{
 				//traer los datos del form
 				int idSelectTipoCuenta = Integer.parseInt(request.getParameter("selectCuenta"));
 				int idCuenta = Integer.parseInt(request.getParameter("idCuenta"));
+				idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
 				//pasar los datos a un objeto cuenta
 				Cuenta cuenta = new Cuenta();
 				cuenta.setNroCuenta(idCuenta);
@@ -90,6 +103,21 @@ public class servletGestionarCuentas extends HttpServlet {
 				
 				negocioCuenta.modificarCuenta(cuenta);
 			}
+			
+			
+			//detectar si se pulso el boton de ELIMINAR
+			if(request.getParameter("btnEliminar") != null)
+			{
+				//traer los datos del form
+				int nroCuenta = Integer.parseInt(request.getParameter("idCuenta"));
+				idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
+				//pasar los datos a un objeto cuenta
+				Cuenta cuenta = new Cuenta();
+				cuenta.setNroCuenta(nroCuenta);
+				
+				negocioCuenta.eliminarCuenta(cuenta);
+			}
+			
 			//actualizar la pagina volviendo a llamar a un doGet
 			response.sendRedirect("servletGestionarCuentas?id=" + idCliente);
 		}

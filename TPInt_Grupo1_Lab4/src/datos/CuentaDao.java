@@ -7,6 +7,7 @@ import entidad.Cuenta;
 public interface CuentaDao {
 	public boolean agregarCuenta(Cuenta cuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
+	public boolean eliminarCuenta(Cuenta cuenta);
 	public List<Cuenta> leerTodasLasCuentas();
 	public Cuenta leerUnaCuenta(int id_cuenta);
 	public int CuantasCuentasActivasTieneElCliente(int id_cliente);

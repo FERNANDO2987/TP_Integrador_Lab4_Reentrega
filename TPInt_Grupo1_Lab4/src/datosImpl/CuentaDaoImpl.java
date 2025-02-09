@@ -39,7 +39,7 @@ public class CuentaDaoImpl implements CuentaDao {
 	@Override
 	public boolean modificarCuenta(Cuenta cuenta) {
 		cn.Open();
-		String query = "";
+		String query = "CALL SP_ModificarCuenta(?,?)";
 		boolean exito = false;
 		try
 		{
@@ -181,6 +181,28 @@ public class CuentaDaoImpl implements CuentaDao {
 			cn.close();
 		}
 		return cuentas;
+	}
+
+	@Override
+	public boolean eliminarCuenta(Cuenta cuenta) {
+		cn.Open();
+		String query = "CALL SP_EliminarCuenta(?)";
+		boolean exito = false;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, cuenta.getNroCuenta());
+			exito = cst.execute();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return exito;
 	}
 
 }
