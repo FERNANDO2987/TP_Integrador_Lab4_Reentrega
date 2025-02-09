@@ -38,31 +38,29 @@
 				
 	%>			<!--  CARTA DE CUENTA -->
 				<form action="servletGestionarCuentas" method="post">
-				<div class="col-md-4 d-flex align-items-stretch mb-4">
-				<!-- Card -->
-				<div class="card" style="width: 18rem;">
-			  	<div class="card-body">
-			  	<input type="hidden" id="idCuenta" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
-			    <h5 class="card-title">CBU: <%=cuenta.getCbu() %></h5>
-			    <select name="selectCuenta" id="selectCuenta" class="text-muted bold">
-			    <%
-		    		if (tiposCuenta != null && tiposCuenta.size() > 0)
-		    		{
-		    			for(TipoCuenta tipo : tiposCuenta)
-		    			{%>
-		    				<option <%if (tipo.getId() == cuenta.getTipoCuenta().getId()) {%> selected<%}%>
-		    				 value= "<%=tipo.getId()%>"><%=tipo.getDescripcion() %></option>
-		    
-		    			 <%}
-		    		} %>
-			    </select>
-			    
-			    <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
-			    <input type="submit" class="btn btn-success btn-sm" value="Modificar" id="btnModificar" name="btnModificar">
-			  	</div>
-				</div>
-				</div>
-				</form>
+				<div class="container-fluid">
+			    <div class="row justify-content-center">
+			        <div class="col">
+			            <div class="card w-100">
+			                <div class="card-body">
+			                    <input type="hidden" id="idCuenta" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
+			                    <h5 class="card-title text-truncate">CBU: <%=cuenta.getCbu() %></h5>
+			                    <select name="selectCuenta" id="selectCuenta" class="form-control">
+			                        <%
+			                        if (tiposCuenta != null && tiposCuenta.size() > 0) {
+			                            for(TipoCuenta tipo : tiposCuenta) { %>
+			                                <option <%if (tipo.getId() == cuenta.getTipoCuenta().getId()) {%> selected<%}%>
+			                                    value="<%=tipo.getId()%>"><%=tipo.getDescripcion() %></option>
+			                        <% } } %>
+			                    </select>
+			                    <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
+			                    <input type="submit" class="btn btn-success btn-sm" value="Modificar" id="btnModificar" name="btnModificar">
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			</form>
 				<!-- FIN CARTA DE CUENTA -->
 	<% 		}	
 		}

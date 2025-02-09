@@ -97,7 +97,7 @@ $$
 DELIMITER $$
 CREATE PROCEDURE SP_ModificarCuenta(in nro_cuenta_input int, in id_tipo_cuenta_input int)
 BEGIN
-	UPDATE cuentas SET 
+	UPDATE cuentas SET id_tipo_cuenta = id_tipo_cuenta_input WHERE nro_cuenta = nro_cuenta_input;
 END;
 $$
 
