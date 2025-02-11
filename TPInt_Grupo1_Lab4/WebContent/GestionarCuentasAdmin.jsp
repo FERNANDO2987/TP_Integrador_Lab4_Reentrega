@@ -38,6 +38,26 @@
 				
 	%>			<!--  CARTA DE CUENTA -->
 				<form action="servletGestionarCuentas" method="post">
+				
+				<div class="modal" tabindex="-1">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title">Desea Confirmar la accion?</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <p>Desea confirmar la continuidad del proceso?</p>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary">Save changes</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
 				<div class="container-fluid">
 			    <div class="row justify-content-center">
