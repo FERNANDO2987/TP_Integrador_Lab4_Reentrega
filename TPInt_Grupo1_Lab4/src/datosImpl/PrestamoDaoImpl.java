@@ -1,6 +1,7 @@
 package datosImpl;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -131,5 +132,55 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return estado;
 	}
+
+	@Override
+	public boolean AgregarPrestamo(Prestamo prestamo) {
+		boolean estado = true;
+		cn.Open();
+		String query = "{CALL SP_AgregarPrestamo(?, ?, ?, ?)}";
+		
+		try(CallableStatement cst = (CallableStatement) cn.connection.prepareCall(query)) {
+			cst.setInt(1, prestamo.getCliente().getId());
+			cst.setInt(2, prestamo.getCuenta().getNroCuenta());
+			cst.setBigDecimal(3, prestamo.getImporte());
+			cst.setInt(4, prestamo.getCuotas());
+			cst.executeUpdate();
+			
+		} catch(SQLException e){
+			estado = false;
+			e.printStackTrace();
+		} finally {
+			cn.close();
+		}
+		
+		
+		return estado;
+	}
+
+	@Override
+	public boolean ChequearPendiente(int id) {
+	    boolean estado = false;
+	    
+	    cn.Open();
+	    String query = "SELECT COUNT(id) FROM prestamos WHERE id = ? AND estado = 'pendiente'";
+	    
+	    try (PreparedStatement pst = cn.connection.prepareStatement(query)) { 
+	        pst.setInt(1, id);
+	        
+	        try (ResultSet rs = pst.executeQuery()) { // Ejecutar la consulta correctamente
+	            if (rs.next()) { 
+	                int count = rs.getInt(1); 
+	                estado = (count > 0); // Si count es mayor que 0, el estado será true
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+	    
+	    return estado;
+	}
+
 
 }
