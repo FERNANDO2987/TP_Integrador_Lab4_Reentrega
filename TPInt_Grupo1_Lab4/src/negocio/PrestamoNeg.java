@@ -8,4 +8,5 @@ public interface PrestamoNeg {
 	public List<Prestamo> ListarPrestamos();
 	public boolean RechazarPrestamo(int idPrestamo, String observacion);
 	public boolean AprobarPrestamo(int idPrestamo, String observacion);
+	public boolean AgregarPrestamo(Prestamo prestamo);
 }
