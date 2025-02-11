@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
     <style>  
         .dropdown-toggle::after {  
-            display: none; /* Quitar el �cono del dropdown */  
+            display: none; /* Quitar el icono del dropdown */  
         }  
         .dropdown-menu {  
-            min-width: 0; /* Ajustar el ancho del men� */  
+            min-width: 0; /* Ajustar el ancho del menu */  
         }  
         .centered-header {
     		text-align: center; /* Centrar el texto horizontalmente */
@@ -69,6 +69,7 @@
 	                        <th>Cuotas</th>
 	                        <th>Fecha de Solicitud</th>
 	                        <th>Estado</th>
+	                        <th>Acciones</th>
 	                        
 	                    </tr>  
 	                </thead>  
