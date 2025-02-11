@@ -173,7 +173,7 @@ BEGIN
     
     -- Set estado de prestamo a 'aprobado'
     UPDATE prestamos
-    SET estado = 'aprobado' , observaciones = p_observaciones -- Cambiar el estado a aprobado
+    SET estado = 'aprobado' , observaciones = p_observaciones, fecha_alta = now() 
     WHERE id = p_id;
     
     -- Sumar dinero a la cuenta
@@ -194,5 +194,58 @@ BEGIN
     END WHILE;
     
     COMMIT;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ListarPrestamos`()
+BEGIN
+	SELECT   
+        p.id AS Id,  
+        cl.nombre AS Nombre,
+        cl.apellido AS Apellido,  
+        cl.correo AS Correo,  
+        cl.telefono AS Telefono,  
+        cu.cbu AS CBU,
+        cu.id_cliente as Id_cliente,
+        cu.nro_cuenta as Nro_cuenta,
+        p.create_date as Fecha_solicitud,  
+        p.importe AS Importe,  
+        p.cuotas AS Cuotas,  
+        p.observaciones AS Observaciones,
+        p.estado AS Estado
+    FROM   
+        bdbanco.prestamos p  
+    JOIN   
+        bdbanco.clientes cl ON p.id_cliente = cl.id  
+    JOIN   
+        bdbanco.cuentas cu ON p.nro_cuenta = cu.nro_cuenta AND cu.deleted = 0  
+    WHERE   
+        p.deleted = 0 ; 
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarPrestamo`( -- Solicitar Prestamo
+	IN p_idCliente int,
+    IN p_nroCuenta int,
+    IN p_importe decimal(10,2),
+    IN p_cuotas int
+)
+BEGIN
+	INSERT INTO `bdbanco`.`prestamos`
+	(`id_cliente`,
+	`nro_cuenta`,
+	`importe`,
+	`cuotas`,
+	`valor_cuotas`)
+	VALUES
+	(p_idCliente,
+	p_nroCuenta,
+	p_importe,
+	p_cuotas,
+	(p_importe/p_cuotas));
+
 END$$
 DELIMITER ;
