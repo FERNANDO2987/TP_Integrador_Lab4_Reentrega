@@ -1,237 +1,213 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>  
 <%@ page import="java.util.List" %>  
-<%@ page import="entidad.Cliente" %>
-<%@ page import="entidad.Pais" %> 
+<%@ page import="entidad.Cliente" %>  
+<%@ page import="entidad.Pais" %>  
 
 <!DOCTYPE html>  
 <html lang="es">  
 <head>  
+  
     <meta charset="ISO-8859-1">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Lista de Clientes</title>  
-    <!-- Bootstrap CSS -->  
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
-    <style>  
-        .dropdown-toggle::after {  
-            display: none; /* Quitar el ícono del dropdown */  
-        }  
-        .dropdown-menu {  
-            min-width: 0; /* Ajustar el ancho del menú */  
-        }  
-        .centered-header {
-    text-align: center; /* Centrar el texto horizontalmente */
-    margin: 100 auto;     /* Asegurar que el margen se maneje correctamente */
-}
-        
-       
-    }
     
-   .add-button-container {
-    text-align: center;
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>Lista de Clientes</title>  
+    
+       <style>
+      
+       .alert {  
+    font-size: 1.2rem;  
+    padding: 20px;  
+    border-radius: 8px;  
+    display: flex;  
+    align-items: center;  
+    margin-bottom: 16px;  
+}  
+.alert-success {  
+    background-color: #28a745; /* Color verde */  
+    color: white;  
+}  
+.alert-error {  
+    background-color: #dc3545; /* Color rojo */  
+    color: white;  
 }
-
-
-
-
-
-
-    </style>  
+    </style>
 </head>  
-<body>  
-<div class="container mt-5">  
-   <!-- Contenedor centrado para el encabezado -->
-    <div class="row justify-content-center mb-4">
-        <h2 class="text-primary">Lista de Clientes</h2>
+<body class="bg-gray-100">  
+
+<div class="container mx-auto mt-5">  
+    <!-- Contenedor centrado para el encabezado -->
+    <div class="text-center mb-4">
+        <h2 class="text-2xl text-blue-600">Lista de Clientes</h2>
     </div>
 
-
     <!-- Botón Agregar alineado a la derecha -->
-<div class="row mb-4" >
-    <div class="col-12" style="text-align: right;">
-        <a href="AgregarCliente.jsp" class="btn btn-success">
+    <div class="mb-4 text-right">
+        <a href="AgregarCliente.jsp" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
             <i class="fas fa-user-plus"></i> Agregar Cliente
         </a>
     </div>
-</div>
 
-
-
-      <!-- Buscador alineado a la izquierda -->
-    <div class="row mb-4">
-        <div class="col-12 col-md-6 search-container">
-            <input type="text" id="searchInput" class="form-control" placeholder="Buscar cliente..." onkeyup="filterTable()">  
-        </div>
+    <!-- Buscador alineado a la izquierda -->
+    <div class="mb-4">
+        <input type="text" id="searchInput" class="form-control w-full p-2 rounded-lg border-gray-300" placeholder="Buscar cliente..." onkeyup="filterTable()">  
     </div>
+
     <%   
         // Obtener lista de usuarios y mensaje de error  
         List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");  
-    String mensajeExito = (String) request.getAttribute("mensajeExito");  
-    String mensajeError = (String) request.getAttribute("mensajeError");  
-   
+        String mensajeExito = (String) request.getAttribute("mensajeExito");  
+        String mensajeError = (String) request.getAttribute("mensajeError");  
     %>  
 
-    <% if (mensajeExito != null) { %>  
-    <div class="alert alert-success" role="alert" id="successMessage">
-        <i class="fas fa-check-circle"></i> <%= mensajeExito %>
-    </div>  
-<% } %>  
+      <!-- Mostrar mensaje de éxito -->
+  <%  
 
-<% if (mensajeError != null) { %>  
-    <div class="alert alert-danger" role="alert" id="errorMessage">
-        <i class="fas fa-exclamation-circle"></i> <%= mensajeError %>
+    if (mensajeExito != null) {  
+%>  
+    <div id="successMessage" class="alert alert-success mb-4">  
+        <i class="fas fa-check-circle"></i> <%= mensajeExito %>  
     </div>  
-<% } %>
+<%  
+    }  
+%>   
+
+<%  
+  
+    if (mensajeError != null) {  
+%>  
+    <div id="errorMessage" class="alert alert-error mb-4">  
+        <i class="fas fa-exclamation-circle"></i> <%= mensajeError %>  
+    </div>  
+<%  
+    }  
+%>
 
     <% if (clientes != null && !clientes.isEmpty()) { %>  
-        <!-- Tabla de usuarios -->  
-        <div class="table-responsive">  
-            <table class="table table-hover table-bordered" id="usersTable">  
-                <thead class="thead-light">  
+        <!-- Tabla de clientes -->  
+        <div class="overflow-x-auto">  
+            <table class="table-auto w-full bg-white border-collapse border border-gray-300" id="usersTable">  
+                <thead class="bg-gray-200">  
                     <tr>  
-                        <th>ID</th>  
-                        <th>DNI</th>  
-                        <th class="cuil-column">Cuil</th>
-
-                        <th>Nombre</th>  
-                        <th>Apellido</th>
-                        <th>Sexo</th>
-                        <th>Pais</th>
-                        <th>FechaNacimiento</th>
-                        <th>Direccion</th>
-                        <th>Localidad</th>
-                        <th>Provincia</th>
-                        <th>Correo</th>
-                        <th>Telefono</th>
-                        <th>Acciones</th>  
-                        
+                        <th class="px-4 py-2 border">ID</th>  
+                        <th class="px-4 py-2 border">DNI</th>  
+                        <th class="px-4 py-2 border">Cuil</th>
+                        <th class="px-4 py-2 border">Nombre</th>  
+                        <th class="px-4 py-2 border">Apellido</th>
+                        <th class="px-4 py-2 border">Sexo</th>
+                        <th class="px-4 py-2 border">País</th>
+                        <th class="px-4 py-2 border">Fecha Nacimiento</th>
+                        <th class="px-4 py-2 border">Dirección</th>
+                        <th class="px-4 py-2 border">Localidad</th>
+                        <th class="px-4 py-2 border">Provincia</th>
+                        <th class="px-4 py-2 border">Correo</th>
+                        <th class="px-4 py-2 border">Teléfono</th>
+                        <th class="px-4 py-2 border">Acciones</th>  
                     </tr>  
                 </thead>  
-               <tbody>  
-    <% for (Cliente cliente : clientes) { %>  
-    <tr>  
-        <td><%= cliente.getId() %></td>  
-        <td><%= cliente.getDni() %></td>  
-        <td><%= cliente.getCuil() %></td>  
-        <td><%= cliente.getNombre() %></td>  
-        <td><%= cliente.getApellido() %></td>
-         <td><%= cliente.getSexo() %></td> 
-        <td><%= cliente.getPaisNacimiento().getNombre() %></td>  
-        <td><%= cliente.getFechaNacimiento() %></td>  
-        <td><%= cliente.getDireccion() %></td>  
-        <td><%= cliente.getLocalidad().getNombre() %></td>  
-        <td><%= cliente.getProvincia().getNombre() %></td>  
-        <td><%= cliente.getCorreo() %></td>  
-        <td><%= cliente.getTelefono() %></td>  
-        <td>  
-            <div class="dropdown">  
-                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
-                    <i class="fas fa-ellipsis-v"></i>  
-                </button>  
-                <div class="dropdown-menu dropdown-menu-right">  
-                    <a class="dropdown-item" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">  
-                        <i class="fas fa-edit"></i> Modificar  
-                    </a>  
-            
-                      <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('¿Estas seguro de que deseas eliminar este cliente?');">
-                                        <i class="fas fa-trash-alt"></i>Eliminar
-                                    </a> 
-                </div>  
-            </div>  
-        </td>  
-    </tr>  
-    <% } %>  
-</tbody>  
+                <tbody>  
+                    <% for (Cliente cliente : clientes) { %>  
+                        <tr>  
+                            <td class="px-4 py-2 border"><%= cliente.getId() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getDni() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getCuil() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getNombre() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getApellido() %></td>
+                            <td class="px-4 py-2 border"><%= cliente.getSexo() %></td> 
+                            <td class="px-4 py-2 border"><%= cliente.getPaisNacimiento().getNombre() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getFechaNacimiento() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getDireccion() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getLocalidad().getNombre() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getProvincia().getNombre() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getCorreo() %></td>  
+                            <td class="px-4 py-2 border"><%= cliente.getTelefono() %></td>  
+                            <td class="px-4 py-2 border">  
+                                <div class="relative inline-block text-left">
+                                    <!-- Botón para abrir el menú con el icono de tres puntos -->
+                                    <button type="button" class="bg-transparent text-gray-600 hover:text-gray-900 px-3 py-2 rounded-full" id="dropdownButton<%= cliente.getId() %>">
+                                        <i class="fas fa-ellipsis-v"></i> <!-- Icono de tres puntos -->
+                                    </button>
+                                    <!-- Menú desplegable oculto por defecto -->
+                                 <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10" id="dropdown<%= cliente.getId() %>">
+    <!-- Opción para Modificar -->
+    <a class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">
+        <i class="fas fa-edit mr-2"></i> <!-- Ícono con margen a la derecha -->
+        Modificar
+    </a>  
+    <!-- Opción para Eliminar -->
+    <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+        <i class="fas fa-trash-alt mr-2"></i> <!-- Ícono con margen a la derecha -->
+        Eliminar
+    </a> 
+</div>
 
+                                </div>
+                            </td>  
+                        </tr>  
+                    <% } %>  
+                </tbody>  
             </table>  
         </div>  
     <% } else { %>  
-        <!-- Mensaje de no hay usuarios -->  
-        <div class="alert alert-info" role="alert">  
+        <div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4" role="alert">  
             <i class="fas fa-info-circle"></i> No se encontraron clientes.  
         </div>  
     <% } %>  
-    
-    
-  
 </div>  
-<!-- Bootstrap JS and dependencies -->  
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>  
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
+<script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
 
 <script>
-
-
-
-    // Inicializar dropdowns de Bootstrap
-    $(document).ready(function () {
-        $('.dropdown-toggle').dropdown();
+// Manejo del menú desplegable
+document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {
+    button.addEventListener('click', function() {
+        const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));
+        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú
     });
+});
 
-    // Función para filtrar la tabla en tiempo real
-    function filterTable() {
-        const input = document.getElementById("searchInput");
-        const filter = input.value.toLowerCase();
-        const table = document.getElementById("usersTable");
-        const rows = table.getElementsByTagName("tr");
+function filterTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById("usersTable");
+    const rows = table.getElementsByTagName("tr");
 
-        for (let i = 1; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName("td");
-            let match = false;
+    for (let i = 1; i < rows.length; i++) {
+        let cells = rows[i].getElementsByTagName("td");
+        let found = false;
 
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j]) {
-                    const cellText = cells[j].textContent || cells[j].innerText;
-                    if (cellText.toLowerCase().indexOf(filter) > -1) {
-                        match = true;
-                        break;
-                    }
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j]) {
+                let text = cells[j].textContent || cells[j].innerText;
+                if (text.toLowerCase().includes(filter)) {
+                    found = true;
+                    break;
                 }
             }
-
-            rows[i].style.display = match ? "" : "none";
         }
+
+        rows[i].style.display = found ? "" : "none";
     }
+}
 </script>
 
-  <script>
-    // Mover la llamada de la función al document.ready para asegurar que el DOM esté cargado
-    $(document).ready(function() {
-        <% if(request.getAttribute("mensajeExito") != null) { %>  
-            mostrarMensaje("successMessage");  
-        <% } else if(request.getAttribute("mensajeError") != null) { %>  
-            mostrarMensaje("errorMessage");  
-        <% } %>  
-    });
-
-    function ocultarMensaje() {  
-        var mensaje = document.getElementById("successMessage");  
-        if (mensaje) {  
-            setTimeout(function() {  
-                mensaje.style.display = "none";  
-            }, 9000); 
-        }  
-
-        var errorMensaje = document.getElementById("errorMessage");
-        if (errorMensaje) {
-            setTimeout(function() {
-                errorMensaje.style.display = "none";
-            }, 9000);
-        }
-    } 
-
-    function mostrarMensaje(tipo) {  
-        var mensaje = document.getElementById(tipo);  
-        if (mensaje) {  
-            mensaje.style.display = "block"; // Mostrar el mensaje  
-            // Ocultar el mensaje después de 9 segundos (9000 milisegundos)  
-            setTimeout(function() {  
-                mensaje.style.display = "none";  
-            }, 9000);  
-        }  
-    }
+<script>  
+    window.onload = function() {  
+        // Esperar a que el DOM esté completamente cargado  
+        setTimeout(function() {  
+            var successMessage = document.getElementById('successMessage');  
+            var errorMessage = document.getElementById('errorMessage');  
+            if (successMessage) {  
+                successMessage.style.display = 'none'; // Ocultar mensaje de éxito  
+            }  
+            if (errorMessage) {  
+                errorMessage.style.display = 'none'; // Ocultar mensaje de error  
+            }  
+        }, 5000); // 5000 milisegundos = 5 segundos  
+    };  
 </script>
-
 </body>  
 </html>

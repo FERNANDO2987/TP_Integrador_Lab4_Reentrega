@@ -3,16 +3,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Sistema de Gestión Bancaria</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-      
-      height: 100%;
-    margin: 0;
-    padding: 0;
-     overflow-x: hidden; /* Oculta el scroll horizontal */
-            
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Oculta el scroll horizontal */
         }
+        /* Barra lateral */
         .sidebar {
             height: 100vh;
             background-color: #343a40;
@@ -29,38 +28,18 @@
         .sidebar.show {
             left: 0; /* Cuando se muestra, se mueve a la posición 0 */
         }
-        .sidebar a {
-            color: #fff;
-        }
-        .sidebar a:hover {
-            color: #007bff;
-        }
+        /* Contenido */
         .content {
             margin-left: 0;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transición para el título */
             overflow-y: auto; /* Asegura que el contenido se desplace verticalmente sin problemas */
-                flex: 1;  
+            flex: 1;  
             padding: 1px;  
         }
         .content.shift {
             margin-left: 200px;
         }
-        .navbar {
-            background-color: #343a40;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #007bff;
-        }
-        .navbar-brand, .navbar-nav .nav-link {
-            color: #343a40;
-        }
-        .navbar-nav .nav-link:hover {
-            color: #007bff;
-        }
-        .navbar-nav .nav-item.active .nav-link {
-            color: #007bff;
-        }
+        /* Icono del menú */
         .menu-icon {
             cursor: pointer;
             font-size: 35px;
@@ -70,53 +49,61 @@
             top: 10px;
             left: 25px;
         }
-        
-         /* Opcional: si el formulario debe ocupar toda la altura */
-    .content form {
-      height: 100%;
-    }
+        /* Título */
+        .title {
+            transition: margin-left 0.3s ease; /* Añadir transición */
+        }
+        .title.shift {
+            margin-left: 200px; /* Mover título cuando la barra lateral se abre */
+        }
+        /* Formulario */
+        .content form {
+            height: 100%;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- Barra de navegación -->
+    <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
         <!-- Icono para abrir/cerrar el menú -->
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
-        <a class="navbar-brand" href="#"></a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Logout</a>
-                </li>
-            </ul>
+     <div class="flex justify-end items-center text-xl ml-52"> <!-- Aquí agregamos el margen izquierdo -->
+    Sistema de Gestión Bancaria
+</div>
+
+        <div>
+            <a href="#" class="text-white hover:text-blue-500">Logout</a>
         </div>
     </nav>
 
+    <!-- Barra lateral -->
     <div class="sidebar" id="sidebar">
         <br>
-        <br>
-        <h4>Administrador</h4>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="#" onclick="cargarPagina('inicio')">Inicio</a>
+          <br>
+        <h4 class="text-white text-xl">Administrador</h4>
+        <ul class="space-y-2">
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('clientes')">Clientes</a>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('clientes')">Clientes</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>
             </li>
         </ul>
     </div>
 
-    <div class="content container-fluid" id="contenidoPrincipal">
-        <h2>¡Bienvenido/a admin!</h2>
+    <!-- Contenido principal -->
+    <div class="content ml-0 transition-all" id="contenidoPrincipal">
+        <h2 class="text-3xl font-bold p-6">¡Bienvenido/a admin!</h2>
     </div>
 
     <script>
@@ -138,14 +125,12 @@
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');
             var content = document.getElementById('contenidoPrincipal');
+            var title = document.getElementById('title');
             sidebar.classList.toggle('show');
             content.classList.toggle('shift');
+            title.classList.toggle('shift');
         }
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>
