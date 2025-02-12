@@ -135,14 +135,20 @@
                                         <i class="fas fa-ellipsis-v"></i> <!-- Icono de tres puntos -->
                                     </button>
                                     <!-- Menú desplegable oculto por defecto -->
-                             <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg bottom-full mb-1 z-10" id="dropdown<%= cliente.getId() %>">
+                            <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg top-full mb-1 z-10" id="dropdown<%= cliente.getId() %>">
+
 
 
                                        <!-- Opción para Modificar -->
                                   <a class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">
-                                     <i class="fas fa-edit mr-2"></i> <!-- Ícono con margen a la derecha -->
+                                     <i class="fas fa-edit mr-5"></i> <!-- Ícono con margen a la derecha -->
                                        Modificar
                                      </a>  
+                                     
+                                      <a href="servletGestionarCuentas?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                  <i class="fas fa-cogs mr-5"></i> <!-- Ícono con margen a la derecha -->
+                                   Gestionar Cuentas
+                                  </a> 
     <!-- Opción para Eliminar -->
                                   <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-8 py-4 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
                                   <i class="fas fa-trash-alt mr-5"></i> <!-- Ícono con margen a la derecha -->
