@@ -13,6 +13,11 @@
     
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+      
+          <link rel="stylesheet" href="path/to/your/styles.css"> <!-- Personaliza esta línea -->  
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
+      
     <title>Lista de Clientes</title>  
     
        <style>
@@ -124,24 +129,26 @@
                             <td class="px-4 py-2 border"><%= cliente.getCorreo() %></td>  
                             <td class="px-4 py-2 border"><%= cliente.getTelefono() %></td>  
                             <td class="px-4 py-2 border">  
-                                <div class="relative inline-block text-left">
+                                <div class="relative inline-block text-rihtg">
                                     <!-- Botón para abrir el menú con el icono de tres puntos -->
                                     <button type="button" class="bg-transparent text-gray-600 hover:text-gray-900 px-3 py-2 rounded-full" id="dropdownButton<%= cliente.getId() %>">
                                         <i class="fas fa-ellipsis-v"></i> <!-- Icono de tres puntos -->
                                     </button>
                                     <!-- Menú desplegable oculto por defecto -->
-                                 <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10" id="dropdown<%= cliente.getId() %>">
-    <!-- Opción para Modificar -->
-    <a class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">
-        <i class="fas fa-edit mr-2"></i> <!-- Ícono con margen a la derecha -->
-        Modificar
-    </a>  
+                             <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg bottom-full mb-1 z-10" id="dropdown<%= cliente.getId() %>">
+
+
+                                       <!-- Opción para Modificar -->
+                                  <a class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">
+                                     <i class="fas fa-edit mr-2"></i> <!-- Ícono con margen a la derecha -->
+                                       Modificar
+                                     </a>  
     <!-- Opción para Eliminar -->
-    <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
-        <i class="fas fa-trash-alt mr-2"></i> <!-- Ícono con margen a la derecha -->
-        Eliminar
-    </a> 
-</div>
+                                  <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-8 py-4 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+                                  <i class="fas fa-trash-alt mr-5"></i> <!-- Ícono con margen a la derecha -->
+                                   Eliminar
+                                  </a> 
+                                 </div>
 
                                 </div>
                             </td>  
@@ -157,43 +164,65 @@
     <% } %>  
 </div>  
 
+
+</body>  
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
 <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
 
-<script>
-// Manejo del menú desplegable
-document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {
-    button.addEventListener('click', function() {
-        const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));
-        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú
-    });
-});
 
-function filterTable() {
-    const input = document.getElementById("searchInput");
-    const filter = input.value.toLowerCase();
-    const table = document.getElementById("usersTable");
-    const rows = table.getElementsByTagName("tr");
 
-    for (let i = 1; i < rows.length; i++) {
-        let cells = rows[i].getElementsByTagName("td");
-        let found = false;
 
-        for (let j = 0; j < cells.length; j++) {
-            if (cells[j]) {
-                let text = cells[j].textContent || cells[j].innerText;
-                if (text.toLowerCase().includes(filter)) {
-                    found = true;
-                    break;
-                }
-            }
-        }
+<script>  
+// Manejo del menú desplegable  
+document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {  
+    button.addEventListener('click', function(event) {  
+        event.stopPropagation(); // Evita que el evento burbujee al documento  
+        const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));  
+        // Cerrar otros menús si están abiertos  
+        document.querySelectorAll('.dropdown-menu').forEach(dropdown => {  
+            if (dropdown !== menu) {  
+                dropdown.classList.add('hidden');  
+            }  
+        });  
+        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú  
+    });  
+});  
 
-        rows[i].style.display = found ? "" : "none";
-    }
-}
+// Cerrar el menú si se hace clic fuera de él  
+document.addEventListener('click', function(event) {  
+    const dropdowns = document.querySelectorAll('.dropdown-menu');  
+    dropdowns.forEach(dropdown => {  
+        if (!dropdown.classList.contains('hidden') && !dropdown.contains(event.target)) {  
+            dropdown.classList.add('hidden'); // Ocultar el menú  
+        }  
+    });  
+});  
+
+function filterTable() {  
+    const input = document.getElementById("searchInput");  
+    const filter = input.value.toLowerCase();  
+    const table = document.getElementById("usersTable");  
+    const rows = table.getElementsByTagName("tr");  
+
+    for (let i = 1; i < rows.length; i++) {  
+        let cells = rows[i].getElementsByTagName("td");  
+        let found = false;  
+
+        for (let j = 0; j < cells.length; j++) {  
+            if (cells[j]) {  
+                let text = cells[j].textContent || cells[j].innerText;  
+                if (text.toLowerCase().includes(filter)) {  
+                    found = true;  
+                    break;  
+                }  
+            }  
+        }  
+
+        rows[i].style.display = found ? "" : "none";  
+    }  
+}  
 </script>
-
 <script>  
     window.onload = function() {  
         // Esperar a que el DOM esté completamente cargado  
@@ -209,5 +238,4 @@ function filterTable() {
         }, 5000); // 5000 milisegundos = 5 segundos  
     };  
 </script>
-</body>  
 </html>

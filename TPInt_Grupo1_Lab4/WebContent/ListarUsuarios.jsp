@@ -12,6 +12,9 @@
     
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+          <link rel="stylesheet" href="path/to/your/styles.css"> <!-- Personaliza esta línea -->  
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
     <title>Lista de Clientes</title>  
     
        <style>
@@ -143,41 +146,61 @@
     <% } %>  
 </div>  
 
+
+</body>  
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
 <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
 
-<script>
-// Manejo del menú desplegable
-document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {
-    button.addEventListener('click', function() {
-        const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));
-        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú
-    });
-});
+<script>  
+// Manejo del menú desplegable  
+document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {  
+    button.addEventListener('click', function(event) {  
+        event.stopPropagation(); // Evita que el evento burbujee al documento  
+        const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));  
+        // Cerrar otros menús si están abiertos  
+        document.querySelectorAll('.dropdown-menu').forEach(dropdown => {  
+            if (dropdown !== menu) {  
+                dropdown.classList.add('hidden');  
+            }  
+        });  
+        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú  
+    });  
+});  
 
-function filterTable() {
-    const input = document.getElementById("searchInput");
-    const filter = input.value.toLowerCase();
-    const table = document.getElementById("usersTable");
-    const rows = table.getElementsByTagName("tr");
+// Cerrar el menú si se hace clic fuera de él  
+document.addEventListener('click', function(event) {  
+    const dropdowns = document.querySelectorAll('.dropdown-menu');  
+    dropdowns.forEach(dropdown => {  
+        if (!dropdown.classList.contains('hidden') && !dropdown.contains(event.target)) {  
+            dropdown.classList.add('hidden'); // Ocultar el menú  
+        }  
+    });  
+});  
 
-    for (let i = 1; i < rows.length; i++) {
-        let cells = rows[i].getElementsByTagName("td");
-        let found = false;
+function filterTable() {  
+    const input = document.getElementById("searchInput");  
+    const filter = input.value.toLowerCase();  
+    const table = document.getElementById("usersTable");  
+    const rows = table.getElementsByTagName("tr");  
 
-        for (let j = 0; j < cells.length; j++) {
-            if (cells[j]) {
-                let text = cells[j].textContent || cells[j].innerText;
-                if (text.toLowerCase().includes(filter)) {
-                    found = true;
-                    break;
-                }
-            }
-        }
+    for (let i = 1; i < rows.length; i++) {  
+        let cells = rows[i].getElementsByTagName("td");  
+        let found = false;  
 
-        rows[i].style.display = found ? "" : "none";
-    }
-}
+        for (let j = 0; j < cells.length; j++) {  
+            if (cells[j]) {  
+                let text = cells[j].textContent || cells[j].innerText;  
+                if (text.toLowerCase().includes(filter)) {  
+                    found = true;  
+                    break;  
+                }  
+            }  
+        }  
+
+        rows[i].style.display = found ? "" : "none";  
+    }  
+}  
 </script>
 
 <script>  
@@ -195,5 +218,4 @@ function filterTable() {
         }, 5000); // 5000 milisegundos = 5 segundos  
     };  
 </script>
-</body>  
 </html>

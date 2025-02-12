@@ -21,10 +21,10 @@
     <meta charset="ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modificar Cliente</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+     <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
+  <style>
         .centered-header {
             text-align: center;
         }
@@ -35,42 +35,67 @@
         .form-label {
             font-weight: bold;
         }
+       .alert {  
+    font-size: 1.2rem;  
+    padding: 20px;  
+    border-radius: 8px;  
+    display: flex;  
+    align-items: center;  
+    margin-bottom: 16px;  
+}  
+.alert-success {  
+    background-color: #28a745; /* Color verde */  
+    color: white;  
+}  
+.alert-error {  
+    background-color: #dc3545; /* Color rojo */  
+    color: white;  
+}
+    input:invalid {
+        border-color: red;
+    }
+    
+    /* Si prefieres un borde rojo sin mostrar el mensaje de error */
+    input:required:invalid {
+        border-color: red;
+    }
+
     </style>
 </head>
-<body>
-<div class="container mt-5">
+<body class="bg-gray-100">
+<div class="container mx-auto mt-10">
     <!-- Encabezado centrado -->
-    <div class="row justify-content-center mb-4">
-        <h2 class="text-primary centered-header">Modificar Cliente</h2>
+  <div class="text-center mb-6">
+        <h2 class="text-2xl font-semibold text-blue-600">Modificar Cliente</h2>
     </div>
 
-    <!-- Mostrar mensaje de éxito -->  
-        <%  
-            String mensajeExito = (String) request.getAttribute("mensajeExito");  
-            if (mensajeExito != null) {  
-        %>  
-            <div id="successMessage" class="alert alert-success">  
-                <%= mensajeExito %>  
-            </div>  
-        <%  
-            }  
-        %> 
-        
-        <%  
-    String mensajeError = (String) request.getAttribute("mensajeError");  
-    if (mensajeError != null) {  
+      <!-- Mostrar mensaje de éxito -->
+  <%  
+    String mensajeExito = (String) request.getAttribute("mensajeExito");  
+    if (mensajeExito != null) {  
 %>  
-    <div id="errorMessage" class="alert alert-danger">  
-        <%= mensajeError %>  
+    <div id="successMessage" class="alert alert-success mb-4">  
+        <i class="fas fa-check-circle"></i> <%= mensajeExito %>  
     </div>  
 <%  
     }  
+%>   
+
+<%  
+    String mensajeError = (String) request.getAttribute("mensajeError");  
+    if (mensajeError != null) {  
 %>  
+    <div id="errorMessage" class="alert alert-error mb-4">  
+        <i class="fas fa-exclamation-circle"></i> <%= mensajeError %>  
+    </div>  
+<%  
+    }  
+%>
         
  
 
            <!-- Contenedor del formulario -->
-    <div class="form-container">
+  <div class="form-container bg-white p-6 shadow-md rounded-lg">
         <hr>
         <%
             // Obtener el ID del cliente desde la solicitud
@@ -89,45 +114,50 @@
                <input type="hidden" name="id" value="<%= cliente.getId() %>"> <!-- Campo oculto para el ID -->
 
             
-            <div class="row mb-4">
-                <div class="col-12 col-md-6">
-                    <label for="dni" class="form-label">DNI:</label>
-                   
-                    <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese el DNI"   
-                               value="<%= cliente.getDni() != null ? cliente.getDni() : "" %>"    readonly required>  
-                </div>
-                <div class="col-12 col-md-6">
-                    <label for="cuil" class="form-label">Cuil:</label>
-                    <input type="text" id="cuil" name="cuil" class="form-control" placeholder="Ingrese el Cuil"   
-                           
-                             value="<%= cliente.getCuil() != null ? cliente.getCuil() : "" %>"  readonly required>  
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div class="col-12 col-md-6">
+        <label for="dni" class="form-label text-lg">DNI:</label>
+        <input type="text" id="dni" name="dni" class="form-input mt-2 p-2 border border-gray-400 bg-gray-200 rounded w-full text-gray-500"
+               placeholder="Ingrese el DNI" 
+               value="<%= cliente.getDni() != null ? cliente.getDni() : "" %>"
+               disabled required>  
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="cuil" class="form-label text-lg">Cuil:</label>
+        <input type="text" id="cuil" name="cuil" class="form-input mt-2 p-2 border border-gray-400 bg-gray-200 rounded w-full text-gray-500"
+               placeholder="Ingrese el Cuil" 
+               value="<%= cliente.getCuil() != null ? cliente.getCuil() : "" %>"
+               disabled required>  
+    </div>
+</div>
 
-            <div class="row mb-4">
+
+            <!-- Nombre y Apellido -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div class="col-12 col-md-6">
-                    <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre"   
+                    <label for="nombre" class="form-label text-lg">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-input mt-2 p-2 border border-gray-300 rounded w-full"placeholder="Ingrese el Nombre"   
                            value="<%= cliente.getNombre() != null ? cliente.getNombre() : "" %>" required>  
                 </div>
                 <div class="col-12 col-md-6">
-                    <label for="apellido" class="form-label">Apellido:</label>
-                       <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ingrese el Apellido"   
+                    <label for="apellido" class="form-label text-lg">Apellido:</label>
+                       <input type="text" id="apellido" name="apellido" class="form-input mt-2 p-2 border border-gray-300 rounded w-full" placeholder="Ingrese el Apellido"   
                               value="<%= cliente.getApellido() != null ? cliente.getApellido() : "" %>" required>  
                 </div>
             </div>
 
-            <div class="row mb-4">
+            <!-- Sexo y Pais -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div class="col-12 col-md-6">
-                    <label for="sexo" class="form-label">Sexo</label>
-                     <select id="sexo" name="sexo" class="form-control">  
+                    <label for="sexo"  class="form-label text-lg">Sexo</label>
+                     <select id="sexo" name="sexo" class="form-input mt-2 p-2 border border-gray-300 rounded w-full">  
                             <option value="Masculino" <%= cliente.getSexo().equals("Masculino") ? "selected" : "" %>>Masculino</option>
 		                        <option value="Femenino" <%= cliente.getSexo().equals("Femenino") ? "selected" : "" %>>Femenino</option> 
                     </select>  
                 </div>
-                <div class="col-12 col-md-6">
-                    <label for="pais">Pais:</label>
-                    <select class="form-control" id="pais" name="pais" required>
+                <div>
+                    <label for="pais" class="form-label text-lg">Pais:</label>
+                    <select class="form-input mt-2 p-2 border border-gray-300 rounded w-full" id="pais" name="pais" required>
                         <option value="">Seleccionar</option>
                         <%
                             // Obtener la lista de países desde la base de datos
@@ -152,16 +182,17 @@
             
             
 
-            <div class="row mb-4">
+             <!-- Fecha de nacimiento y Direccion -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div class="col-12 col-md-6">
-                   <label for="fechaNacimiento" class="form-label">Fecha Nacimiento:</label>
-                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" 
+                   <label for="fechaNacimiento" class="form-label text-lg">Fecha Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento"  class="form-input mt-2 p-2 border border-gray-300 rounded w-full"
                     value="<%= cliente.getFechaNacimiento() != null ? cliente.getFechaNacimiento() : "" %>" required>   
                   </div>     
 
-                <div class="col-12 col-md-6">  
-                    <label for="direccion" class="form-label">Direccion:</label>  
-                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingrese la direccion"   
+                <div>  
+                    <label for="direccion" class="form-label text-lg">Direccion:</label>  
+                    <input type="text" id="direccion" name="direccion" class="form-input mt-2 p-2 border border-gray-300 rounded w-full" placeholder="Ingrese la direccion"   
                          value="<%= cliente.getDireccion() != null ? cliente.getDireccion() : "" %>" required> 
                 </div> 
            
@@ -169,10 +200,11 @@
      
     
              
-                  <div class="row mb-4">            
-                   <div class="col-12 col-md-6">
-                    <label for="localidad">Localidad:</label>
-                    <select class="form-control" id="localidad" name="localidad" required>
+                   <!-- Localidad y Provincia -->
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">    
+                   <div>
+                    <label for="localidad" class="form-label text-lg">Localidad:</label>
+                    <select class="form-input mt-2 p-2 border border-gray-300 rounded w-full"  id="localidad" name="localidad" required>
                         <option value="">Seleccionar</option>
                         <%
                             // Obtener la lista de países desde la base de datos
@@ -195,9 +227,9 @@
              
                 
                 
-                  <div class="col-12 col-md-6">
-                    <label for="provincia">Provincia:</label>
-                    <select class="form-control" id="provincia" name="provincia" required>
+                  <div>
+                    <label for="provincia"  class="form-label text-lg">Provincia:</label>
+                    <select class="form-input mt-2 p-2 border border-gray-300 rounded w-full" id="provincia" name="provincia" required>
                         <option value="">Seleccionar</option>
                         <%
                             // Obtener la lista de países desde la base de datos
@@ -221,28 +253,29 @@
                 
             </div>
 
-            <div class="row mb-4">
-                    <div class="col-12 col-md-6">  
-                    <label for="email" class="form-label">Email:</label>  
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Ingrese el email"   
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>  
+                    <label for="email"  class="form-label text-lg">Email:</label>  
+                    <input type="email" id="email" name="email" class="form-input mt-2 p-2 border border-gray-300 rounded w-full" placeholder="Ingrese el email"   
                            value="<%= cliente.getCorreo() != null ? cliente.getCorreo() : "" %>" readonly required> 
                 </div> 
-                  <div class="col-12 col-md-6">  
-                    <label for="telefono" class="form-label">Telefono:</label>  
-                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingrese el telefono"   
+                  <div>  
+                    <label for="telefono" class="form-label text-lg">Telefono:</label>  
+                    <input type="text" id="telefono" name="telefono" class="form-input mt-2 p-2 border border-gray-300 rounded w-full" placeholder="Ingrese el telefono"   
                          
                             value="<%= cliente.getTelefono() != null ? cliente.getTelefono() : "" %>" readonly required> 
                 </div> 
             </div>
 
-            <!-- Botones -->
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Guardar
-                </button>
-<a href="#" class="btn btn-secondary" onclick="window.location.reload();">  
-    <i class="fas fa-times"></i> Cancelar  
-</a>        </div>
+          <!-- Botón de Modificar -->
+<div class="text-center mt-6">
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700"
+        onclick="return confirm('¿Está seguro de que desea modificar?')">
+        Modificar
+    </button>
+</div>
+
+
         </form>
           <% } else { %>
             <p class="text-danger">Cliente no encontrado.</p>

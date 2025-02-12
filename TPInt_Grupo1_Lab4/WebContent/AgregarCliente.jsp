@@ -48,6 +48,15 @@
     background-color: #dc3545; /* Color rojo */  
     color: white;  
 }
+  input:invalid {
+        border-color: red;
+    }
+    
+    /* Si prefieres un borde rojo sin mostrar el mensaje de error */
+    input:required:invalid {
+        border-color: red;
+    }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -218,10 +227,14 @@
                 </div>
             </div>
 
-            <!-- Botón de Enviar -->
+         
+            
             <div class="text-center mt-6">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">Agregar Cliente</button>
-            </div>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700"
+        onclick="return confirm('¿Está seguro de que desea agregar un cliente?')">
+        Agregar Cliente
+    </button>
+</div>
         </form>
     </div>
 </div>
