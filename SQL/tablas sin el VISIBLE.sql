@@ -140,7 +140,7 @@ REFERENCES cuentas(nro_cuenta);
 -- prestamos
 
 CREATE TABLE `bdbanco`.`prestamos` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL auto_increment,
   `observaciones` VARCHAR(255) NULL,
   `id_cliente` INT NOT NULL,
   `nro_cuenta` INT NOT NULL,

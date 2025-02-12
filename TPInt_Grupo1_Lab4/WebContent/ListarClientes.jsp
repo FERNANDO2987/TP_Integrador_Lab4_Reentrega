@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
     <style>  
         .dropdown-toggle::after {  
-            display: none; /* Quitar el ícono del dropdown */  
+            display: none; /* Quitar el Ã­cono del dropdown */  
         }  
         .dropdown-menu {  
-            min-width: 0; /* Ajustar el ancho del menú */  
+            min-width: 0; /* Ajustar el ancho del menÃº */  
         }  
         .centered-header {
     text-align: center; /* Centrar el texto horizontalmente */
@@ -46,7 +46,7 @@
     </div>
 
 
-    <!-- Botón Agregar alineado a la derecha -->
+    <!-- BotÃ³n Agregar alineado a la derecha -->
 <div class="row mb-4" >
     <div class="col-12" style="text-align: right;">
         <a href="AgregarCliente.jsp" class="btn btn-success">
@@ -109,7 +109,8 @@
                 </thead>  
                <tbody>  
     <% for (Cliente cliente : clientes) { %>  
-    <tr>  
+    <tr>
+    	<input type="hidden" name="InputIdCliente" value="<%= cliente.getId() %>">
         <td><%= cliente.getId() %></td>  
         <td><%= cliente.getDni() %></td>  
         <td><%= cliente.getCuil() %></td>  
@@ -132,14 +133,17 @@
                     <a class="dropdown-item" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">  
                         <i class="fas fa-edit"></i> Modificar  
                     </a>  
-            
-                      <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('¿Estas seguro de que deseas eliminar este cliente?');">
-                                        <i class="fas fa-trash-alt"></i>Eliminar
-                                    </a> 
+                    <a class="dropdown-item" href="servletGestionarCuentas?id=<%= cliente.getId() %>">  
+                        <i class="fas fa-edit"></i> Gestionar Cuentas  
+                    </a>
+                      <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('Â¿Estas seguro de que deseas eliminar este cliente?');">
+                         <i class="fas fa-trash-alt"></i>Eliminar
+                      </a> 
                 </div>  
             </div>  
-        </td>  
-    </tr>  
+        </td>
+      
+    </tr>
     <% } %>  
 </tbody>  
 
@@ -169,7 +173,7 @@
         $('.dropdown-toggle').dropdown();
     });
 
-    // Función para filtrar la tabla en tiempo real
+    // FunciÃ³n para filtrar la tabla en tiempo real
     function filterTable() {
         const input = document.getElementById("searchInput");
         const filter = input.value.toLowerCase();
@@ -196,7 +200,7 @@
 </script>
 
   <script>
-    // Mover la llamada de la función al document.ready para asegurar que el DOM esté cargado
+    // Mover la llamada de la funciÃ³n al document.ready para asegurar que el DOM estÃ© cargado
     $(document).ready(function() {
         <% if(request.getAttribute("mensajeExito") != null) { %>  
             mostrarMensaje("successMessage");  
@@ -225,7 +229,7 @@
         var mensaje = document.getElementById(tipo);  
         if (mensaje) {  
             mensaje.style.display = "block"; // Mostrar el mensaje  
-            // Ocultar el mensaje después de 9 segundos (9000 milisegundos)  
+            // Ocultar el mensaje despuÃ©s de 9 segundos (9000 milisegundos)  
             setTimeout(function() {  
                 mensaje.style.display = "none";  
             }, 9000);  

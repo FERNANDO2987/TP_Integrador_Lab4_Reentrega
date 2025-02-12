@@ -6,7 +6,7 @@ import entidad.Cliente;
 import entidad.UsuarioCliente;
 
 public interface ClienteDao {
-
+	public boolean modificarCliente(Cliente cliente);
 	public List<Cliente> ObtenerClientes();
 	public boolean agregarOmodifcarCliente(Cliente cliente);
 	public boolean modificarCliente(Cliente cliente);

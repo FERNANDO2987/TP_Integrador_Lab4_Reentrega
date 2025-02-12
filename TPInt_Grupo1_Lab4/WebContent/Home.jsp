@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Sistema de Gestión Bancaria</title>
+    <title>Sistema de GestiÃ³n Bancaria</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -20,14 +20,14 @@
             color: #fff;
             position: fixed;
             width: 200px; /* Ancho de la barra lateral */
-            top: 0; /* Asegura que la barra lateral esté alineada arriba */
+            top: 0; /* Asegura que la barra lateral estÃ© alineada arriba */
             left: -200px; /* Inicialmente oculta */
-            transition: left 0.3s ease; /* Animación para el desplazamiento */
-            z-index: 1; /* Asegura que la barra lateral esté detrás del botón */
+            transition: left 0.3s ease; /* AnimaciÃ³n para el desplazamiento */
+            z-index: 1; /* Asegura que la barra lateral estÃ© detrÃ¡s del botÃ³n */
             overflow-y: auto; /* Permite que la barra lateral tenga su propio scroll si es necesario */
         }
         .sidebar.show {
-            left: 0; /* Cuando se muestra, se mueve a la posición 0 */
+            left: 0; /* Cuando se muestra, se mueve a la posiciÃ³n 0 */
         }
         .sidebar a {
             color: #fff;
@@ -65,7 +65,7 @@
             cursor: pointer;
             font-size: 35px;
             color: white;
-            z-index: 2; /* Asegura que el icono esté por encima de la barra lateral */
+            z-index: 2; /* Asegura que el icono estÃ© por encima de la barra lateral */
             position: fixed;
             top: 10px;
             left: 25px;
@@ -80,7 +80,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <!-- Icono para abrir/cerrar el menú -->
+        <!-- Icono para abrir/cerrar el menÃº -->
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
         <a class="navbar-brand" href="#"></a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -104,7 +104,7 @@
                 <a class="nav-link" href="#" onclick="cargarPagina('clientes')">Clientes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>
+                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">PrÃ©stamos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
@@ -115,24 +115,30 @@
         </ul>
     </div>
 
+
     <div class="content container-fluid" id="contenidoPrincipal">
-        <h2>¡Bienvenido/a admin!</h2>
+        <h2>Â¡Bienvenido/a admin!</h2>
     </div>
 
     <script>
         function cargarPagina(pagina) {
             var contenido = document.getElementById('contenidoPrincipal');
             if (pagina === 'inicio') {
-                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+                contenido.innerHTML = '<h2>Â¡Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
+                contenido.innerHTML = '<h2>Clientes</h2><p>AquÃ­ va la informaciÃ³n de los clientes.</p>';
             } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+                contenido.innerHTML = '<h2>PrÃ©stamos</h2><p>AquÃ­ va la informaciÃ³n de los prÃ©stamos.</p>';
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarClientes') {
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
             }
+            else if (pagina === 'listarCuentas') {
+            	// Enlace al servlet que lista los usuarios
+                contenido.innerHTML = '<iframe src="servletListarCuentas" width="90%" height="900px"></iframe>';
+            }
+            
         }
 
         function toggleSidebar() {
