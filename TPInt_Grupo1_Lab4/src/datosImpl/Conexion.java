@@ -21,13 +21,11 @@ public class Conexion {
 	{
 		try
 		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(url, user, pass);
-			System.out.println("Conectado ***************");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Error ***************");
 			e.printStackTrace();
 		}
 		return this.connection;
