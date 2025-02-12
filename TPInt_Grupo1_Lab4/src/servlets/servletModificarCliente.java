@@ -3,8 +3,6 @@ package servlets;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Map;
 
@@ -30,45 +28,45 @@ import negocioImpl.PaisNegImpl;
 import negocioImpl.ProvinciaNegImpl;
 
 /**
- * Servlet implementation class servletAgregarCliente
+ * Servlet implementation class servletModificarCliente
  */
-@WebServlet("/servletAgregarCliente")
-public class servletAgregarCliente extends HttpServlet {
+@WebServlet("/servletModificarCliente")
+public class servletModificarCliente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+  
+	
 	 PaisNeg paisNeg = new PaisNegImpl();
 	 ProvinciasNeg provinciaNeg = new ProvinciaNegImpl();
 	 LocalidadNeg localidadNeg = new LocalidadNegImpl();
 	 
 	 ClienteNeg clienteNeg = new ClienteNegImpl();
 	 UsuarioDao usuarioDao = new UsuarioDaoImpl();
-	 private static final String MENSAJE_EXITO = "Cliente y Usuario agregado exitosamente, recibirá por email usuario y password.";
+	 private static final String MENSAJE_EXITO = "Cliente y Usuario Modificado exitosamente, recibirá por email usuario y password.";
 	    private static final String MENSAJE_ERROR = "Error al agregar el cliente.";
-	 
-    public servletAgregarCliente() {
-  
+	
+	
+    public servletModificarCliente() {
+        super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Pais> listaPaises = paisNeg.ListarPaises();
-		if (listaPaises == null || listaPaises.isEmpty()) {
-		    listaPaises = new ArrayList<>(); // Para evitar que sea nula
-		}
-		request.setAttribute("paises", listaPaises);
-		request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
-
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-
-	
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    try {
 	    	
 	    	
 	        // Obtener los parámetros del formulario
+	    	  int id = Integer.parseInt(request.getParameter("id"));
 	        String dni = request.getParameter("dni");
 	        String cuil = request.getParameter("cuil");
 	        String nombre = request.getParameter("nombre");
@@ -107,7 +105,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        } catch (Exception e) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Formato de fecha inválido.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
@@ -117,7 +115,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        } catch (NumberFormatException e) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: ID del país inválido.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
@@ -127,7 +125,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        } catch (NumberFormatException e) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: ID de la provincia inválido.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 	        
@@ -137,7 +135,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        } catch (NumberFormatException e) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: ID de la localidad inválido.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
@@ -151,7 +149,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        if (paisNacimiento == null) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: País de nacimiento no encontrado.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
@@ -165,7 +163,7 @@ public class servletAgregarCliente extends HttpServlet {
 	        if (provincia == null) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: Provincia no encontrada.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
@@ -180,27 +178,27 @@ public class servletAgregarCliente extends HttpServlet {
 	        if (localidad == null) {
 	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	            request.setAttribute("mensajeError", "Error: localidad no encontrado.");
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	            return;
 	        }
 
 
 	        // Crear el objeto Cliente
 	        Cliente cliente = new Cliente(
-	            0, dni, cuil, nombre, apellido, sexo,
+	            id, dni, cuil, nombre, apellido, sexo,
 	            paisNacimiento, fechaNacimiento, direccion,
 	            localidad, provincia, correo, telefono
 	        );
 
 	      
 	        
-	        Map<String, String> errores = clienteNeg.AgregarCliente(cliente);  
+	        Map<String, String> errores = clienteNeg.ModificarCliente(cliente);  
 
 	        // Manejo de errores  
 	        if (!errores.isEmpty()) {  
 	            String mensajeError = String.join(", ", errores.values());  
 	            request.setAttribute("mensajeError", mensajeError);  
-	            request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);  
+	            request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);  
 	            return;  
 	        }  
 
@@ -220,20 +218,18 @@ public class servletAgregarCliente extends HttpServlet {
 	        request.removeAttribute("provincia");
 	        request.removeAttribute("email");
 	        request.removeAttribute("telefono");
-	        request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);  
+	        request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);  
 
 
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        request.setAttribute("mensajeError", "Error al procesar la solicitud: " + e.getMessage());
-	        request.getRequestDispatcher("AgregarCliente.jsp").forward(request, response);
+	        request.getRequestDispatcher("ModificarCliente.jsp").forward(request, response);
 	    }
 	}
-	
+		
+		
+	}
 
 
-  
-
-	
-}

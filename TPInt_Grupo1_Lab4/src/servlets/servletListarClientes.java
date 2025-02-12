@@ -10,11 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cliente;
-
+import entidad.Cuenta;
+import entidad.TipoCuenta;
 import negocio.ClienteNeg;
-import negocio.PaisNeg;
 import negocioImpl.ClienteNegImpl;
-import negocioImpl.PaisNegImpl;
 
 
 /**
@@ -37,26 +36,27 @@ public class servletListarClientes extends HttpServlet {
 		
 		
 		 try {
-             // Llamar al mÈtodo ListarUsuarios
+             // Llamar al m√©todo ListarUsuarios
              List<Cliente> clientes = clienteNeg.ListarClientes();
 
              // Verificar si la lista no es nula
              if (clientes != null && !clientes.isEmpty()) {
                  // Establecer la lista de usuarios como un atributo en el request
                  request.setAttribute("clientes", clientes);
+                 
              } else {
                  // Si no hay usuarios, establecer un mensaje de error
                  request.setAttribute("error", "No se encontraron clientes.");
+                 //request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
              }
 
-       
              
-             // Redirigir a la p·gina JSP para mostrar la lista de usuarios
+             // Redirigir a la p√°gina JSP para mostrar la lista de usuarios
              request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
          } catch (Exception e) {
-             // Manejar excepciones y redirigir a una p·gina de error si es necesario
+             // Manejar excepciones y redirigir a una p√°gina de error si es necesario
              e.printStackTrace();
-             request.setAttribute("error", "OcurriÛ un error al obtener la lista de clientes.");
+             request.setAttribute("error", "Ocurri√≥ un error al obtener la lista de clientes.");
              request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
          }
 		
@@ -65,8 +65,12 @@ public class servletListarClientes extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+
+		if(request.getParameter("btnGestionCuenta") != null)
+		{
+			
+			
+		}
 	}
 
 }

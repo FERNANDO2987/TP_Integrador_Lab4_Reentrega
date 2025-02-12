@@ -13,7 +13,7 @@ public class Conexion {
 	private String user = "root";
 	private String pass = "root";
 	private String dbName = "bdbanco";
-	private String url = host + dbName + "?profileSQL=true&useSSL=false";
+	private String url = host + dbName + "?profileSQL=false&useSSL=false";
 
 	protected Connection connection;
 	

@@ -1,125 +1,162 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">  
-<html>  
-<head>  
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">  
-    <title>Sistema de Gestión Bancaria</title>  
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
-    <style>  
- body {
-    overflow-x: hidden; /* Desactiva el scroll horizontal */
-}
-    .sidebar {  
-        height: 100vh;  
-        background-color: #343a40;  
-        padding: 15px;  
-        color: #fff;  
-        position: fixed;  
-        width: 200px; /* Ancho de la barra lateral */  
-        top: 0;  
-        left: 0;  
-    }  
-    .sidebar a {  
-        color: #fff;  
-    }  
-    .sidebar a:hover {  
-        color: #007bff;  
-    }  
-    .content {
-        flex: 1;
-        padding: 0.1px;
-        margin-left: calc(150px + 1rem); /* Ajusta dinámicamente según el ancho de la barra lateral */
-        margin-right: 0; /* No es necesario cambiar este valor */
-        
-    }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-    .navbar {  
-        background-color: #343a40; /* Color de la franja superior */
-        display: flex; /* Para usar flexbox */
-        justify-content: space-between; /* Esto asegura que los elementos se distribuyan de manera automática */
-        align-items: center; /* Centra los elementos verticalmente */
-         color: #007bff;  
-    }  
-    .navbar-brand, .navbar-nav .nav-link {  
-        color: #343a40;  
-    }  
-    .navbar-nav .nav-link:hover {  
-        color: #007bff; /* Color al pasar el ratón */  
-    }  
-    .navbar-nav .nav-item.active .nav-link {  
-        color: #007bff; /* Color del enlace activo */  
-    }  
-</style>
+    <title>Sistema de Gestiï¿½n Bancaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-    
-</head>  
-<body>  
+    <title>Sistema de GestiÃ³n Bancaria</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-    <nav class="navbar navbar-expand-lg navbar-dark">  
-        <a class="navbar-brand" href="#">Gestión Bancaria</a>  
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">  
-            <span class="navbar-toggler-icon"></span>  
-        </button>  
-        <div class="collapse navbar-collapse" id="navbarNav">  
-            <ul class="navbar-nav ml-auto">  
-                <li class="nav-item">  
-                    <a class="nav-link" href="#">Logout</a>  
-                </li>  
-            </ul>  
-        </div>  
-    </nav>  
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Oculta el scroll horizontal */
+        }
+        /* Barra lateral */
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            padding: 15px;
+            color: #fff;
+            position: fixed;
+            width: 200px; /* Ancho de la barra lateral */
+            top: 0; /* Asegura que la barra lateral estÃ© alineada arriba */
+            left: -200px; /* Inicialmente oculta */
+            transition: left 0.3s ease; /* AnimaciÃ³n para el desplazamiento */
+            z-index: 1; /* Asegura que la barra lateral estÃ© detrÃ¡s del botÃ³n */
+            overflow-y: auto; /* Permite que la barra lateral tenga su propio scroll si es necesario */
+        }
+        .sidebar.show {
+            left: 0; /* Cuando se muestra, se mueve a la posiciÃ³n 0 */
+        }
+        /* Contenido */
+        .content {
+            margin-left: 0;
+            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transiciï¿½n para el tï¿½tulo */
+            overflow-y: auto; /* Asegura que el contenido se desplace verticalmente sin problemas */
+            flex: 1;  
+            padding: 1px;  
+        }
+        .content.shift {
+            margin-left: 200px;
+        }
+        /* Icono del menï¿½ */
+        .menu-icon {
+            cursor: pointer;
+            font-size: 35px;
+            color: white;
+            z-index: 2; /* Asegura que el icono estÃ© por encima de la barra lateral */
+            position: fixed;
+            top: 10px;
+            left: 25px;
+        }
+        /* Tï¿½tulo */
+        .title {
+            transition: margin-left 0.3s ease; /* Aï¿½adir transiciï¿½n */
+        }
+        .title.shift {
+            margin-left: 200px; /* Mover tï¿½tulo cuando la barra lateral se abre */
+        }
+        /* Formulario */
+        .content form {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
 
-    <div class="sidebar">  
-        <h4>Administrador</h4>  
-        <ul class="nav flex-column">  
-            <li class="nav-item">  
-                <a class="nav-link active" href="#" onclick="cargarPagina('inicio')">Inicio</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="#" onclick="cargarPagina('clientes')">Clientes</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>  
+
+    <!-- Barra de navegaciï¿½n -->
+    <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
+        <!-- Icono para abrir/cerrar el menï¿½ -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <!-- Icono para abrir/cerrar el menÃº -->
+
+        <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
+     <div class="flex justify-end items-center text-xl ml-52"> <!-- Aquï¿½ agregamos el margen izquierdo -->
+    Sistema de Gestiï¿½n Bancaria
+</div>
+
+        <div>
+            <a href="#" class="text-white hover:text-blue-500">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Barra lateral -->
+    <div class="sidebar" id="sidebar">
+        <br>
+          <br>
+        <h4 class="text-white text-xl">Administrador</h4>
+        <ul class="space-y-2">
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a>
             </li>
-              <li class="nav-item">  
-                <a class="nav-link" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>  
-            </li>   
-        </ul>  
-    </div>  
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('clientes')">Clientes</a>
+            </li>
 
-    <div class="content container-fluid" id="contenidoPrincipal">  
-        <h2>¡Bienvenido/a admin!</h2>  
-      
-    </div>  
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Prï¿½stamos</a>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">PrÃ©stamos</a>
+
+            </li>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
+            </li>
+            <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- Contenido principal -->
+    <div class="content ml-0 transition-all" id="contenidoPrincipal">
+        <h2 class="text-3xl font-bold p-6">ï¿½Bienvenido/a admin!</h2>
+
+
+    <div class="content container-fluid" id="contenidoPrincipal">
+        <h2>Â¡Bienvenido/a admin!</h2>
+
+    </div>
 
     <script>
         function cargarPagina(pagina) {
             var contenido = document.getElementById('contenidoPrincipal');
             if (pagina === 'inicio') {
-                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+                contenido.innerHTML = '<h2>Â¡Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
+                contenido.innerHTML = '<h2>Clientes</h2><p>AquÃ­ va la informaciÃ³n de los clientes.</p>';
             } else if (pagina === 'prestamos') {
             	contenido.innerHTML = '<iframe src="servletListarPrestamos" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarUsuarios') {
-                // Enlace al servlet que lista los usuarios
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
-            }
-            
-            else if (pagina === 'listarClientes') {
-                // Enlace al servlet que lista los usuarios
+            } else if (pagina === 'listarClientes') {
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
+            }
+            else if (pagina === 'listarCuentas') {
+            	// Enlace al servlet que lista los usuarios
+                contenido.innerHTML = '<iframe src="servletListarCuentas" width="90%" height="900px"></iframe>';
             }
             
         }
+
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            var content = document.getElementById('contenidoPrincipal');
+            var title = document.getElementById('title');
+            sidebar.classList.toggle('show');
+            content.classList.toggle('shift');
+            title.classList.toggle('shift');
+        }
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>  
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
-</body>  
+</body>
 </html>
