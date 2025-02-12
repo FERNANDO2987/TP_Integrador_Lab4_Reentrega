@@ -10,6 +10,26 @@
   
     <meta charset="ISO-8859-1">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+
+    <title>Lista de Clientes</title>  
+    <!-- Bootstrap CSS -->  
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
+    <style>  
+        .dropdown-toggle::after {  
+            display: none; /* Quitar el Ã­cono del dropdown */  
+        }  
+        .dropdown-menu {  
+            min-width: 0; /* Ajustar el ancho del menÃº */  
+        }  
+        .centered-header {
+    text-align: center; /* Centrar el texto horizontalmente */
+    margin: 100 auto;     /* Asegurar que el margen se maneje correctamente */
+}
+        
+       
+    }
+
     
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -43,9 +63,17 @@
         <h2 class="text-2xl text-blue-600">Lista de Clientes</h2>
     </div>
 
-    <!-- Botón Agregar alineado a la derecha -->
+
+    <!-- Botï¿½n Agregar alineado a la derecha -->
     <div class="mb-4 text-right">
         <a href="AgregarCliente.jsp" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+
+
+    <!-- BotÃ³n Agregar alineado a la derecha -->
+<div class="row mb-4" >
+    <div class="col-12" style="text-align: right;">
+        <a href="AgregarCliente.jsp" class="btn btn-success">
+
             <i class="fas fa-user-plus"></i> Agregar Cliente
         </a>
     </div>
@@ -62,7 +90,7 @@
         String mensajeError = (String) request.getAttribute("mensajeError");  
     %>  
 
-      <!-- Mostrar mensaje de éxito -->
+      <!-- Mostrar mensaje de ï¿½xito -->
   <%  
 
     if (mensajeExito != null) {  
@@ -97,16 +125,17 @@
                         <th class="px-4 py-2 border">Nombre</th>  
                         <th class="px-4 py-2 border">Apellido</th>
                         <th class="px-4 py-2 border">Sexo</th>
-                        <th class="px-4 py-2 border">País</th>
+                        <th class="px-4 py-2 border">Paï¿½s</th>
                         <th class="px-4 py-2 border">Fecha Nacimiento</th>
-                        <th class="px-4 py-2 border">Dirección</th>
+                        <th class="px-4 py-2 border">Direcciï¿½n</th>
                         <th class="px-4 py-2 border">Localidad</th>
                         <th class="px-4 py-2 border">Provincia</th>
                         <th class="px-4 py-2 border">Correo</th>
-                        <th class="px-4 py-2 border">Teléfono</th>
+                        <th class="px-4 py-2 border">Telï¿½fono</th>
                         <th class="px-4 py-2 border">Acciones</th>  
                     </tr>  
                 </thead>  
+
                 <tbody>  
                     <% for (Cliente cliente : clientes) { %>  
                         <tr>  
@@ -125,23 +154,64 @@
                             <td class="px-4 py-2 border"><%= cliente.getTelefono() %></td>  
                             <td class="px-4 py-2 border">  
                                 <div class="relative inline-block text-left">
-                                    <!-- Botón para abrir el menú con el icono de tres puntos -->
+                                    <!-- Botï¿½n para abrir el menï¿½ con el icono de tres puntos -->
                                     <button type="button" class="bg-transparent text-gray-600 hover:text-gray-900 px-3 py-2 rounded-full" id="dropdownButton<%= cliente.getId() %>">
                                         <i class="fas fa-ellipsis-v"></i> <!-- Icono de tres puntos -->
                                     </button>
-                                    <!-- Menú desplegable oculto por defecto -->
+                                    <!-- Menï¿½ desplegable oculto por defecto -->
                                  <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10" id="dropdown<%= cliente.getId() %>">
-    <!-- Opción para Modificar -->
+    <!-- Opciï¿½n para Modificar -->
     <a class="dropdown-item flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">
-        <i class="fas fa-edit mr-2"></i> <!-- Ícono con margen a la derecha -->
+        <i class="fas fa-edit mr-2"></i> <!-- ï¿½cono con margen a la derecha -->
         Modificar
     </a>  
-    <!-- Opción para Eliminar -->
-    <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
-        <i class="fas fa-trash-alt mr-2"></i> <!-- Ícono con margen a la derecha -->
+    <!-- Opciï¿½n para Eliminar -->
+    <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-100" onclick="return confirm('ï¿½Estï¿½s seguro de que deseas eliminar este cliente?');">
+        <i class="fas fa-trash-alt mr-2"></i> <!-- ï¿½cono con margen a la derecha -->
         Eliminar
     </a> 
 </div>
+
+               <tbody>  
+    <% for (Cliente cliente : clientes) { %>  
+    <tr>
+    	<input type="hidden" name="InputIdCliente" value="<%= cliente.getId() %>">
+        <td><%= cliente.getId() %></td>  
+        <td><%= cliente.getDni() %></td>  
+        <td><%= cliente.getCuil() %></td>  
+        <td><%= cliente.getNombre() %></td>  
+        <td><%= cliente.getApellido() %></td>
+         <td><%= cliente.getSexo() %></td> 
+        <td><%= cliente.getPaisNacimiento().getNombre() %></td>  
+        <td><%= cliente.getFechaNacimiento() %></td>  
+        <td><%= cliente.getDireccion() %></td>  
+        <td><%= cliente.getLocalidad().getNombre() %></td>  
+        <td><%= cliente.getProvincia().getNombre() %></td>  
+        <td><%= cliente.getCorreo() %></td>  
+        <td><%= cliente.getTelefono() %></td>  
+        <td>  
+            <div class="dropdown">  
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                    <i class="fas fa-ellipsis-v"></i>  
+                </button>  
+                <div class="dropdown-menu dropdown-menu-right">  
+                    <a class="dropdown-item" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">  
+                        <i class="fas fa-edit"></i> Modificar  
+                    </a>  
+                    <a class="dropdown-item" href="servletGestionarCuentas?id=<%= cliente.getId() %>">  
+                        <i class="fas fa-edit"></i> Gestionar Cuentas  
+                    </a>
+                      <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('Â¿Estas seguro de que deseas eliminar este cliente?');">
+                         <i class="fas fa-trash-alt"></i>Eliminar
+                      </a> 
+                </div>  
+            </div>  
+        </td>
+      
+    </tr>
+    <% } %>  
+</tbody>  
+
 
                                 </div>
                             </td>  
@@ -161,19 +231,28 @@
 <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>  
 
 <script>
-// Manejo del menú desplegable
+// Manejo del menï¿½ desplegable
 document.querySelectorAll('[id^="dropdownButton"]').forEach(button => {
     button.addEventListener('click', function() {
         const menu = document.getElementById('dropdown' + this.id.replace('dropdownButton', ''));
-        menu.classList.toggle('hidden'); // Alterna la visibilidad del menú
+        menu.classList.toggle('hidden'); // Alterna la visibilidad del menï¿½
     });
 });
+
 
 function filterTable() {
     const input = document.getElementById("searchInput");
     const filter = input.value.toLowerCase();
     const table = document.getElementById("usersTable");
     const rows = table.getElementsByTagName("tr");
+
+    // FunciÃ³n para filtrar la tabla en tiempo real
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("usersTable");
+        const rows = table.getElementsByTagName("tr");
+
 
     for (let i = 1; i < rows.length; i++) {
         let cells = rows[i].getElementsByTagName("td");
@@ -194,20 +273,59 @@ function filterTable() {
 }
 </script>
 
+
 <script>  
     window.onload = function() {  
-        // Esperar a que el DOM esté completamente cargado  
+        // Esperar a que el DOM estï¿½ completamente cargado  
         setTimeout(function() {  
             var successMessage = document.getElementById('successMessage');  
             var errorMessage = document.getElementById('errorMessage');  
             if (successMessage) {  
-                successMessage.style.display = 'none'; // Ocultar mensaje de éxito  
+                successMessage.style.display = 'none'; // Ocultar mensaje de ï¿½xito  
             }  
             if (errorMessage) {  
                 errorMessage.style.display = 'none'; // Ocultar mensaje de error  
             }  
         }, 5000); // 5000 milisegundos = 5 segundos  
     };  
+
+  <script>
+    // Mover la llamada de la funciÃ³n al document.ready para asegurar que el DOM estÃ© cargado
+    $(document).ready(function() {
+        <% if(request.getAttribute("mensajeExito") != null) { %>  
+            mostrarMensaje("successMessage");  
+        <% } else if(request.getAttribute("mensajeError") != null) { %>  
+            mostrarMensaje("errorMessage");  
+        <% } %>  
+    });
+
+    function ocultarMensaje() {  
+        var mensaje = document.getElementById("successMessage");  
+        if (mensaje) {  
+            setTimeout(function() {  
+                mensaje.style.display = "none";  
+            }, 9000); 
+        }  
+
+        var errorMensaje = document.getElementById("errorMessage");
+        if (errorMensaje) {
+            setTimeout(function() {
+                errorMensaje.style.display = "none";
+            }, 9000);
+        }
+    } 
+
+    function mostrarMensaje(tipo) {  
+        var mensaje = document.getElementById(tipo);  
+        if (mensaje) {  
+            mensaje.style.display = "block"; // Mostrar el mensaje  
+            // Ocultar el mensaje despuÃ©s de 9 segundos (9000 milisegundos)  
+            setTimeout(function() {  
+                mensaje.style.display = "none";  
+            }, 9000);  
+        }  
+    }
+
 </script>
 </body>  
 </html>

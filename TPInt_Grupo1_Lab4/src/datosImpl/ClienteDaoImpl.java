@@ -204,6 +204,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	    return resultado;
 	}
 
+	
 
 
 	
