@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cliente;
-import entidad.Cuenta;
-import entidad.TipoCuenta;
+
 import negocio.ClienteNeg;
 import negocioImpl.ClienteNegImpl;
 

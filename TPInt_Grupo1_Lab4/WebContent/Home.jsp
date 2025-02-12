@@ -2,13 +2,8 @@
 <html lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
-    <title>Sistema de Gestiï¿½n Bancaria</title>
+    <title>Sistema de Gestión Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-    <title>Sistema de GestiÃ³n Bancaria</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             height: 100%;
@@ -24,19 +19,19 @@
             color: #fff;
             position: fixed;
             width: 200px; /* Ancho de la barra lateral */
-            top: 0; /* Asegura que la barra lateral estÃ© alineada arriba */
+            top: 0; /* Asegura que la barra lateral esté alineada arriba */
             left: -200px; /* Inicialmente oculta */
-            transition: left 0.3s ease; /* AnimaciÃ³n para el desplazamiento */
-            z-index: 1; /* Asegura que la barra lateral estÃ© detrÃ¡s del botÃ³n */
+            transition: left 0.3s ease; /* Animación para el desplazamiento */
+            z-index: 1; /* Asegura que la barra lateral esté detrás del botón */
             overflow-y: auto; /* Permite que la barra lateral tenga su propio scroll si es necesario */
         }
         .sidebar.show {
-            left: 0; /* Cuando se muestra, se mueve a la posiciÃ³n 0 */
+            left: 0; /* Cuando se muestra, se mueve a la posición 0 */
         }
         /* Contenido */
         .content {
             margin-left: 0;
-            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transiciï¿½n para el tï¿½tulo */
+            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transición para el título */
             overflow-y: auto; /* Asegura que el contenido se desplace verticalmente sin problemas */
             flex: 1;  
             padding: 1px;  
@@ -44,22 +39,22 @@
         .content.shift {
             margin-left: 200px;
         }
-        /* Icono del menï¿½ */
+        /* Icono del menú */
         .menu-icon {
             cursor: pointer;
             font-size: 35px;
             color: white;
-            z-index: 2; /* Asegura que el icono estÃ© por encima de la barra lateral */
+            z-index: 2; /* Asegura que el icono esté por encima de la barra lateral */
             position: fixed;
             top: 10px;
             left: 25px;
         }
-        /* Tï¿½tulo */
+        /* Título */
         .title {
-            transition: margin-left 0.3s ease; /* Aï¿½adir transiciï¿½n */
+            transition: margin-left 0.3s ease; /* Añadir transición */
         }
         .title.shift {
-            margin-left: 200px; /* Mover tï¿½tulo cuando la barra lateral se abre */
+            margin-left: 200px; /* Mover título cuando la barra lateral se abre */
         }
         /* Formulario */
         .content form {
@@ -69,18 +64,14 @@
 </head>
 <body class="bg-gray-100">
 
-
-    <!-- Barra de navegaciï¿½n -->
+    <!-- Barra de navegación -->
     <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
-        <!-- Icono para abrir/cerrar el menï¿½ -->
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <!-- Icono para abrir/cerrar el menÃº -->
-
+        <!-- Icono para abrir/cerrar el menú -->
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
-     <div class="flex justify-end items-center text-xl ml-52"> <!-- Aquï¿½ agregamos el margen izquierdo -->
-    Sistema de Gestiï¿½n Bancaria
+<div class="flex justify-end items-center text-xl title relative left-16" id="title">
+    Sistema de Gestión Bancaria
 </div>
+
 
         <div>
             <a href="#" class="text-white hover:text-blue-500">Logout</a>
@@ -99,13 +90,8 @@
             <li>
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('clientes')">Clientes</a>
             </li>
-
             <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Prï¿½stamos</a>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">PrÃ©stamos</a>
-
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>
             </li>
             <li>
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
@@ -116,36 +102,25 @@
         </ul>
     </div>
 
-
     <!-- Contenido principal -->
     <div class="content ml-0 transition-all" id="contenidoPrincipal">
-        <h2 class="text-3xl font-bold p-6">ï¿½Bienvenido/a admin!</h2>
-
-
-    <div class="content container-fluid" id="contenidoPrincipal">
-        <h2>Â¡Bienvenido/a admin!</h2>
-
+        <h2 class="text-3xl font-bold p-6">¡Bienvenido/a admin!</h2>
     </div>
 
     <script>
         function cargarPagina(pagina) {
             var contenido = document.getElementById('contenidoPrincipal');
             if (pagina === 'inicio') {
-                contenido.innerHTML = '<h2>Â¡Bienvenido/a admin!</h2>';
+                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>AquÃ­ va la informaciÃ³n de los clientes.</p>';
+                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
             } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>PrÃ©stamos</h2><p>AquÃ­ va la informaciÃ³n de los prÃ©stamos.</p>';
+                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarClientes') {
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
             }
-            else if (pagina === 'listarCuentas') {
-            	// Enlace al servlet que lista los usuarios
-                contenido.innerHTML = '<iframe src="servletListarCuentas" width="90%" height="900px"></iframe>';
-            }
-            
         }
 
         function toggleSidebar() {
