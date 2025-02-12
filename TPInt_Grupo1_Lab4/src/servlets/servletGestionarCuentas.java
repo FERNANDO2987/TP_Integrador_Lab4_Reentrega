@@ -39,11 +39,7 @@ public class servletGestionarCuentas extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//recuperar ID de cliente
-		int idCliente = Integer.parseInt(request.getParameter("id"));
-		//recuperar nombre del cliente
-		ClienteNeg clienteNeg = new ClienteNegImpl();
-		//FALTA DESARROLLAR
-		
+		int idCliente = Integer.parseInt(request.getParameter("id"));	
 		//recolectar las cuentas relacionadas al cliente
 		CuentaNeg cuentaNeg = new CuentaNegImpl();
 		List<Cuenta> cuentasDelCliente = cuentaNeg.leerLasCuentasDelCliente(idCliente);

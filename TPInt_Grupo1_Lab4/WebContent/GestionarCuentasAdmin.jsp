@@ -37,53 +37,91 @@
 			{
 				
 	%>			<!--  CARTA DE CUENTA -->
-				<form action="servletGestionarCuentas" method="post">
-				
-				<div class="modal" tabindex="-1">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title">Desea Confirmar la accion?</h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				        <p>Desea confirmar la continuidad del proceso?</p>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <button type="button" class="btn btn-primary">Save changes</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
-				<div class="container-fluid">
-			    <div class="row justify-content-center">
-			        <div class="col">
-			            <div class="card w-100">
-			                <div class="card-body">
-			                    <input type="hidden" id="idCuenta" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
-			                    <h5 class="card-title text-truncate">CBU: <%=cuenta.getCbu() %></h5>
-			                    <select name="selectCuenta" id="selectCuenta" class="form-control">
-			                        <%
-			                        if (tiposCuenta != null && tiposCuenta.size() > 0) {
-			                            for(TipoCuenta tipo : tiposCuenta) { %>
-			                                <option <%if (tipo.getId() == cuenta.getTipoCuenta().getId()) {%> selected<%}%>
-			                                    value="<%=tipo.getId()%>"><%=tipo.getDescripcion() %></option>
-			                        <% } } %>
-			                    </select>
-			                    <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
-			                    <input type="submit" class="btn btn-success btn-sm" value="Modificar" id="btnModificar" name="btnModificar">
-			                    <input type="submit" class="btn btn-info btn-sm" value="Movimientos" id="btnMovimientos" name="btnMovimientos">
-			                    <input type="submit" class="btn btn-danger btn-sm" value="Eliminar" id="btnEliminar" name="btnEliminar">
-			                </div>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-			</form>
+		
+			
+				<!-- FORMULARIO PARA MODIFICAR/ELIMINAR UNA CUENTA -->
+<form action="servletGestionarCuentas" method="post">
+    <input type="hidden" name="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
+    <input type="hidden" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
+    
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="card w-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">CBU: <%=cuenta.getCbu() %></h5>
+                        <select name="selectCuenta" class="form-control">
+                            <%
+                            if (tiposCuenta != null && tiposCuenta.size() > 0) {
+                                for (TipoCuenta tipo : tiposCuenta) { %>
+                                    <option <%if (tipo.getId() == cuenta.getTipoCuenta().getId()) {%> selected<%}%>
+                                        value="<%=tipo.getId()%>"><%=tipo.getDescripcion() %>
+                                    </option>
+                            <% } } %>
+                        </select>
+                        <h6 class="card-text">$<%=cuenta.getSaldo() %></h6>
+
+                        <!-- Botón Modificar dentro del formulario -->
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirmarModificacion_<%=cuenta.getNroCuenta()%>">Modificar</button>
+
+                        <!-- Botón Movimientos (envía el formulario directamente) -->
+                        <input type="submit" class="btn btn-info btn-sm" value="Movimientos" name="btnMovimientos">
+
+                        <!-- Botón Eliminar dentro del formulario -->
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalConfirmarEliminacion_<%=cuenta.getNroCuenta()%>">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAR MODIFICACIÓN -->
+    <div class="modal fade" id="modalConfirmarModificacion_<%=cuenta.getNroCuenta()%>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Modificación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de que desea modificar esta cuenta?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <!-- Este botón ahora envía el formulario -->
+                    <input type="submit" class="btn btn-primary" name="btnModificar" value="Confirmar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAR ELIMINACIÓN -->
+    <div class="modal fade" id="modalConfirmarEliminacion_<%=cuenta.getNroCuenta()%>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                	<div class="alert alert-danger">
+                    ¿Está seguro de que desea eliminar esta cuenta? Esta acción no se puede deshacer.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <!-- Este botón ahora envía el formulario -->
+                    <input type="submit" class="btn btn-danger" name="btnEliminar" value="Eliminar">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 				<!-- FIN CARTA DE CUENTA -->
 	<% 		}	
 		}
@@ -99,6 +137,7 @@
 	<!-- FORMULARIO DE NUEVA CUENTA -->
 	<div class = "row card">
 		<form action="servletGestionarCuentas" method="post" class = "card-body m-4">
+		
 		<input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
 		  <div class="form-group">
 		    <h4>Agregar Nueva Cuenta</h4>
@@ -118,8 +157,30 @@
 		    </select>
 		  </div>
 		  <div class="form-group">
-		    <input class="btn btn-success" type="submit" value="Agregar" id="btnAgregar" name="btnAgregar">
+		    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirmarAgregar">Agregar</button>
 		  </div>
+		  
+		  <!-- MODAL CONFIRMAR AGREGAR -->
+    <div class="modal fade" id="modalConfirmarAgregar" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Nueva Cuenta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de que desea crear esta cuenta?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <!-- Este botón ahora envía el formulario -->
+                    <input class="btn btn-success" type="submit" value="Agregar" id="btnAgregar" name="btnAgregar">
+                </div>
+            </div>
+        </div>
+    </div>
 		</form>
 	</div>
 	<%} %>
