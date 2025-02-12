@@ -40,14 +40,7 @@
     </div>
 
 
-    <!-- Botón Agregar alineado a la derecha -->
-<div class="row mb-4" >
-    <div class="col-12" style="text-align: right;">
-        <a href="AgregarUsuario.jsp" class="btn btn-success">
-            <i class="fas fa-user-plus"></i> Agregar Usuario
-        </a>
-    </div>
-</div>
+
 
 
 
@@ -98,12 +91,12 @@
                                     <i class="fas fa-ellipsis-v"></i>  
                                 </button>  
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accionesUsuario<%= usuario.getId() %>">  
-                                    <a class="dropdown-item" href="modificarUsuario?id=<%= usuario.getId() %>">  
-                                        <i class="fas fa-edit"></i> Modificar  
-                                    </a>  
-                                    <a class="dropdown-item text-danger" href="eliminarUsuario?id=<%= usuario.getId() %>" onclick="return confirm('¿Está seguro de que desea eliminar este usuario?');">  
-                                        <i class="fas fa-trash-alt"></i> Eliminar  
-                                    </a>  
+                                   
+                                  
+                                    
+                                      <a href="servletEliminarUsuario?id=<%= usuario.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('¿Estas seguro de que deseas eliminar este usuario?');">
+                                        <i class="fas fa-trash-alt"></i>Eliminar
+                                    </a> 
                                   
                                 </div>  
                             </div>  

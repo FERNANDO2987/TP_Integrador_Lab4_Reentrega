@@ -14,14 +14,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
     <style>  
         .dropdown-toggle::after {  
-            display: none; /* Quitar el Ìcono del dropdown */  
+            display: none; /* Quitar el √≠cono del dropdown */  
         }  
         .dropdown-menu {  
-            min-width: 0; /* Ajustar el ancho del men˙ */  
+            min-width: 0; /* Ajustar el ancho del men√∫ */  
         }  
         .centered-header {
     text-align: center; /* Centrar el texto horizontalmente */
-    margin: 0 auto;     /* Asegurar que el margen se maneje correctamente */
+    margin: 100 auto;     /* Asegurar que el margen se maneje correctamente */
 }
         
        
@@ -46,7 +46,7 @@
     </div>
 
 
-    <!-- BotÛn Agregar alineado a la derecha -->
+    <!-- Bot√≥n Agregar alineado a la derecha -->
 <div class="row mb-4" >
     <div class="col-12" style="text-align: right;">
         <a href="AgregarCliente.jsp" class="btn btn-success">
@@ -66,16 +66,24 @@
     <%   
         // Obtener lista de usuarios y mensaje de error  
         List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");  
-        String error = (String) request.getAttribute("error");  
+    String mensajeExito = (String) request.getAttribute("mensajeExito");  
+    String mensajeError = (String) request.getAttribute("mensajeError");  
    
     %>  
 
-    <% if (error != null) { %>  
-        <!-- Mostrar mensaje de error -->  
-        <div class="alert alert-danger" role="alert">  
-            <i class="fas fa-exclamation-circle"></i> <%= error %>  
-        </div>  
-    <% } else if (clientes != null && !clientes.isEmpty()) { %>  
+    <% if (mensajeExito != null) { %>  
+    <div class="alert alert-success" role="alert" id="successMessage">
+        <i class="fas fa-check-circle"></i> <%= mensajeExito %>
+    </div>  
+<% } %>  
+
+<% if (mensajeError != null) { %>  
+    <div class="alert alert-danger" role="alert" id="errorMessage">
+        <i class="fas fa-exclamation-circle"></i> <%= mensajeError %>
+    </div>  
+<% } %>
+
+    <% if (clientes != null && !clientes.isEmpty()) { %>  
         <!-- Tabla de usuarios -->  
         <div class="table-responsive">  
             <table class="table table-hover table-bordered" id="usersTable">  
@@ -87,6 +95,7 @@
 
                         <th>Nombre</th>  
                         <th>Apellido</th>
+                        <th>Sexo</th>
                         <th>Pais</th>
                         <th>FechaNacimiento</th>
                         <th>Direccion</th>
@@ -94,6 +103,7 @@
                         <th>Provincia</th>
                         <th>Correo</th>
                         <th>Telefono</th>
+                        <th>Acciones</th>  
                         
                     </tr>  
                 </thead>  
@@ -105,7 +115,8 @@
         <td><%= cliente.getDni() %></td>  
         <td><%= cliente.getCuil() %></td>  
         <td><%= cliente.getNombre() %></td>  
-        <td><%= cliente.getApellido() %></td>  
+        <td><%= cliente.getApellido() %></td>
+         <td><%= cliente.getSexo() %></td> 
         <td><%= cliente.getPaisNacimiento().getNombre() %></td>  
         <td><%= cliente.getFechaNacimiento() %></td>  
         <td><%= cliente.getDireccion() %></td>  
@@ -119,17 +130,15 @@
                     <i class="fas fa-ellipsis-v"></i>  
                 </button>  
                 <div class="dropdown-menu dropdown-menu-right">  
-                    <a class="dropdown-item" href="modificarCliente?id=<%= cliente.getId() %>">  
+                    <a class="dropdown-item" href="ModificarCliente.jsp?id=<%= cliente.getId() %>">  
                         <i class="fas fa-edit"></i> Modificar  
                     </a>  
-                    <a class="dropdown-item text-danger" href="eliminarCliente?id=<%= cliente.getId() %>" 
-                        onclick="return confirm('øEst· seguro de que desea eliminar este cliente?');">  
-                        <i class="fas fa-trash-alt"></i> Eliminar  
-                    </a>
                     <a class="dropdown-item" href="servletGestionarCuentas?id=<%= cliente.getId() %>">  
                         <i class="fas fa-edit"></i> Gestionar Cuentas  
                     </a>
-                     
+                      <a href="servletEliminarCliente?id=<%= cliente.getId() %>" class="dropdown-item text-danger" title="Eliminar" onclick="return confirm('¬øEstas seguro de que deseas eliminar este cliente?');">
+                         <i class="fas fa-trash-alt"></i>Eliminar
+                      </a> 
                 </div>  
             </div>  
         </td>
@@ -146,6 +155,9 @@
             <i class="fas fa-info-circle"></i> No se encontraron clientes.  
         </div>  
     <% } %>  
+    
+    
+  
 </div>  
 <!-- Bootstrap JS and dependencies -->  
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
@@ -153,12 +165,15 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
 
 <script>
+
+
+
     // Inicializar dropdowns de Bootstrap
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
     });
 
-    // FunciÛn para filtrar la tabla en tiempo real
+    // Funci√≥n para filtrar la tabla en tiempo real
     function filterTable() {
         const input = document.getElementById("searchInput");
         const filter = input.value.toLowerCase();
@@ -183,5 +198,44 @@
         }
     }
 </script>
+
+  <script>
+    // Mover la llamada de la funci√≥n al document.ready para asegurar que el DOM est√© cargado
+    $(document).ready(function() {
+        <% if(request.getAttribute("mensajeExito") != null) { %>  
+            mostrarMensaje("successMessage");  
+        <% } else if(request.getAttribute("mensajeError") != null) { %>  
+            mostrarMensaje("errorMessage");  
+        <% } %>  
+    });
+
+    function ocultarMensaje() {  
+        var mensaje = document.getElementById("successMessage");  
+        if (mensaje) {  
+            setTimeout(function() {  
+                mensaje.style.display = "none";  
+            }, 9000); 
+        }  
+
+        var errorMensaje = document.getElementById("errorMessage");
+        if (errorMensaje) {
+            setTimeout(function() {
+                errorMensaje.style.display = "none";
+            }, 9000);
+        }
+    } 
+
+    function mostrarMensaje(tipo) {  
+        var mensaje = document.getElementById(tipo);  
+        if (mensaje) {  
+            mensaje.style.display = "block"; // Mostrar el mensaje  
+            // Ocultar el mensaje despu√©s de 9 segundos (9000 milisegundos)  
+            setTimeout(function() {  
+                mensaje.style.display = "none";  
+            }, 9000);  
+        }  
+    }
+</script>
+
 </body>  
 </html>

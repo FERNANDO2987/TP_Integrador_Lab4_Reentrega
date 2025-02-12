@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import entidad.Cliente;
 import entidad.Usuario;
 import negocio.UsuarioNeg;
 import negocioImpl.UsuarioNegImpl;
