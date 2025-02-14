@@ -1,3 +1,4 @@
+<%@ page import="entidad.Usuario" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -65,7 +66,13 @@
     </style>
 </head>
 <body class="bg-gray-100">
-
+	 <%
+      Usuario usuario = (Usuario)session.getAttribute("usuario");
+      if (usuario == null) {
+        response.sendRedirect("Login.jsp");
+        return;
+      }
+    %>
 
     <!-- Barra de navegaci�n -->
     <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
@@ -116,7 +123,7 @@
 
     <!-- Contenido principal -->
     <div class="content ml-0 transition-all" id="contenidoPrincipal">
-        <h2 class="text-3xl font-bold p-6">Bienvenido/a admin!</h2>
+        <h5 class="d-flex"> Bienvenido, <%= usuario.getCliente().getNombre() %></h5>
 
 
     <script>

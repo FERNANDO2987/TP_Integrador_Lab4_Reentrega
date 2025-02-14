@@ -9,21 +9,21 @@ public class Cliente {
     private String nombre;
     private String apellido;
     private String sexo;
-    private Pais paisNacimiento;
+    private Pais paisNacimiento = new Pais();
     private LocalDate fechaNacimiento;
     private String direccion;
-    private Localidad localidad;
-    private Provincia provincia;
+    private Localidad localidad = new Localidad();
+    private Provincia provincia = new Provincia();
     private String correo;
     private String telefono;
     
 
     
     
-	// Constructor vacío
+	// Constructor vacï¿½o
     public Cliente() {}
     
-    // Constructor con parámetros   
+    // Constructor con parï¿½metros   
 	public Cliente(int id, String dni, String cuil, String nombre, String apellido, String sexo, Pais paisNacimiento,
 			LocalDate fechaNacimiento, String direccion, Localidad localidad, Provincia provincia, String correo,
 			String telefono) {
@@ -137,15 +137,14 @@ public class Cliente {
 	           ",\n  nombre='" + nombre + '\'' +
 	           ",\n  apellido='" + apellido + '\'' +
 	           ",\n  sexo='" + sexo + '\'' +
-	           ",\n  paisNacimiento=" + paisNacimiento +
+	           ",\n  paisNacimiento=" + paisNacimiento.toString() +
 	           ",\n  fechaNacimiento=" + fechaNacimiento +
 	           ",\n  direccion='" + direccion + '\'' +
-	           ",\n  localidad=" + localidad +
-	           ",\n  provincia=" + provincia +
+	           ",\n  localidad=" + localidad.toString() +
+	           ",\n  provincia=" + provincia.toString() +
 	           ",\n  correo='" + correo + '\'' +
 	           ",\n  telefono='" + telefono + '\'' +
 	           "\n}";
 	}
 
 }
-

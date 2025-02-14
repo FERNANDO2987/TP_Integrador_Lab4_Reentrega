@@ -25,7 +25,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px; /* Máxima anchura del formulario */
+    max-width: 400px; /* Mï¿½xima anchura del formulario */
 }
 
 h2 {
@@ -39,7 +39,7 @@ h2 {
 }
 
 input[type="submit"] {
-    width: 100%; /* Aseguramos que el botón ocupe todo el ancho */
+    width: 100%; /* Aseguramos que el botï¿½n ocupe todo el ancho */
 }
 
 .label{
@@ -60,7 +60,7 @@ input[type="submit"] {
                     if ("true".equals(error)) {   
                 %>  
                     <div class="alert alert-danger" role="alert">  
-                        Usuario y/o contraseña no válidos. Inténtalo de nuevo.  
+                        Usuario y/o contraseï¿½a no vï¿½lidos. Intï¿½ntalo de nuevo.  
                     </div>  
                 <% } %>  
                 <form action="servletLogin" method="post">   
@@ -69,10 +69,10 @@ input[type="submit"] {
                         <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Ingresa tu usuario">  
                     </div>  
                     <div class="form-group">  
-                        <label for="contrasenia">Contraseña</label>  
-                        <input type="password" class="form-control" id="contrasenia" name="contrasenia" placeholder="Ingresa tu contraseña">  
+                        <label for="contrasenia">Contraseï¿½a</label>  
+                        <input type="password" class="form-control" id="contrasenia" name="contrasenia" placeholder="Ingresa tu contraseï¿½a">  
                     </div>  
-                    <input type="submit" value="Login" class="btn btn-primary btn-block" name="btnAceptar" id="btnAceptar" disabled>  
+                    <input type="submit" value="Login" class="btn btn-primary btn-block" name="btnAceptar" id="btnAceptar" >  
                 </form>  
             </div>  
         </div>  

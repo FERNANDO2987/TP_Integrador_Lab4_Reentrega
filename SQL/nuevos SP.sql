@@ -42,6 +42,63 @@ END;
 $$
 
 DELIMITER $$
+CREATE PROCEDURE SP_ValidarUsuario(
+    IN usuarioIngresado VARCHAR(50), 
+    IN contraseniaIngresada VARCHAR(50)
+) 
+BEGIN
+    -- Verificar si el usuario existe y es administrador
+    IF EXISTS (
+        SELECT 1 
+        FROM usuarios 
+        WHERE usuario = usuarioIngresado 
+          AND pass = contraseniaIngresada 
+          AND admin = 1
+    ) THEN
+        -- Retornar solo los datos del administrador
+        SELECT 
+            usuario, 
+            admin 
+        FROM 
+            usuarios 
+        WHERE 
+            usuario = usuarioIngresado 
+            AND pass = contraseniaIngresada;
+    ELSE
+        -- Retornar datos del cliente si no es administrador
+        SELECT 
+            c.*, 
+            u.admin, 
+            u.usuario,
+            p.nombre AS nombre_pais,
+            pro.nombre AS nombre_provincia,
+            l.nombre AS nombre_localidad
+        FROM 
+            usuarios u
+        LEFT JOIN 
+            clientes c 
+        ON 
+            u.id_cliente = c.id
+        LEFT JOIN 
+            paises p
+        ON 
+            c.id_pais = p.id
+		LEFT JOIN
+			provincia pro
+		ON
+			c.id_provincia = pro.id
+		LEFT JOIN
+			localidades l
+		ON
+			c.id_localidad = l.id
+        WHERE 
+            u.usuario = usuarioIngresado 
+            AND u.pass = contraseniaIngresada;
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 CREATE PROCEDURE SP_ModificarCliente (IN id_input int, IN dni_input varchar(255), IN cuil_input varchar(255), IN nombre_input varchar(255), IN apellido_input varchar(255), IN sexo_input varchar(255), IN id_pais_input int, IN fecha_nacimiento_input DATE, IN direccion_input varchar(255), IN id_localidad_input int, IN id_provincia_input int, IN correo_input varchar(255), IN telefono_input varchar(255))
 BEGIN
 	update clientes set dni = dni_input, cuil = cuil_input, nombre = nombre_input, apellido = apellido_input, sexo = sexo_input, id_pais = id_pais_input, fecha_nacimiento = fecha_nacimiento_input, direccion = direccion_input, id_localidad = id_localidad_input, id_provincia = id_provincia_input, correo = correo_input, telefono = telefono_input where id = id_input;

@@ -1,6 +1,7 @@
 package datosImpl;
 
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.CallableStatement;
+
 
 import datos.PrestamoDao;
 import entidad.Cliente;
