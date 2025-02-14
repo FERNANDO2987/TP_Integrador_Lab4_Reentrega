@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.List" %>
+<%@ page import="entidad.Movimiento" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="es">
 <head>
@@ -23,9 +25,32 @@
     </style>
 </head>
 <body>
+<%
+	List<Movimiento> movimientos = (List<Movimiento>)request.getAttribute("movimientos");
+%>
 <div class="container mt-5">
 <table>
-<tr></tr>
+<tr>
+<th>Id</th>
+<th>Fecha</th>
+<th>TipoMovimiento</th>
+<th>Importe</th>
+<th>Detalle</th>
+</tr>
+<%
+for(Movimiento mov: movimientos)
+{
+%>
+	<tr>
+	<td><%= mov.getId() %></td>
+	<td><%= mov.getCreateDate() %></td>
+	<td><%= mov.getTipoMovimiento().getDescripcion() %></td>
+	<td><%= mov.getImporte() %></td>
+	<td><%= mov.getDetalle() %></td>
+	</tr>
+<%
+}
+%>
 </table>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

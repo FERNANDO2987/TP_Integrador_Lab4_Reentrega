@@ -5,6 +5,7 @@ import java.util.List;
 import datos.CuentaDao;
 import datosImpl.CuentaDaoImpl;
 import entidad.Cuenta;
+import entidad.Movimiento;
 import negocio.CuentaNeg;
 
 public class CuentaNegImpl implements CuentaNeg {
@@ -59,6 +60,12 @@ public class CuentaNegImpl implements CuentaNeg {
 	public boolean eliminarCuenta(Cuenta cuenta) {
 		CuentaDao cuentaDao = new CuentaDaoImpl();
 		return cuentaDao.eliminarCuenta(cuenta);
+	}
+
+	@Override
+	public List<Movimiento> leerMovimientosDeCuenta(int nro_cuenta) {
+		CuentaDao cuentaDao = new CuentaDaoImpl();
+		return cuentaDao.leerMovimientosDeLaCuenta(nro_cuenta);
 	}
 
 }
