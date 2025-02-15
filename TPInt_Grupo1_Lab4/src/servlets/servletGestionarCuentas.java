@@ -122,7 +122,7 @@ public class servletGestionarCuentas extends HttpServlet {
 				int nroCuenta = Integer.parseInt(request.getParameter("idCuenta"));
 				idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
 				//guardar la pagina desde la cual solicite los movimientos
-				request.setAttribute("anteriorPaginaVisitada", "servletGestionarCuentas?id=" + idCliente );
+				request.getSession().setAttribute("anteriorPaginaVisitada", "servletGestionarCuentas?id=" + idCliente );
 				//redirigirme al servlet
 				response.sendRedirect("servletMovimientosCuenta?id=" + nroCuenta);
 				return;
