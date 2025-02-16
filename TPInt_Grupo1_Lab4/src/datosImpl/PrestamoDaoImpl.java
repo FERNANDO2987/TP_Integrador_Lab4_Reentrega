@@ -100,6 +100,8 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return prestamos;
 	}
+	
+	
 
 	@Override
 	public boolean RechazarPrestamo(int idPrestamo, String observacion) {
@@ -124,6 +126,8 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return estado;
 	}
+	
+	
 
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo, String observacion) {
@@ -172,6 +176,8 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return estado;
 	}
+	
+	
 
 	@Override
 	public boolean ChequearPendiente(int id) {
@@ -190,6 +196,13 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	            }
 	        }
 	    } catch (SQLException e) {
+	    	
+	    	System.err.println("Error al chequear prestamos: " + e.getMessage());
+	    	
+	    }
+	    
+	    return estado;
+	    }
 
 	
 
@@ -223,18 +236,13 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	        cn.close();
 	    }
 
-	    
-	    return estado;
-	}
-
-
 
 
 	    return listaPrestamos;
 	}
 	
 	
-	  // Nuevo m�todo para obtener los montos solicitados y adjudicados para estado 'pendiente'
+	  //  para obtener los montos solicitados y adjudicados para estado 'pendiente'
     public Map<String, BigDecimal> obtenerMontosPendientes() {
         Map<String, BigDecimal> montos = new HashMap<>();
         final String query = "SELECT estado, " +
@@ -350,6 +358,9 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 		    return listaPrestamos;
 	}
+
+
+
 
 
 

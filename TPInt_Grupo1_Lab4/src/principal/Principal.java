@@ -15,8 +15,7 @@ import negocioImpl.ProvinciaNegImpl;
 
 import java.util.List;
 
-import entidad.Prestamo;
-import negocioImpl.PrestamoNegImpl;
+
 
 
 
@@ -81,5 +80,7 @@ public class Principal {
         }
     
     }
+    }
 }
+
  

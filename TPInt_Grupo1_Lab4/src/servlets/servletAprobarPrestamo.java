@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import negocio.PrestamoNeg;
 import negocioImpl.PrestamoNegImpl;
 
+
 /**
  * Servlet implementation class servletAprobarPrestamo
  */

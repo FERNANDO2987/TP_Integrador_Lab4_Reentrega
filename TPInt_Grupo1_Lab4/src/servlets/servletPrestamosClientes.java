@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import entidad.Prestamo;
 import negocio.PrestamoNeg;
-
 import negocioImpl.PrestamoNegImpl;
+
 
 
 /**
@@ -28,8 +28,7 @@ public class servletPrestamosClientes extends HttpServlet {
  
 	
 
-	 
-	 PrestamoNeg prestamoNeg = new PrestamoNegImpl();
+PrestamoNeg prestamoNeg = new PrestamoNegImpl();
 	 
     public servletPrestamosClientes() {
         super();

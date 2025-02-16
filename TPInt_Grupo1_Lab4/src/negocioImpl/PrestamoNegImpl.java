@@ -21,27 +21,17 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		this.prestamoDao = prestamoDao;
 	}
 	
-	public PrestamoNegImpl() 
-
-	
-	
-private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
-	
-	public PrestamoNegImpl(PrestamoDao prestamoDao)
-	{
-		this.prestamoDao = prestamoDao;
-		
-	}
 	
 	public PrestamoNegImpl()
-
 	{
 		
 	}
+	
+
 	
 	@Override
 
-	public List<Prestamo> ListarPrestamos() {
+	public List<Prestamo> ListarPrestamos2() {
 		List<Prestamo> prestamos = prestamoDao.ListarPrestamos();
 		if(prestamos == null || prestamos.isEmpty())
 		{
