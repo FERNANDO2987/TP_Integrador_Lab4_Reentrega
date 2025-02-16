@@ -1,6 +1,8 @@
 
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>  
+<meta charset="UTF-8">
+
 <%@ page import="java.util.List" %>  
 <%@ page import="entidad.Cliente" %> 
 <%@ page import="entidad.Prestamo" %> 
@@ -174,53 +176,7 @@
         </div>  
     <% } %>  
     
-    <br>
-     <br>
-      <!-- Nueva Tabla: Historial de Préstamos -->  
-     <%   
-    // Recuperar el historial de préstamos  
-    List<Prestamo> historialPrestamos = (List<Prestamo>) request.getAttribute("historialPrestamos");  
-    %> 
-    
-        <h2 class="text-xl font-semibold mt-5">Historial de Préstamos:</h2>  
-    <div class="overflow-x-auto">  
-        <table class="table-auto w-full bg-white border-collapse border border-gray-300" id="historialTable">  
-            <thead class="bg-gray-200">  
-                <tr>  
-                    <th class="px-4 py-2 border">ID</th>  
-                    <th class="px-4 py-2 border">DNI</th>  
-                    <th class="px-4 py-2 border">Nombre y Apellido</th>  
-                    <th class="px-4 py-2 border">Tipo de Préstamo</th>  
-                    <th class="px-4 py-2 border">Monto Solicitado</th>  
-                    <th class="px-4 py-2 border">Cuotas</th>  
-                    <th class="px-4 py-2 border">Estado</th>  
-                    <th class="px-4 py-2 border">Deuda Pendiente</th>  
-                </tr>  
-            </thead>  
-            <tbody>  
-                <% if (historialPrestamos != null && !historialPrestamos.isEmpty()) {   
-                    for (Prestamo prestamo : historialPrestamos) { %>  
-                        <tr>  
-                            <td class="px-4 py-2 border"><%= prestamo.getId() %></td>  
-                            <td class="px-4 py-2 border"><%= prestamo.getCliente().getDni() %></td>  
-                            <td class="border px-4 py-2"><%= prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido() %></td>  
-                            
-                            <td class="border px-4 py-2">$ <%= prestamo.getImporte() %></td>  
-                            <td class="border px-4 py-2"><%= prestamo.getCuotas() %></td>  
-                            <td class="border px-4 py-2"><%= prestamo.getEstado() %></td>  
-                      
-                        </tr>  
-                    <% }   
-                } else { %>  
-                    <tr>  
-                        <td colspan="8" class="text-center border px-4 py-2">No se encontraron registros en el historial.</td>  
-                    </tr>  
-                <% } %>  
-            </tbody>  
-        </table>  
-    </div>  
-    
-</div>  
+
 
 
 

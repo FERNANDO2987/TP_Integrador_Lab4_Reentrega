@@ -42,6 +42,8 @@ public class Prestamo {
 	}
 	
 	
+	
+	
 	// Getters y Setters
 	public int getId() {
 		return id;

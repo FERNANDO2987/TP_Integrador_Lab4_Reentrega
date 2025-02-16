@@ -89,17 +89,19 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
     
     public boolean rechazarPrestamo(int idPrestamo) {
-        final String query = "{CALL RechazarPrestamo(?)}";
+
+        final String query = "{CALL RechazarPrestamo(?, ?)}"; 
         cn.Open();
         boolean resultado = false;
 
         try (CallableStatement cst = cn.connection.prepareCall(query)) {
             cst.setInt(1, idPrestamo);
-            int filasAfectadas = cst.executeUpdate();
+            cst.registerOutParameter(2, java.sql.Types.INTEGER);
 
-            if (filasAfectadas > 0) {
-                resultado = true;
-            }
+            cst.execute();
+            int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
+
+            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el préstamo fue aprobado
         } catch (Exception e) {
             System.err.println("Error al rechazar el préstamo: " + e.getMessage());
             e.printStackTrace();
@@ -112,28 +114,64 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 
 
+    @Override
+    public boolean aprobarPrestamo(int idPrestamo) {
+        final String query = "{CALL AprobarPrestamo(?, ?)}"; 
+        cn.Open();
+        boolean resultado = false;
+
+        try (CallableStatement cst = cn.connection.prepareCall(query)) {
+            cst.setInt(1, idPrestamo);
+            cst.registerOutParameter(2, java.sql.Types.INTEGER);
+
+            cst.execute();
+            int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
+
+            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el préstamo fue aprobado
+        } catch (Exception e) {
+            System.err.println("Error al aprobar el préstamo: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cn.close();
+        }
+
+        return resultado;
+    }
+
+
+
 	@Override
-	public boolean aprobarPrestamo(int idPrestamo) {
-		 final String query = "{CALL AprobarPrestamo(?)}";
-	        cn.Open();
-	        boolean resultado = false;
+	public List<Prestamo> ObtenerTodosLosPrestamos() {
+		  List<Prestamo> listaPrestamos = new ArrayList<>();
+		    final String query = "{CALL ObtenerTodosLosPrestamos()}";
+		    cn.Open();
 
-	        try (CallableStatement cst = cn.connection.prepareCall(query)) {
-	            cst.setInt(1, idPrestamo);
-	            int filasAfectadas = cst.executeUpdate();
+		    try (CallableStatement cst = cn.connection.prepareCall(query);
+		         ResultSet rs = cst.executeQuery()) {
 
-	            if (filasAfectadas > 0) {
-	                resultado = true;
-	            }
-	        } catch (Exception e) {
-	            System.err.println("Error al aprobar el préstamo: " + e.getMessage());
-	            e.printStackTrace();
-	        } finally {
-	            cn.close();
-	        }
+		        while (rs.next()) {
+		            Prestamo prestamo = new Prestamo();
+		            prestamo.setCliente(new Cliente()); // Asegura que Cliente no sea null
+		            prestamo.getCliente().setDni(rs.getString("DNI"));
+		            prestamo.getCliente().setNombre(rs.getString("Nombre"));
+		            prestamo.getCliente().setApellido(rs.getString("Apellido"));
+		            prestamo.setId(rs.getInt("ID_Prestamo"));
+		            prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+		            prestamo.setCuotas(rs.getInt("Cuotas"));
+		            prestamo.setEstado(rs.getString("Estado"));
 
-	        return resultado;
+		            listaPrestamos.add(prestamo);
+		        }
+		    } catch (Exception e) {
+		        System.err.println("Error al obtener la lista de prestamos: " + e.getMessage());
+		        e.printStackTrace();
+		    } finally {
+		        cn.close();
+		    }
+
+		    return listaPrestamos;
 	}
+
 
 
 }

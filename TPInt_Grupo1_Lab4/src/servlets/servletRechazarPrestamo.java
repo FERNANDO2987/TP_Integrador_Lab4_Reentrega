@@ -29,39 +29,34 @@ public class servletRechazarPrestamo extends HttpServlet {
     }
 
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-		String idParam = request.getParameter("id");
-        if (idParam != null && !idParam.isEmpty()) {
-            try {
-                int id = Integer.parseInt(idParam);
-                boolean eliminado = prestamoNeg.RechazarPrestamo(id);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
+        String idParam = request.getParameter("id");  
         
-                
-                if (eliminado) {
-                   
+        if (idParam != null && !idParam.isEmpty()) {  
+            try {  
+                int id = Integer.parseInt(idParam);  
+                boolean rechazado = prestamoNeg.RechazarPrestamo(id);  
+
+                // Maneja los mensajes de manera adecuada  
+                if (rechazado) {  
                     request.setAttribute("mensajeExito", MENSAJE_EXITO);  
                 
+                } else {  
+                    request.setAttribute("mensajeError", MENSAJE_ERROR);  
+                }  
+            } catch (NumberFormatException e) {  
+                request.setAttribute("mensajeError", "ID del préstamo no válido.");  
+            } catch (Exception e) {  
+                request.setAttribute("mensajeError", "Error inesperado: " + e.getMessage());  
+                e.printStackTrace();  
+            }  
+        } else {  
+            request.setAttribute("mensajeError", "No se proporcionó un ID del préstamo.");  
+        }  
 
-                } else {
-                   
-                    request.setAttribute("mensajeError", MENSAJE_EXITO);  
-                }
-
-            } catch (Exception e) {
-                request.getSession().setAttribute("mensajeError", "Error inesperado: " + e.getMessage());
-                e.printStackTrace(); // Para depuración
-            }
-        } else {
-            request.getSession().setAttribute("mensajeError", "No se proporcionó un ID del prestamo.");
-        }
-
-       // request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
-        // En lugar de redirigir al JSP directamente, redirige al servlet que lista los clientes
-        request.getRequestDispatcher("servletPrestamosClientes").forward(request, response);
-		
-	}
+        // Redirigir al servlet que lista los préstamos; los mensajes se mantienen a través de forward  
+        request.getRequestDispatcher("servletPrestamosClientes").forward(request, response);  
+    } 
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

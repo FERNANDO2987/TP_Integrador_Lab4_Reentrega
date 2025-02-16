@@ -65,7 +65,7 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 
 	@Override
 	public boolean RechazarPrestamo(int idPrestamo) {
-	    // Obtener la lista de préstamos
+		 // Obtener la lista de préstamos
 	    List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
 	    
 	    // Buscar el préstamo por ID
@@ -79,12 +79,9 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 	        throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
 	    }
 
-	    // Validar si el estado es 'activo'
 	    if (!"pendiente".equalsIgnoreCase(prestamo.getEstado())) {
-	        throw new RuntimeException("El préstamo no se puede rechazar porque su estado no es 'pendiente'.");
+	        throw new RuntimeException("El préstamo no está en estado 'pendiente'. No se puede aprobar.");
 	    }
-
-	    // Llamar al método DAO para rechazar el préstamo
 	    return prestamoDao.rechazarPrestamo(idPrestamo);
 	}
 	
@@ -106,9 +103,21 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 	        throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
 	    }
 
-	 
-	    //
+	    if (!"pendiente".equalsIgnoreCase(prestamo.getEstado())) {
+	        throw new RuntimeException("El préstamo no está en estado 'pendiente'. No se puede aprobar.");
+	    }
 	    return prestamoDao.aprobarPrestamo(idPrestamo);
+	}
+
+	@Override
+	public ArrayList<Prestamo> ListarTodosLosPrestamos() {
+		  List<Prestamo> prestamos = prestamoDao.ObtenerTodosLosPrestamos();
+
+	        if (prestamos == null || prestamos.isEmpty()) {
+	            throw new RuntimeException("No se encontraron prestamos.");
+	        }
+
+	        return (ArrayList<Prestamo>) prestamos;
 	}
 
 }

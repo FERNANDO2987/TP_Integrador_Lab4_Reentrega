@@ -12,5 +12,8 @@ public interface PrestamoNeg {
 	 public Map<String, BigDecimal> ObtenerMontosPendientes();
 	 public boolean RechazarPrestamo(int idPrestamo);
 	 public boolean AprobarPrestamo(int idPrestamo);
+		public ArrayList<Prestamo> ListarTodosLosPrestamos();
+	 
+	
 
 }

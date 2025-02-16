@@ -12,6 +12,7 @@ public interface PrestamoDao {
 	 public Map<String, BigDecimal> obtenerMontosPendientes();
 	 public boolean rechazarPrestamo(int idPrestamo);
 	 public boolean aprobarPrestamo(int idPrestamo);
+	 public List<Prestamo> ObtenerTodosLosPrestamos();
 	
 
 }

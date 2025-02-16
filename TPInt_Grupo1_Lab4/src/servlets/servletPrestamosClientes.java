@@ -43,9 +43,24 @@ public class servletPrestamosClientes extends HttpServlet {
         try {
             // Obtener la lista de prestamos
             List<Prestamo> prestamos = prestamoNeg.ListarPrestamos();
+            List<Prestamo> historialPrestamos = prestamoNeg.ListarTodosLosPrestamos();
 
             // Obtener los montos pendientes
             Map<String, BigDecimal> montosPendientes = prestamoNeg.ObtenerMontosPendientes();
+            
+            
+            
+          
+            // Verificar si la lista de prestamos no es nula o vacía
+            if (historialPrestamos !=null) {
+                // Establecer la lista de prestamos como un atributo en el request
+                request.setAttribute("historialPrestamos", historialPrestamos);
+            } else {
+                // Si no hay prestamos, establecer un mensaje de error
+                request.setAttribute("error", "No se encontraron Prestamos.");
+            }
+        
+            
 
             // Verificar si la lista de prestamos no es nula o vacía
             if (prestamos != null && !prestamos.isEmpty()) {
@@ -65,6 +80,9 @@ public class servletPrestamosClientes extends HttpServlet {
                 // Si no se pueden obtener los montos, establecer un mensaje de error
                 request.setAttribute("errorMontos", "No se pudieron obtener los montos pendientes.");
             }
+            
+            
+        
 
             // Redirigir a la página JSP para mostrar la lista de prestamos
             request.getRequestDispatcher("PrestamosClientes.jsp").forward(request, response);
