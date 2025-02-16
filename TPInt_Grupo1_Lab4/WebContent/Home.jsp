@@ -115,7 +115,7 @@
             } else if (pagina === 'clientes') {
                 contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
             } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+                contenido.innerHTML = '<iframe src="servletPrestamosClientes" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarClientes') {

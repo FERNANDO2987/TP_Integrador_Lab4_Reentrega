@@ -1,0 +1,114 @@
+package negocioImpl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import datos.PrestamoDao;
+import datosImpl.PrestamoDaoImpl;
+import entidad.Prestamo;
+import negocio.PrestamoNeg;
+
+public class PrestamoNegImpl implements PrestamoNeg{
+
+	
+	
+private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
+	
+	public PrestamoNegImpl(PrestamoDao prestamoDao)
+	{
+		this.prestamoDao = prestamoDao;
+		
+	}
+	
+	public PrestamoNegImpl()
+	{
+		
+	}
+	
+	@Override
+	public ArrayList<Prestamo> ListarPrestamos() {
+		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
+
+	        if (prestamos == null || prestamos.isEmpty()) {
+	            throw new RuntimeException("No se encontraron prestamos.");
+	        }
+
+	        return (ArrayList<Prestamo>) prestamos;
+	}
+
+	@Override
+	public Map<String, BigDecimal> ObtenerMontosPendientes() {
+		  // Llamamos al método de la capa de datos (DAO)
+	    Map<String, BigDecimal> montos = prestamoDao.obtenerMontosPendientes();
+
+	    // Validamos que los montos no sean nulos y tengan valores
+	    if (montos == null || montos.isEmpty()) {
+	        throw new RuntimeException("No se encontraron montos pendientes.");
+	    }
+
+	    // Validamos que los valores de los montos sean válidos (no nulos ni cero)
+	    BigDecimal montoSolicitado = montos.get("montoTotalSolicitado");
+	    BigDecimal montoAdjudicado = montos.get("montoTotalAdjudicado");
+
+	    if (montoSolicitado == null || montoSolicitado.compareTo(BigDecimal.ZERO) <= 0) {
+	        throw new RuntimeException("Monto total solicitado no válido.");
+	    }
+
+	    if (montoAdjudicado == null || montoAdjudicado.compareTo(BigDecimal.ZERO) <= 0) {
+	        throw new RuntimeException("Monto total adjudicado no válido.");
+	    }
+
+	    return montos;
+	}
+
+	@Override
+	public boolean RechazarPrestamo(int idPrestamo) {
+	    // Obtener la lista de préstamos
+	    List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
+	    
+	    // Buscar el préstamo por ID
+	    Prestamo prestamo = prestamos.stream()
+	            .filter(p -> p.getId() == idPrestamo)
+	            .findFirst()
+	            .orElse(null);
+
+	    // Validar si el préstamo existe
+	    if (prestamo == null) {
+	        throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
+	    }
+
+	    // Validar si el estado es 'activo'
+	    if (!"pendiente".equalsIgnoreCase(prestamo.getEstado())) {
+	        throw new RuntimeException("El préstamo no se puede rechazar porque su estado no es 'pendiente'.");
+	    }
+
+	    // Llamar al método DAO para rechazar el préstamo
+	    return prestamoDao.rechazarPrestamo(idPrestamo);
+	}
+	
+	
+
+	@Override
+	public boolean AprobarPrestamo(int idPrestamo) {
+		 // Obtener la lista de préstamos
+	    List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
+	    
+	    // Buscar el préstamo por ID
+	    Prestamo prestamo = prestamos.stream()
+	            .filter(p -> p.getId() == idPrestamo)
+	            .findFirst()
+	            .orElse(null);
+
+	    // Validar si el préstamo existe
+	    if (prestamo == null) {
+	        throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
+	    }
+
+	 
+	    //
+	    return prestamoDao.aprobarPrestamo(idPrestamo);
+	}
+
+}

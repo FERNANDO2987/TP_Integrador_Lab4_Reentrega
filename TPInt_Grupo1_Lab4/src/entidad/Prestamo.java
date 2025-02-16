@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 
 public class Prestamo {
-	private long id;
+	private int id;
 	private String observaciones;
 	private Cliente cliente;
 	private Cuenta cuenta;
@@ -23,7 +23,7 @@ public class Prestamo {
     public Prestamo() {}
     
     // Constructor con parámetros
-	public Prestamo(long id, String observaciones, Cliente cliente, Cuenta cuenta, LocalDate fechaAlta,
+	public Prestamo(int id, String observaciones, Cliente cliente, Cuenta cuenta, LocalDate fechaAlta,
 			BigDecimal importe, int cuotas, BigDecimal valorCuotas, String estado, LocalDate createDate,
 			boolean deleted, LocalDate deleteDate) {
 		super();
@@ -43,10 +43,10 @@ public class Prestamo {
 	
 	
 	// Getters y Setters
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getObservaciones() {

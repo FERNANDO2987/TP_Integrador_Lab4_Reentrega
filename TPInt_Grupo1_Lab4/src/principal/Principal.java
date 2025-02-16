@@ -1,6 +1,10 @@
 package principal;
 
-import negocioImpl.ClienteNegImpl;
+
+import java.util.List;
+
+import entidad.Prestamo;
+import negocioImpl.PrestamoNegImpl;
 
 
 public class Principal {
@@ -8,22 +12,23 @@ public class Principal {
     public static void main(String[] args) {
 
 
-    	 // Crear una instancia de ClienteNegImpl
-        ClienteNegImpl clienteNegImpl = new ClienteNegImpl();
+    	// Crear instancia de PrestamoNegImpl
+        PrestamoNegImpl prestamoNeg = new PrestamoNegImpl();
 
-        // Crear un Cliente con un DNI para probar
-        int id = 1;  // AsegÃºrate de que este DNI exista en la base de datos para la prueba
-        
-        // Llamar al mÃ©todo existeDni
-        boolean existe = clienteNegImpl.EliminarCliente(id);
+        try {
+            // Llamar al método ListarPrestamos y obtener la lista de préstamos
+            List<Prestamo> listaPrestamos = prestamoNeg.ListarPrestamos();
 
-        // Imprimir el resultado
-        if (existe) {
-            System.out.println("El ID " + id + " YA FUE ELIMINADO.");
-        } else {
-            System.out.println("El ID " + id + " NO SE PUDO ELIMINAR.");
+            // Recorrer la lista y mostrar los datos
+            for (Prestamo prestamo : listaPrestamos) {
+                System.out.println("ID: " + prestamo.getId());
+                System.out.println("Importe: " + prestamo.getImporte());
+                System.out.println("Cliente: " + prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido());
+                System.out.println("--------------------------------");
+            }
+        } catch (Exception e) {
+            System.err.println("Error al listar los préstamos: " + e.getMessage());
         }
-        
     
     }
 }
