@@ -2,6 +2,7 @@ package principal;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+
 import datosImpl.PrestamoDaoImpl;
 import entidad.Cliente;
 import entidad.Cuenta;
@@ -12,9 +13,17 @@ import negocioImpl.PrestamoNegImpl;
 import negocioImpl.ProvinciaNegImpl;
 
 
+import java.util.List;
+
+import entidad.Prestamo;
+import negocioImpl.PrestamoNegImpl;
+
+
+
 public class Principal {
 
     public static void main(String[] args) {
+
 
     	
     	
@@ -50,8 +59,26 @@ public class Principal {
             System.out.println(p.getObservaciones());
             System.out.println(p.getEstado());
             System.out.println("----------------------------------------------");
+
+
+    	// Crear instancia de PrestamoNegImpl
+        PrestamoNegImpl prestamoNeg = new PrestamoNegImpl();
+
+        try {
+            // Llamar al m�todo ListarPrestamos y obtener la lista de pr�stamos
+            List<Prestamo> listaPrestamos = prestamoNeg.ListarPrestamos();
+
+            // Recorrer la lista y mostrar los datos
+            for (Prestamo prestamo : listaPrestamos) {
+                System.out.println("ID: " + prestamo.getId());
+                System.out.println("Importe: " + prestamo.getImporte());
+                System.out.println("Cliente: " + prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido());
+                System.out.println("--------------------------------");
+            }
+        } catch (Exception e) {
+            System.err.println("Error al listar los pr�stamos: " + e.getMessage());
+
         }
-        
     
     }
 }

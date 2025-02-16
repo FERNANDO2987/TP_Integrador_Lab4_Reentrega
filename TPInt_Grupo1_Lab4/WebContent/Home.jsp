@@ -105,10 +105,14 @@
             </li>
 
             <li>
+
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Prestamos</a>
 
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">Préstamos</a>
+
+
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Listar Pr�stamos</a>
 
             </li>
             <li>
@@ -117,6 +121,10 @@
             <li>
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>
             </li>
+              <li>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Prestamos</a>
+            </li>
+            
         </ul>
     </div>
 
@@ -134,7 +142,18 @@
             } else if (pagina === 'clientes') {
                 contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
             } else if (pagina === 'prestamos') {
+
                 contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+
+                contenido.innerHTML = '<iframe src="servletPrestamosClientes" width="90%" height="900px"></iframe>';
+                
+                
+            }
+                else if (pagina === 'historialPrestamos') {
+                    contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
+  
+                
+
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarClientes') {
