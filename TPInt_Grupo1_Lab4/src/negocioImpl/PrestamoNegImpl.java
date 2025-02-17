@@ -21,17 +21,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		this.prestamoDao = prestamoDao;
 	}
 	
-	public PrestamoNegImpl() 
 
-	
-	
-private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
-	
-	public PrestamoNegImpl(PrestamoDao prestamoDao)
-	{
-		this.prestamoDao = prestamoDao;
-		
-	}
 	
 	public PrestamoNegImpl()
 
@@ -39,9 +29,9 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 		
 	}
 	
+	
 	@Override
-
-	public List<Prestamo> ListarPrestamos() {
+	public List<Prestamo> ListarPrestamos2() {
 		List<Prestamo> prestamos = prestamoDao.ListarPrestamos();
 		if(prestamos == null || prestamos.isEmpty())
 		{
@@ -51,6 +41,18 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 		System.out.println("Prestamos encontrados: " + prestamos.size());
 		return new ArrayList<>(prestamos);
 	}
+	
+	
+	public ArrayList<Prestamo> ListarPrestamos() {
+		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
+
+	        if (prestamos == null || prestamos.isEmpty()) {
+	            throw new RuntimeException("No se encontraron prestamos.");
+	        }
+
+	        return (ArrayList<Prestamo>) prestamos;
+	}
+	
 
 	@Override
 	public boolean RechazarPrestamo(int idPrestamo, String observacion) {
@@ -113,15 +115,7 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 	}
 	
 
-	public ArrayList<Prestamo> ListarPrestamos() {
-		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
 
-	        if (prestamos == null || prestamos.isEmpty()) {
-	            throw new RuntimeException("No se encontraron prestamos.");
-	        }
-
-	        return (ArrayList<Prestamo>) prestamos;
-	}
 
 	@Override
 	public Map<String, BigDecimal> ObtenerMontosPendientes() {

@@ -190,6 +190,13 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	            }
 	        }
 	    } catch (SQLException e) {
+	    	
+	        System.err.println("Error al chequear prestamos: " + e.getMessage());
+	    	
+	    }
+	    
+	    return estado;
+	  }
 
 	
 
@@ -223,12 +230,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	        cn.close();
 	    }
 
-	    
-	    return estado;
-	}
-
-
-
+	   
 
 	    return listaPrestamos;
 	}

@@ -68,11 +68,15 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <%
+     <%
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario == null) {
             response.sendRedirect("Login.jsp");
             return;
+        }
+        String nombreUsuario = "Usuario desconocido";
+        if (usuario.getCliente() != null) {
+            nombreUsuario = usuario.getCliente().getNombre();
         }
     %>
 
@@ -84,7 +88,9 @@
 </div>
 
         <div>
-            <a href="#" class="text-white hover:text-blue-500">Logout</a>
+           
+           <a href="servletLogout" class="text-white hover:text-blue-500" onclick="return confirm('¿Estás seguro de que deseas salir??');">Logout</a>
+
         </div>
     </nav>
 
@@ -96,7 +102,7 @@
       
         <ul class="space-y-2">
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a></li>
-            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('clientes')">Clientes</a></li>
+
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a></li>
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a></li>
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a></li>
@@ -110,30 +116,29 @@
     </div>
 
     <script>
-        function cargarPagina(pagina) {
-            var contenido = document.getElementById('contenidoPrincipal');
+    function cargarPagina(pagina) {
+        let contenido = document.getElementById('contenidoPrincipal');
+        contenido.innerHTML = ''; // Limpia el contenido antes de cargar
 
-            switch (pagina) {
-                case 'inicio':
-                    contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
-                    break;
-                case 'clientes':
-                    contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
-                    break;
-                case 'prestamos':
-                    contenido.innerHTML = '<iframe src="servletPrestamosClientes" width="90%" height="900px"></iframe>';
-                    break;
-                case 'historialPrestamos':
-                    contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
-                    break;
-                case 'listarUsuarios':
-                    contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
-                    break;
-                case 'listarClientes':
-                    contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
-                    break;
-            }
+        switch (pagina) {
+            case 'inicio':
+                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+                break;
+    
+            case 'prestamos':
+                contenido.innerHTML = '<iframe src="servletPrestamosClientes" width="90%" height="900px"></iframe>';
+                break;
+            case 'historialPrestamos':
+                contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
+                break;
+            case 'listarUsuarios':
+                contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
+                break;
+            case 'listarClientes':
+                contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
+                break;
         }
+    }
 
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');

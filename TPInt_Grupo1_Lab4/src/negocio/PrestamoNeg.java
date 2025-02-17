@@ -12,7 +12,7 @@ import entidad.Prestamo;
 
 public interface PrestamoNeg {
 
-	public List<Prestamo> ListarPrestamos();
+	public List<Prestamo> ListarPrestamos2();
 	public boolean RechazarPrestamo(int idPrestamo, String observacion);
 	public boolean AprobarPrestamo(int idPrestamo, String observacion);
 	public boolean AgregarPrestamo(Prestamo prestamo);
