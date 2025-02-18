@@ -55,7 +55,7 @@ public class servletListarClientes extends HttpServlet {
          } catch (Exception e) {
              // Manejar excepciones y redirigir a una página de error si es necesario
              e.printStackTrace();
-             request.setAttribute("error", "Ocurrió un error al obtener la lista de clientes.");
+             request.setAttribute("error", "Ocurrio un error al obtener la lista de clientes.");
              request.getRequestDispatcher("ListarClientes.jsp").forward(request, response);
          }
 		

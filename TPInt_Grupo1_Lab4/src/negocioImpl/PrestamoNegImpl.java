@@ -18,16 +18,18 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	{
 		this.prestamoDao = prestamoDao;
 	}
-		
+	
+
+	
 	public PrestamoNegImpl()
 	{
 		
 	}
 
+
 	@Override
 	public List<Prestamo> ListarPrestamos2() {
 		List<Prestamo> prestamos = prestamoDao.ListarPrestamos();
-		if(prestamos == null || prestamos.isEmpty())
 		{
 			System.err.println("No se encontraron usuarios.");
 			return new ArrayList<>();
@@ -35,6 +37,18 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		System.out.println("Prestamos encontrados: " + prestamos.size());
 		return new ArrayList<>(prestamos);
 	}
+	
+	@Override
+	public ArrayList<Prestamo> ListarPrestamos() {
+		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
+
+	        if (prestamos == null || prestamos.isEmpty()) {
+	            throw new RuntimeException("No se encontraron prestamos.");
+	        }
+
+	        return (ArrayList<Prestamo>) prestamos;
+	}
+	
 
 	@Override
 	public boolean RechazarPrestamo(int idPrestamo, String observacion) {
@@ -94,11 +108,6 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		return prestamoDao.AgregarPrestamo(prestamo);
 	}
 
-	@Override
-	public ArrayList<Prestamo> ListarPrestamos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Map<String, BigDecimal> ObtenerMontosPendientes() {
