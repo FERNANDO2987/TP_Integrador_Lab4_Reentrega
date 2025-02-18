@@ -321,3 +321,13 @@ BEGIN
 
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE SP_MovimientosDeCuenta(IN nro_cuenta_input int)
+BEGIN
+select M.id,  M.detalle, M.importe, TM.id as TMid, TM.descripcion as TMdescripcion, M.nro_cuenta, M.create_date, M.deleted, M.delete_date  from movimientos M
+left join tipos_movimiento TM on TM.id = M.id_tipos_movimiento
+left join cuentas C on C.nro_cuenta = M.nro_cuenta
+WHERE M.deleted = 0 and C.nro_cuenta = nro_cuenta_input;
+END;
+$$

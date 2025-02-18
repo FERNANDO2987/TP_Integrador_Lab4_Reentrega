@@ -7,6 +7,7 @@ import java.util.List;
 
 import datos.CuentaDao;
 import entidad.Cuenta;
+import entidad.Movimiento;
 
 public class CuentaDaoImpl implements CuentaDao {
 	private Conexion cn;
@@ -203,6 +204,47 @@ public class CuentaDaoImpl implements CuentaDao {
 			cn.close();
 		}
 		return exito;
+	}
+
+	@Override
+	public List<Movimiento> leerMovimientosDeLaCuenta(int nro_cuenta) {
+		cn.Open();
+		String query = "CALL SP_MovimientosDeCuenta(?)";
+		List<Movimiento> movimientos = new ArrayList<Movimiento>();
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, nro_cuenta);
+			ResultSet rs = cst.executeQuery();
+			while(rs.next())
+			{
+				Movimiento aux = new Movimiento();
+				aux.setId(rs.getInt("id"));
+				aux.setDetalle(rs.getString("detalle"));
+				aux.setImporte(rs.getBigDecimal("importe"));
+				aux.getTipoMovimiento().setId(rs.getInt("TMid"));
+				aux.getTipoMovimiento().setDescripcion(rs.getString("TMdescripcion"));
+				aux.setNroCuenta(rs.getInt("nro_cuenta"));
+				aux.setCreateDate(rs.getDate("create_date").toLocalDate());
+				aux.setDeleted(rs.getBoolean("deleted"));
+				if(rs.getDate("delete_date") != null)
+				{
+					aux.setDeleteDate(rs.getDate("delete_date").toLocalDate());
+				}
+				movimientos.add(aux);
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		
+		return movimientos;
 	}
 
 }
