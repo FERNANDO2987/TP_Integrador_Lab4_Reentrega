@@ -37,10 +37,13 @@
             padding: 8px 12px;
             font-weight: bold;
         }
+        .fondoPant {
+        	background: #8D99AE;
+        }
     </style>
 </head>
 <body>
-<div class="container-fluid mt-4 p-0">
+<div>
     <div class="row justify-content-around">
         <% List<TipoCuenta> tiposCuenta = (List<TipoCuenta>) request.getAttribute("tiposCuenta");
            List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentas");
@@ -66,6 +69,51 @@
                     </div>
                 </div>
             </div>
+            
+             <!-- MODAL CONFIRMAR MODIFICACIÓN -->
+		    <div class="modal fade" id="modalConfirmarModificacion_<%=cuenta.getNroCuenta()%>" tabindex="-1" role="dialog" aria-hidden="true">
+		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title">Confirmar Modificación</h5>
+		                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+		                        <span aria-hidden="true">&times;</span>
+		                    </button>
+		                </div>
+		                <div class="modal-body">
+		                    ¿Está seguro de que desea modificar esta cuenta?
+		                </div>
+		                <div class="modal-footer">
+		                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		                    <!-- Este botón ahora envía el formulario -->
+		                    <input type="submit" class="btn btn-primary" name="btnModificar" value="Confirmar">
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		    <!-- MODAL CONFIRMAR ELIMINACIÓN -->
+		    <div class="modal fade" id="modalConfirmarEliminacion_<%=cuenta.getNroCuenta()%>" tabindex="-1" role="dialog" aria-hidden="true">
+		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title">Confirmar Eliminación</h5>
+		                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+		                        <span aria-hidden="true">&times;</span>
+		                    </button>
+		                </div>
+		                <div class="modal-body">
+		                	<div class="alert alert-danger">
+		                    ¿Está seguro de que desea eliminar esta cuenta? Esta acción no se puede deshacer.
+		                    </div>
+		                </div>
+		                <div class="modal-footer">
+		                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		                    <!-- Este botón ahora envía el formulario -->
+		                    <input type="submit" class="btn btn-danger" name="btnEliminar" value="Eliminar">
+		                </div>
+		            </div>
+		        </div>
+		    </div>
         </form>
         <% } } else { %>
             <div class="alert alert-danger w-100 text-center">No se encontraron Cuentas.</div>
@@ -73,7 +121,7 @@
     </div>
     <% if(cuentas.size() < 3){ %>
     <div class="row form-container mt-4">
-        <form action="servletGestionarCuentas" method="post" class="w-100">
+        <form action="servletGestionarCuentas" method="post" class="w-100 container-sm border border-secondary shadow p-4 rounded">
             <input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
             <h4 class="text-center">Agregar Nueva Cuenta</h4>
             <div class="form-group">
