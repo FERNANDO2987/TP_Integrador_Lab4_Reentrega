@@ -4,15 +4,15 @@ package entidad;
 
 public class Usuario {
     private int id;
-    private Cliente cliente;
+    private Cliente cliente = new Cliente();
     private String usuario;
     private String password;
     private boolean admin;
 
-    // Constructor vacío
+    // Constructor vacï¿½o
     public Usuario() {}
 
-    // Constructor con parámetros
+    // Constructor con parï¿½metros
     public Usuario(int id, Cliente cliente, String usuario, String password, boolean admin) {
         this.id = id;
         this.cliente = cliente;
@@ -66,7 +66,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario [id=" + id + 
-               ", cliente=" + cliente.getId() + 
+               ", cliente=" + cliente.toString() + 
                ", usuario=" + usuario + 
                ", admin=" + admin + "]";
         

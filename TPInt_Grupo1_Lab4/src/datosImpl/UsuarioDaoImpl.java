@@ -20,6 +20,56 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	public UsuarioDaoImpl() {
 		cn = new Conexion();
 	}
+	
+	@Override
+	public Usuario loguear(Usuario usuario) {
+	       Usuario usuarioBD = null;
+	       ResultSet rs = null;
+	       cn = new Conexion();
+	       cn.Open();
+	       String query = "{CALL SP_ValidarUsuario(?, ?)}";
+	       try (CallableStatement stmt = cn.connection.prepareCall(query)) {
+	           stmt.setString(1, usuario.getUsuario());
+	           stmt.setString(2, usuario.getPassword()); 
+	           rs = stmt.executeQuery();
+	           if (rs != null && rs.next()) {
+	        	   usuarioBD = new Usuario();
+	        	   usuarioBD.getCliente().setId(rs.getInt("id"));
+	        	   usuarioBD.setUsuario(rs.getString("usuario"));
+	        	   usuarioBD.getCliente().setNombre(rs.getString("nombre"));
+	        	   usuarioBD.getCliente().setApellido(rs.getString("apellido"));
+	        	   usuarioBD.setAdmin(rs.getBoolean("admin"));
+	        	   usuarioBD.getCliente().setTelefono(rs.getString("telefono"));
+	        	   usuarioBD.getCliente().setCuil(rs.getString("cuil"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
+	        	   usuarioBD.getCliente().setDni(rs.getString("dni"));
+	        	   usuarioBD.getCliente().setCorreo(rs.getString("correo"));
+	        	   usuarioBD.getCliente().setDireccion(rs.getString("direccion"));
+	        	   usuarioBD.getCliente().setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+	        	   usuarioBD.getCliente().setSexo(rs.getString("sexo"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
+	        	   usuarioBD.getCliente().getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
+	        	   usuarioBD.getCliente().getProvincia().setId(rs.getInt("id_provincia"));
+	        	   usuarioBD.getCliente().getProvincia().setNombre(rs.getString("nombre_provincia"));
+	        	   usuarioBD.getCliente().getLocalidad().setId(rs.getInt("id_localidad"));
+	        	   usuarioBD.getCliente().getLocalidad().setNombre(rs.getString("nombre_localidad"));
+		            
+		            System.out.println(usuarioBD.toString());
+	           }
+	       } catch (SQLException e) {
+	           e.printStackTrace();
+	       } finally {
+	           try {
+	               if (rs != null) {
+	                   rs.close();
+	               }
+	               cn.close();
+	           } catch (SQLException e) {
+	               e.printStackTrace();
+	           }
+	       }
+	       return usuarioBD;
+	   }
 
 	@Override
 	public Usuario obtenerUsuarioPorId(int id) {
