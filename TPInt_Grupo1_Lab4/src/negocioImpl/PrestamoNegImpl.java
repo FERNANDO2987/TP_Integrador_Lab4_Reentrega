@@ -13,35 +13,19 @@ import entidad.Prestamo;
 import negocio.PrestamoNeg;
 
 public class PrestamoNegImpl implements PrestamoNeg{
-
-
 	private PrestamoDao prestamoDao = new PrestamoDaoImpl();
 	public PrestamoNegImpl(PrestamoDao prestamoDao)
 	{
 		this.prestamoDao = prestamoDao;
 	}
-	
-	public PrestamoNegImpl() 
-
-	
-	
-private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
-	
-	public PrestamoNegImpl(PrestamoDao prestamoDao)
-	{
-		this.prestamoDao = prestamoDao;
 		
-	}
-	
 	public PrestamoNegImpl()
-
 	{
 		
 	}
-	
-	@Override
 
-	public List<Prestamo> ListarPrestamos() {
+	@Override
+	public List<Prestamo> ListarPrestamos2() {
 		List<Prestamo> prestamos = prestamoDao.ListarPrestamos();
 		if(prestamos == null || prestamos.isEmpty())
 		{
@@ -73,7 +57,6 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo, String observacion) {
-		
 		if(idPrestamo < 1)
 		{
 	        System.err.println("El ID del prestamo no es )v�lido.");
@@ -94,7 +77,6 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 
 	@Override
 	public boolean AgregarPrestamo(Prestamo prestamo) {
-		
 		if (prestamo.getCliente() == null || prestamo.getCuenta() == null) {
 		    System.err.println("El cliente o la cuenta no est�n definidos");
 		    return false;
@@ -111,16 +93,11 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 		
 		return prestamoDao.AgregarPrestamo(prestamo);
 	}
-	
 
+	@Override
 	public ArrayList<Prestamo> ListarPrestamos() {
-		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
-
-	        if (prestamos == null || prestamos.isEmpty()) {
-	            throw new RuntimeException("No se encontraron prestamos.");
-	        }
-
-	        return (ArrayList<Prestamo>) prestamos;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -169,8 +146,6 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 	    }
 	    return prestamoDao.rechazarPrestamo(idPrestamo);
 	}
-	
-	
 
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo) {
@@ -196,14 +171,16 @@ private PrestamoDao prestamoDao = new  PrestamoDaoImpl();
 
 	@Override
 	public ArrayList<Prestamo> ListarTodosLosPrestamos() {
-		  List<Prestamo> prestamos = prestamoDao.ObtenerTodosLosPrestamos();
+		List<Prestamo> prestamos = prestamoDao.ObtenerTodosLosPrestamos();
 
-	        if (prestamos == null || prestamos.isEmpty()) {
-	            throw new RuntimeException("No se encontraron prestamos.");
-	        }
+        if (prestamos == null || prestamos.isEmpty()) {
+            throw new RuntimeException("No se encontraron prestamos.");
+        }
 
-	        return (ArrayList<Prestamo>) prestamos;
+        return (ArrayList<Prestamo>) prestamos;
 	}
 
+
+	
 
 }

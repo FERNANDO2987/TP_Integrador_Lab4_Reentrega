@@ -36,8 +36,6 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	public PrestamoDaoImpl() {
 		cn = new Conexion();
 	}
-
-
 	@Override
 	public List<Prestamo> ListarPrestamos() {
 		List<Prestamo> prestamos = new ArrayList<>();
@@ -100,7 +98,6 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return prestamos;
 	}
-
 	@Override
 	public boolean RechazarPrestamo(int idPrestamo, String observacion) {
 		boolean estado = true;
@@ -124,7 +121,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		
 		return estado;
 	}
-
+	
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo, String observacion) {
 		boolean estado = true;
@@ -144,11 +141,10 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		} finally {
 			cn.close();
 		}
-
 		
 		return estado;
 	}
-
+	
 	@Override
 	public boolean AgregarPrestamo(Prestamo prestamo) {
 		boolean estado = true;
@@ -168,14 +164,12 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		} finally {
 			cn.close();
 		}
-		
-		
 		return estado;
 	}
-
+	
 	@Override
 	public boolean ChequearPendiente(int id) {
-	    boolean estado = false;
+		boolean estado = false;
 	    
 	    cn.Open();
 	    String query = "SELECT COUNT(id) FROM prestamos WHERE id = ? AND estado = 'pendiente'";
@@ -190,12 +184,14 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	            }
 	        }
 	    } catch (SQLException e) {
-
+	        System.err.println("Error al chequear prestamos: " + e.getMessage());	
+	    }    
+	    return estado;
+	}
 	
-
 	@Override
 	public List<Prestamo> ObtenerPrestamos() {
-	    List<Prestamo> listaPrestamos = new ArrayList<>();
+		List<Prestamo> listaPrestamos = new ArrayList<>();
 	    final String query = "{CALL ObtenerPrestamos()}";
 	    cn.Open();
 
@@ -223,20 +219,14 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	        cn.close();
 	    }
 
-	    
-	    return estado;
-	}
-
-
-
+	   
 
 	    return listaPrestamos;
 	}
 	
-	
-	  // Nuevo m�todo para obtener los montos solicitados y adjudicados para estado 'pendiente'
-    public Map<String, BigDecimal> obtenerMontosPendientes() {
-        Map<String, BigDecimal> montos = new HashMap<>();
+	@Override
+	public Map<String, BigDecimal> obtenerMontosPendientes() {
+		Map<String, BigDecimal> montos = new HashMap<>();
         final String query = "SELECT estado, " +
                              "       SUM(importe) AS montoTotalSolicitado, " +
                              "       SUM(importe * valor_cuotas) AS montoTotalAdjudicado " +
@@ -263,39 +253,33 @@ public class PrestamoDaoImpl implements PrestamoDao{
         }
 
         return montos;
-    }
+	}
+	@Override
+	public boolean rechazarPrestamo(int idPrestamo) {
+		 final String query = "{CALL RechazarPrestamo(?, ?)}"; 
+	        cn.Open();
+	        boolean resultado = false;
 
+	        try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	            cst.setInt(1, idPrestamo);
+	            cst.registerOutParameter(2, java.sql.Types.INTEGER);
 
-    
-    public boolean rechazarPrestamo(int idPrestamo) {
+	            cst.execute();
+	            int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
 
-        final String query = "{CALL RechazarPrestamo(?, ?)}"; 
-        cn.Open();
-        boolean resultado = false;
+	            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el pr�stamo fue aprobado
+	        } catch (Exception e) {
+	            System.err.println("Error al rechazar el pr�stamo: " + e.getMessage());
+	            e.printStackTrace();
+	        } finally {
+	            cn.close();
+	        }
 
-        try (CallableStatement cst = cn.connection.prepareCall(query)) {
-            cst.setInt(1, idPrestamo);
-            cst.registerOutParameter(2, java.sql.Types.INTEGER);
-
-            cst.execute();
-            int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
-
-            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el pr�stamo fue aprobado
-        } catch (Exception e) {
-            System.err.println("Error al rechazar el pr�stamo: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            cn.close();
-        }
-
-        return resultado;
-    }
-
-
-
-    @Override
-    public boolean aprobarPrestamo(int idPrestamo) {
-        final String query = "{CALL AprobarPrestamo(?, ?)}"; 
+	        return resultado;
+	}
+	@Override
+	public boolean aprobarPrestamo(int idPrestamo) {
+		final String query = "{CALL AprobarPrestamo(?, ?)}"; 
         cn.Open();
         boolean resultado = false;
 
@@ -315,42 +299,41 @@ public class PrestamoDaoImpl implements PrestamoDao{
         }
 
         return resultado;
-    }
-
-
-
+	}
 	@Override
 	public List<Prestamo> ObtenerTodosLosPrestamos() {
-		  List<Prestamo> listaPrestamos = new ArrayList<>();
-		    final String query = "{CALL ObtenerTodosLosPrestamos()}";
-		    cn.Open();
+		List<Prestamo> listaPrestamos = new ArrayList<>();
+	    final String query = "{CALL ObtenerTodosLosPrestamos()}";
+	    cn.Open();
 
-		    try (CallableStatement cst = cn.connection.prepareCall(query);
-		         ResultSet rs = cst.executeQuery()) {
+	    try (CallableStatement cst = cn.connection.prepareCall(query);
+	         ResultSet rs = cst.executeQuery()) {
 
-		        while (rs.next()) {
-		            Prestamo prestamo = new Prestamo();
-		            prestamo.setCliente(new Cliente()); // Asegura que Cliente no sea null
-		            prestamo.getCliente().setDni(rs.getString("DNI"));
-		            prestamo.getCliente().setNombre(rs.getString("Nombre"));
-		            prestamo.getCliente().setApellido(rs.getString("Apellido"));
-		            prestamo.setId(rs.getInt("ID_Prestamo"));
-		            prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
-		            prestamo.setCuotas(rs.getInt("Cuotas"));
-		            prestamo.setEstado(rs.getString("Estado"));
+	        while (rs.next()) {
+	            Prestamo prestamo = new Prestamo();
+	            prestamo.setCliente(new Cliente()); // Asegura que Cliente no sea null
+	            prestamo.getCliente().setDni(rs.getString("DNI"));
+	            prestamo.getCliente().setNombre(rs.getString("Nombre"));
+	            prestamo.getCliente().setApellido(rs.getString("Apellido"));
+	            prestamo.setId(rs.getInt("ID_Prestamo"));
+	            prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+	            prestamo.setCuotas(rs.getInt("Cuotas"));
+	            prestamo.setEstado(rs.getString("Estado"));
 
-		            listaPrestamos.add(prestamo);
-		        }
-		    } catch (Exception e) {
-		        System.err.println("Error al obtener la lista de prestamos: " + e.getMessage());
-		        e.printStackTrace();
-		    } finally {
-		        cn.close();
-		    }
+	            listaPrestamos.add(prestamo);
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Error al obtener la lista de prestamos: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
 
-		    return listaPrestamos;
+	    return listaPrestamos;
 	}
 
+
+	
 
 
 
