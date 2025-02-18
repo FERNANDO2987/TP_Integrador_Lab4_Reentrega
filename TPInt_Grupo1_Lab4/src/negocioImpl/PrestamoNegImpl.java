@@ -30,6 +30,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	@Override
 	public List<Prestamo> ListarPrestamos2() {
 		List<Prestamo> prestamos = prestamoDao.ListarPrestamos();
+		if(prestamos == null || prestamos.isEmpty())
 		{
 			System.err.println("No se encontraron usuarios.");
 			return new ArrayList<>();
