@@ -28,20 +28,18 @@ public class servletLogout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false); // No crear sesión si no existe
-        if (session != null && session.getAttribute("usuario") != null) {
-            response.sendRedirect("Home.jsp"); 
-            return; // Importante para evitar ejecución adicional
-        } 
-        
-        request.getRequestDispatcher("Login.jsp").forward(request, response);
+
+        if (session != null) {
+            session.invalidate(); // Cierra la sesión correctamente
+        }
+
+        response.sendRedirect("Login.jsp"); // Redirige siempre al login después del logout
     }
 
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Método POST no soportado.");
+    }
 
 }

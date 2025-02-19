@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Gesti�n Bancaria</title>
+    <title>Sistema de Gestion Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
@@ -90,8 +90,11 @@
 
         <div>
            
-           <a href="servletLogout" class="text-white hover:text-blue-500" onclick="return confirm('¿Estas seguro que quieres Salir??');">Logout</a>
-
+           <a href="servletLogout?id=id=<%= usuario.getId() %>" class="text-white hover:text-blue-500" onclick="return confirm('¿Estas seguro que quieres Salir??');">Logout</a>
+   
+ 
+   
+                
         </div>
     </nav>
 
