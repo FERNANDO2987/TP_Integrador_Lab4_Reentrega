@@ -31,7 +31,7 @@ public interface PrestamoNeg {
 		
 		 public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
 	 
-		public List<Prestamo> ListarPrestamos2();
+	
 	
 
 }
