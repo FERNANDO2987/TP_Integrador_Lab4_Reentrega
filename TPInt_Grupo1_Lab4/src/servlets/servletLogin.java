@@ -39,29 +39,35 @@ public class servletLogin extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("btnAceptar") != null) {
-            String usuario = request.getParameter("usuario");
-            String contrasenia = request.getParameter("contrasenia");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getParameter("btnAceptar") != null) {
+	        String usuario = request.getParameter("usuario");
+	        String contrasenia = request.getParameter("contrasenia");
 
-            if (usuario != null && contrasenia != null) {
-                UsuarioNegImpl usuarioNegocio = new UsuarioNegImpl();
-                Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
+	        if (usuario != null && contrasenia != null) {
+	            UsuarioNegImpl usuarioNegocio = new UsuarioNegImpl();
+	            Usuario usuarioSesion = new Usuario();
+	            usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
 
-                if (usuarioSesion != null) {  // Verificar que no sea null antes de usarlo
-                    HttpSession session = request.getSession();
-                    session.setAttribute("usuario", usuarioSesion);
-
-                    String paginaDestino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
-                    RequestDispatcher rd = request.getRequestDispatcher(paginaDestino);
-                    rd.forward(request, response);
-                } else {
-                    response.sendRedirect("Login.jsp?error=true"); // Redirigir si las credenciales son incorrectas
-                }
-            } else {
-                response.sendRedirect("Login.jsp?error=true"); // Redirigir si algún campo es null
-            }
-        }
-    }
+	            if (usuarioSesion.isAdmin()) {
+	                HttpSession session = request.getSession();
+	                session.setAttribute("usuario", usuarioSesion);
+	                RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");
+	                rd.forward(request, response);
+	            } else {
+	              
+	            	
+	            	   HttpSession session = request.getSession();
+		                session.setAttribute("usuario", usuarioSesion);
+		                RequestDispatcher rd = request.getRequestDispatcher("HomeCliente.jsp");
+		                rd.forward(request, response);
+	            	
+	            	
+	            }
+	        } else {
+	            response.sendRedirect("Login.jsp?error=true");
+	        }
+	    }
+	}
 
 }

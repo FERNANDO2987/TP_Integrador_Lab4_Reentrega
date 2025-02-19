@@ -136,7 +136,7 @@
                 contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
                 break;
             case 'listarUsuarios':
-                contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
+                contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="1200px"></iframe>';
                 break;
             case 'listarClientes':
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
