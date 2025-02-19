@@ -1,8 +1,26 @@
 package principal;
 
 
+
 import entidad.ProvinciaConClientes;
 import negocio.ProvinciasNeg;
+
+import java.math.BigDecimal;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+import datosImpl.PrestamoDaoImpl;
+import entidad.Cliente;
+import entidad.Cuenta;
+import entidad.Movimiento;
+import entidad.Prestamo;
+import entidad.Provincia;
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
+
 import negocioImpl.ProvinciaNegImpl;
 
 
@@ -17,13 +35,14 @@ public class Principal {
     public static void main(String[] args) {
 
 
+
     	
     	
     
         ProvinciasNeg impl = new ProvinciaNegImpl();
     
         
-        // Llamar al método ObtenerMovimientosPorFecha
+        // Llamar al mï¿½todo ObtenerMovimientosPorFecha
         List<ProvinciaConClientes> povincias = impl.ObtenerCantidadClientesPorProvincia();
 
         // Verificar si hay resultados
@@ -38,6 +57,7 @@ public class Principal {
             }
         }
         
+
     }
 }
  

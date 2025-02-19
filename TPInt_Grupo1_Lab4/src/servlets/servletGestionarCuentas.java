@@ -114,8 +114,23 @@ public class servletGestionarCuentas extends HttpServlet {
 				negocioCuenta.eliminarCuenta(cuenta);
 			}
 			
+			
+			//detectar si se pulso el boton de MOVIMIENTOS
+			if(request.getParameter("btnMovimientos") != null)
+			{
+				//traer los datos del form
+				int nroCuenta = Integer.parseInt(request.getParameter("idCuenta"));
+				idCliente = Integer.parseInt(request.getParameter("InputIdCliente"));
+				//guardar la pagina desde la cual solicite los movimientos
+				request.getSession().setAttribute("anteriorPaginaVisitada", "servletGestionarCuentas?id=" + idCliente );
+				//redirigirme al servlet
+				response.sendRedirect("servletMovimientosCuenta?id=" + nroCuenta);
+				return;
+			}
+			
 			//actualizar la pagina volviendo a llamar a un doGet
 			response.sendRedirect("servletGestionarCuentas?id=" + idCliente);
+			return;
 		}
 		catch(Exception e)
 		{
