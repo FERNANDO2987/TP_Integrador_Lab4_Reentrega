@@ -16,7 +16,9 @@ public class Movimiento {
     
     
     // Constructor vacío
-    public Movimiento() {}
+    public Movimiento() {
+    	tipoMovimiento = new TipoMovimiento();
+    }
 
     // Constructor con parámetros
 	public Movimiento(int id, String detalle, BigDecimal importe, TipoMovimiento tipoMovimiento, int nroCuenta,

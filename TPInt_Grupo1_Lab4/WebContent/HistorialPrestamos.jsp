@@ -137,8 +137,16 @@
         </div>  
     <% } %>  
     
+    <br>
+        <br>
+        
+        
+          <div class="text-center mb-4">  
+        <h2 class="text-2xl text-blue-600">Barra de Estados</h2>  
+    </div> 
     <!-- Contenedor para el gráfico -->
-<div class="mt-6 p-4 bg-white shadow rounded">
+    
+<div class="mt-6 p-4 bg-white shadow rounded-lg">
     <canvas id="prestamosChart"></canvas>
 </div>
 </div>  
@@ -188,43 +196,48 @@ window.onload = function() {
 </script>  
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Contar préstamos por estado
-        let prestamos = [
-            <% for (Prestamo prestamo : prestamos) { %>
-                "<%= prestamo.getEstado() %>",
-            <% } %>
-        ];
+document.addEventListener("DOMContentLoaded", function() {
+    const prestamos = <%= prestamos != null ? prestamos.size() : 0 %>;
 
-        let estados = ["vigente", "finalizado", "rechazado", "revisión"];
-        let conteo = { "vigente": 0, "finalizado": 0, "rechazado": 0, "revisión": 0 };
+    if (prestamos > 0) {
+        // Obtener los datos desde la tabla
+        let estados = { "vigente": 0, "finalizado": 0, "rechazado": 0, "revisión": 0 };
+        
+        <% for (Prestamo prestamo : prestamos) { %>
+            estados["<%= prestamo.getEstado() %>"]++;
+        <% } %>
 
-        prestamos.forEach(estado => {
-            if (conteo.hasOwnProperty(estado)) {
-                conteo[estado]++;
-            }
-        });
-
-        // Configurar el gráfico
-        let ctx = document.getElementById("prestamosChart").getContext("2d");
+        // Configuración del gráfico
+        const ctx = document.getElementById("prestamosChart").getContext("2d");
         new Chart(ctx, {
             type: "bar",
             data: {
-                labels: estados.map(e => e.charAt(0).toUpperCase() + e.slice(1)), // Capitaliza los nombres
+                labels: Object.keys(estados),
                 datasets: [{
                     label: "Cantidad de Préstamos",
-                    data: estados.map(e => conteo[e]),
-                    backgroundColor: ["blue", "green", "red", "orange"]
+                    data: Object.values(estados),
+                    backgroundColor: ["#3B82F6", "#10B981", "#EF4444", "#F59E0B"],
+                    borderColor: ["#1E40AF", "#047857", "#B91C1C", "#B45309"],
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                },
                 scales: {
-                    y: { beginAtZero: true }
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
                 }
             }
         });
-    });
+    }
+});
 </script>
 </body>  
 </html>

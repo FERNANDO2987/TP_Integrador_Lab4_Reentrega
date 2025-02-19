@@ -23,21 +23,25 @@ public class servletLogout extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+	
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false); // No crear sesión si no existe
+        if (session != null && session.getAttribute("usuario") != null) {
+            response.sendRedirect("Home.jsp"); 
+            return; // Importante para evitar ejecución adicional
+        } 
+        
+        request.getRequestDispatcher("Login.jsp").forward(request, response);
+    }
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    HttpSession session = request.getSession();
-	    session.removeAttribute("usuario");
-	    response.sendRedirect("Login.jsp");
+
 	}
 
 }

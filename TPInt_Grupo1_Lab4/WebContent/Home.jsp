@@ -3,9 +3,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
-    <title>Sistema de Gestiï¿½n Bancaria</title>
+    <meta charset="UTF-8">
+    <title>Sistema de Gestión Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
@@ -13,8 +12,9 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Oculta el scroll horizontal */
+            overflow-x: hidden;
         }
+
         /* Barra lateral */
         .sidebar {
             height: 100vh;
@@ -22,160 +22,135 @@
             padding: 15px;
             color: #fff;
             position: fixed;
-            width: 200px; /* Ancho de la barra lateral */
-            top: 0; /* Asegura que la barra lateral estÃ© alineada arriba */
-            left: -200px; /* Inicialmente oculta */
-            transition: left 0.3s ease; /* AnimaciÃ³n para el desplazamiento */
-            z-index: 1; /* Asegura que la barra lateral estÃ© detrÃ¡s del botÃ³n */
-            overflow-y: auto; /* Permite que la barra lateral tenga su propio scroll si es necesario */
+            width: 200px;
+            top: 0;
+            left: -200px;
+            transition: left 0.3s ease;
+            z-index: 1;
+            overflow-y: auto;
         }
+
         .sidebar.show {
-            left: 0; /* Cuando se muestra, se mueve a la posiciÃ³n 0 */
+            left: 0;
         }
-        /* Contenido */
+
+        /* Contenido principal */
         .content {
             margin-left: 0;
-            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transiciï¿½n para el tï¿½tulo */
-            overflow-y: auto; /* Asegura que el contenido se desplace verticalmente sin problemas */
-            flex: 1;  
-            padding: 1px;  
+            transition: margin-left 0.3s ease;
+            overflow-y: auto;
+            flex: 1;
+            padding: 1rem;
         }
+
         .content.shift {
             margin-left: 200px;
         }
-        /* Icono del menï¿½ */
+
+        /* Icono del menú */
         .menu-icon {
             cursor: pointer;
             font-size: 35px;
             color: white;
-            z-index: 2; /* Asegura que el icono estÃ© por encima de la barra lateral */
+            z-index: 2;
             position: fixed;
             top: 10px;
             left: 25px;
         }
-        /* Tï¿½tulo */
-        .title {
-            transition: margin-left 0.3s ease; /* Aï¿½adir transiciï¿½n */
-        }
-        .title.shift {
-            margin-left: 200px; /* Mover tï¿½tulo cuando la barra lateral se abre */
-        }
-        /* Formulario */
-        .content form {
-            height: 100%;
-        }
+        #tituloSistema {
+    transition: margin-left 0.3s ease; /* Transición suave */
+}
+
+#tituloSistema.shift {
+    margin-left: 220px; /* Se mueve cuando el menú está abierto */
+}
+        
+        
     </style>
 </head>
 <body class="bg-gray-100">
-	 <%
-      Usuario usuario = (Usuario)session.getAttribute("usuario");
-      if (usuario == null) {
-        response.sendRedirect("Login.jsp");
-        return;
-      }
+     <%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+        String nombreUsuario = "Usuario desconocido";
+        if (usuario.getCliente() != null) {
+            nombreUsuario = usuario.getCliente().getNombre();
+        }
     %>
 
-    <!-- Barra de navegaciï¿½n -->
+    <!-- Barra de navegación -->
     <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
-        <!-- Icono para abrir/cerrar el menï¿½ -->
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <!-- Icono para abrir/cerrar el menÃº -->
-
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
-     <div class="flex justify-end items-center text-xl ml-52"> <!-- Aquï¿½ agregamos el margen izquierdo -->
-    Sistema de Gestion Bancaria
+      <div id="tituloSistema" class="transition-all duration-300 ml-12 text-xl">
+    Sistema de Gestión Bancaria
 </div>
 
         <div>
-            <a href="#" class="text-white hover:text-blue-500">Logout</a>
+           
+           <a href="servletLogout" class="text-white hover:text-blue-500" onclick="return confirm('¿Estás seguro de que deseas salir??');">Logout</a>
+
         </div>
     </nav>
 
     <!-- Barra lateral -->
     <div class="sidebar" id="sidebar">
+      <br>
         <br>
-          <br>
         <h4 class="text-white text-xl">Administrador</h4>
+      
         <ul class="space-y-2">
-            <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a>
-            </li>
-            <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('clientes')">Clientes</a>
-            </li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a></li>
 
-            <li>
-
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Prestamos</a>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="cargarPagina('prestamos')">PrÃ©stamos</a>
-
-
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Listar Prï¿½stamos</a>
-
-            </li>
-            <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a>
-            </li>
-            <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a>
-            </li>
-              <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Prestamos</a>
-            </li>
-            
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a></li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a></li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a></li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Préstamos</a></li>
         </ul>
     </div>
 
-
     <!-- Contenido principal -->
-    <div class="content ml-0 transition-all" id="contenidoPrincipal">
-        <h5 class="d-flex"> Bienvenido, <%= usuario.getCliente().getNombre() %></h5>
-
+    <div class="content" id="contenidoPrincipal">
+        <h5>Bienvenido, <%= usuario.getCliente().getNombre() %></h5>
+    </div>
 
     <script>
-        function cargarPagina(pagina) {
-            var contenido = document.getElementById('contenidoPrincipal');
-            if (pagina === 'inicio') {
-                contenido.innerHTML = '<h2>Â¡Bienvenido/a admin!</h2>';
-            } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>AquÃ­ va la informaciÃ³n de los clientes.</p>';
-            } else if (pagina === 'prestamos') {
+    function cargarPagina(pagina) {
+        let contenido = document.getElementById('contenidoPrincipal');
+        contenido.innerHTML = ''; // Limpia el contenido antes de cargar
 
-                contenido.innerHTML = '<h2>PrÃ©stamos</h2><p>AquÃ­ va la informaciÃ³n de los prÃ©stamos.</p>';
-
+        switch (pagina) {
+            case 'inicio':
+                contenido.innerHTML = '<iframe src="servletGraficos" width="90%" height="900px"></iframe>';
+                break;
+    
+            case 'prestamos':
                 contenido.innerHTML = '<iframe src="servletPrestamosClientes" width="90%" height="900px"></iframe>';
-                
-                
-            }
-                else if (pagina === 'historialPrestamos') {
-                    contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
-  
-                
-
-            } else if (pagina === 'listarUsuarios') {
+                break;
+            case 'historialPrestamos':
+                contenido.innerHTML = '<iframe src="servletListarTodosLosPrestamos" width="90%" height="900px"></iframe>';
+                break;
+            case 'listarUsuarios':
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
-            } else if (pagina === 'listarClientes') {
+                break;
+            case 'listarClientes':
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
-            }
-            else if (pagina === 'listarCuentas') {
-            	// Enlace al servlet que lista los usuarios
-                contenido.innerHTML = '<iframe src="servletListarCuentas" width="90%" height="900px"></iframe>';
-            }
-            
+                break;
         }
+    }
 
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');
             var content = document.getElementById('contenidoPrincipal');
-            var title = document.getElementById('title');
+            var tituloSistema = document.getElementById('tituloSistema');
+
             sidebar.classList.toggle('show');
             content.classList.toggle('shift');
-            title.classList.toggle('shift');
+            tituloSistema.classList.toggle('shift'); // Mueve el título
         }
-    </script>
 
+    </script>
 </body>
 </html>

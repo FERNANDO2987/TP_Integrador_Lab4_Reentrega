@@ -4,6 +4,7 @@ package negocio;
 import java.util.List;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -12,6 +13,10 @@ import entidad.Prestamo;
 
 public interface PrestamoNeg {
 
+
+
+
+	public List<Prestamo> ListarPrestamos2();
 
 	public boolean RechazarPrestamo(int idPrestamo, String observacion);
 	public boolean AprobarPrestamo(int idPrestamo, String observacion);
@@ -23,6 +28,8 @@ public interface PrestamoNeg {
 	 public boolean RechazarPrestamo(int idPrestamo);
 	 public boolean AprobarPrestamo(int idPrestamo);
 		public ArrayList<Prestamo> ListarTodosLosPrestamos();
+		
+		 public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
 	 
 		public List<Prestamo> ListarPrestamos2();
 	

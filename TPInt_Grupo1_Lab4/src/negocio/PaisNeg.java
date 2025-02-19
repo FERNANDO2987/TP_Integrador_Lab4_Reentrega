@@ -8,5 +8,7 @@ import entidad.Pais;
 public interface PaisNeg {
 	
 	public ArrayList<Pais> ListarPaises();
+	
+
 
 }
