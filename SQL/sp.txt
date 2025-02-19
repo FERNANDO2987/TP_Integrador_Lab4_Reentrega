@@ -254,3 +254,160 @@ BEGIN
         COMMIT;
     END IF;
 END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AprobarPrestamo`(
+    IN p_id INT,
+    OUT p_result INT
+)
+BEGIN
+    DECLARE v_estado VARCHAR(255);
+
+    -- Obtener el estado actual del préstamo
+    SELECT estado INTO v_estado 
+    FROM prestamos 
+    WHERE id = p_id;
+
+    -- Verificar si el estado es 'pendiente'
+    IF v_estado = 'pendiente' THEN
+        -- Actualizar el estado a 'vigente'
+        UPDATE prestamos 
+        SET estado = 'vigente'
+        WHERE id = p_id;
+        
+        -- Retornar 1 si la actualización fue exitosa
+        SET p_result = ROW_COUNT();
+    ELSE
+        -- Retornar 0 si el préstamo no estaba en estado 'pendiente'
+        SET p_result = 0;
+    END IF;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCantidadClientesPorProvincia`()
+BEGIN
+    SELECT 
+        p.id AS IdProvincia,  -- Se agrega el ID de la provincia
+        p.nombre AS Provincia,
+        COUNT(c.id) AS CantidadClientes
+    FROM clientes c
+    INNER JOIN provincia p ON c.id_provincia = p.id
+    WHERE c.deleted = 0 -- Excluir clientes eliminados
+    GROUP BY p.id, p.nombre -- Agrupar también por ID de provincia
+    ORDER BY CantidadClientes DESC;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerMovimientosPorFecha`(
+    IN fechaDesde DATE,
+    IN fechaHasta DATE
+)
+BEGIN
+    SELECT 
+        'Prestamo' AS tipo_movimiento,
+        p.id AS id_movimiento,
+        p.nro_cuenta,
+        c.nombre AS nombre_cliente,
+        c.apellido AS apellido_cliente,
+        p.importe,
+        p.create_date AS fecha_movimiento,
+        p.observaciones AS descripcion_movimiento
+    FROM prestamos p
+    JOIN clientes c ON p.id_cliente = c.id
+    WHERE p.deleted = 0
+    AND p.create_date BETWEEN fechaDesde AND fechaHasta
+
+    UNION ALL
+
+    SELECT 
+        'Transferencia' AS tipo_movimiento,
+        m.id AS id_movimiento,
+        m.nro_cuenta,
+        c.nombre AS nombre_cliente,
+        c.apellido AS apellido_cliente,
+        m.importe,
+        m.create_date AS fecha_movimiento,
+        m.detalle AS descripcion_movimiento
+    FROM movimientos m
+    JOIN cuentas cu ON m.nro_cuenta = cu.nro_cuenta
+    JOIN clientes c ON cu.id_cliente = c.id
+    WHERE m.deleted = 0
+    AND m.id_tipos_movimiento = (SELECT id FROM tipos_movimiento WHERE descripcion = 'Transferencia')
+    AND m.create_date BETWEEN fechaDesde AND fechaHasta
+    ORDER BY fecha_movimiento DESC;
+    
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamos`()
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado
+     
+
+
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+
+
+WHERE p.estado="pendiente" and p.deleted = 0;
+
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerTodosLosPrestamos`()
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado
+     
+
+
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+WHERE p.deleted = 0;
+
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RechazarPrestamo`(
+    IN p_id INT,
+    OUT p_result INT
+)
+BEGIN
+    DECLARE v_estado VARCHAR(255);
+
+    -- Obtener el estado actual del préstamo
+    SELECT estado INTO v_estado 
+    FROM prestamos 
+    WHERE id = p_id;
+
+    -- Verificar si el estado es 'pendiente'
+    IF v_estado = 'pendiente' THEN
+        -- Actualizar el estado a 'vigente'
+        UPDATE prestamos 
+        SET estado = 'rechazado'
+        WHERE id = p_id;
+        
+        -- Retornar 1 si la actualización fue exitosa
+        SET p_result = ROW_COUNT();
+    ELSE
+        -- Retornar 0 si el préstamo no estaba en estado 'pendiente'
+        SET p_result = 0;
+    END IF;
+END
