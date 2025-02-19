@@ -122,7 +122,7 @@
 
         switch (pagina) {
             case 'inicio':
-                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+                contenido.innerHTML = '<iframe src="servletGraficos" width="90%" height="900px"></iframe>';
                 break;
     
             case 'prestamos':

@@ -1,6 +1,7 @@
 package negocioImpl;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +198,24 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	        }
 
 	        return (ArrayList<Prestamo>) prestamos;
+	}
+
+
+
+	@Override
+	public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
+	
+		
+		List<Prestamo> prestamos = prestamoDao.obtenerMovimientosPorFecha(fechaDesde, fechaHasta);
+		if(prestamos == null || prestamos.isEmpty())
+		{
+			System.err.println("No se encontraron movimientos por fecha.");
+			return new ArrayList<>();
+		}
+		System.out.println("Prestamos encontrados por Movimientos: " + prestamos.size());
+		return new ArrayList<>(prestamos);
+		
+		
 	}
 
 

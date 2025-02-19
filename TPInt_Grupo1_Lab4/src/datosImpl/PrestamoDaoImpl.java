@@ -354,6 +354,61 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	}
 
 
+	
+	@Override
+	public List<Prestamo> obtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
+	    List<Prestamo> movimientos = new ArrayList<>();
+	    cn.Open();
+	    
+	    String query = "{CALL ObtenerMovimientosPorFecha(?, ?)}"; // Llamado al Stored Procedure
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setDate(1, java.sql.Date.valueOf(fechaDesde));
+	        cst.setDate(2, java.sql.Date.valueOf(fechaHasta));
+
+	        try (ResultSet rs = cst.executeQuery()) {
+	            while (rs.next()) {
+	                // Datos comunes
+	                int id = rs.getInt("id_movimiento");
+	                String tipoMovimiento = rs.getString("tipo_movimiento");
+	                String nombre = rs.getString("nombre_cliente");
+	                String apellido = rs.getString("apellido_cliente");
+	                int nroCuenta = rs.getInt("nro_cuenta");
+	                BigDecimal importe = rs.getBigDecimal("importe");
+	                LocalDate fechaMovimiento = rs.getDate("fecha_movimiento").toLocalDate();
+	                String descripcion = rs.getString("descripcion_movimiento");
+
+	                // Crear cliente y cuenta
+	                Cliente cliente = new Cliente();
+	                cliente.setNombre(nombre);
+	                cliente.setApellido(apellido);
+
+	                Cuenta cuenta = new Cuenta();
+	                cuenta.setNroCuenta(nroCuenta);
+	                cuenta.setCliente(cliente);
+
+	                // Crear objeto de préstamo (o movimiento genérico)
+	                Prestamo movimiento = new Prestamo();
+	                movimiento.setId(id);
+	                movimiento.setCuenta(cuenta);
+	                movimiento.setCliente(cliente);
+	                movimiento.setImporte(importe);
+	                movimiento.setFechaAlta(fechaMovimiento);
+	                movimiento.setObservaciones(descripcion);
+	                movimiento.setEstado(tipoMovimiento); // Guardamos el tipo de movimiento en "estado"
+
+	                movimientos.add(movimiento);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return movimientos;
+	}
+
 
 
 }
