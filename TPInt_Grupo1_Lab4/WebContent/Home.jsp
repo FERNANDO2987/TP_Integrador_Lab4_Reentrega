@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Gestión Bancaria</title>
+    <title>Sistema de Gestiï¿½n Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
@@ -47,7 +47,7 @@
             margin-left: 200px;
         }
 
-        /* Icono del menú */
+        /* Icono del menï¿½ */
         .menu-icon {
             cursor: pointer;
             font-size: 35px;
@@ -58,11 +58,11 @@
             left: 25px;
         }
         #tituloSistema {
-    transition: margin-left 0.3s ease; /* Transición suave */
+    transition: margin-left 0.3s ease; /* Transiciï¿½n suave */
 }
 
 #tituloSistema.shift {
-    margin-left: 220px; /* Se mueve cuando el menú está abierto */
+    margin-left: 220px; /* Se mueve cuando el menï¿½ estï¿½ abierto */
 }
         
         
@@ -81,16 +81,16 @@
         }
     %>
 
-    <!-- Barra de navegación -->
+    <!-- Barra de navegaciï¿½n -->
     <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
       <div id="tituloSistema" class="transition-all duration-300 ml-12 text-xl">
-    Sistema de Gestión Bancaria
+    Sistema de Gestion Bancaria
 </div>
 
         <div>
            
-           <a href="servletLogout" class="text-white hover:text-blue-500" onclick="return confirm('¿Estás seguro de que deseas salir??');">Logout</a>
+           <a href="servletLogout" class="text-white hover:text-blue-500" onclick="return confirm('Â¿Estas seguro que quieres Salir??');">Logout</a>
 
         </div>
     </nav>
@@ -104,10 +104,10 @@
         <ul class="space-y-2">
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a></li>
 
-            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a></li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Prestamos</a></li>
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a></li>
             <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a></li>
-            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Préstamos</a></li>
+            <li><a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Prestamos</a></li>
         </ul>
     </div>
 
@@ -148,7 +148,7 @@
 
             sidebar.classList.toggle('show');
             content.classList.toggle('shift');
-            tituloSistema.classList.toggle('shift'); // Mueve el título
+            tituloSistema.classList.toggle('shift'); // Mueve el tï¿½tulo
         }
 
     </script>
