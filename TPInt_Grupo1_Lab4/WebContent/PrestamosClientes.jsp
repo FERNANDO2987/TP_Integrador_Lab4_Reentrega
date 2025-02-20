@@ -43,6 +43,28 @@
     background-color: #dc3545; /* Color rojo */  
     color: white;  
 }
+
+       .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button, .pagination span {
+    margin: 0 5px;
+    padding: 5px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+}
+
     </style>
 </head>  
 <body class="bg-gray-100">  
@@ -135,7 +157,7 @@
                         <th class="px-4 py-2 border">Acciones</th>  
                     </tr>  
                 </thead>  
-                <tbody>  
+              <tbody id="tableBody"> 
                     <% for (Prestamo prestamo : prestamos) { %>  
                         <tr>  
                             <td class="px-4 py-2 border"><%= prestamo.getId() %></td>  
@@ -168,6 +190,11 @@
             </table>  
         </div>  
         
+              <div class="pagination mt-4">
+      <button onclick="prevPage()" id="btnPrev" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Anterior</button>
+      <span id="pageNumbers"></span>
+      <button onclick="nextPage()" id="btnNext" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Siguiente</button>
+  </div>
         
         
     <% } else { %>  
@@ -243,4 +270,61 @@ function filterTable() {
         }, 5000); // 5000 milisegundos = 5 segundos  
     };  
 </script>
+
+<script>
+    const rowsPerPage = 5;
+    let currentPage = 1;
+    const table = document.getElementById("usersTable");
+    const tableBody = document.getElementById("tableBody");
+    const rows = tableBody.getElementsByTagName("tr");
+    const totalRows = rows.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        for (let i = 0; i < totalRows; i++) {
+            rows[i].style.display = (i >= start && i < end) ? "" : "none";
+        }
+        document.getElementById("btnPrev").disabled = page === 1;
+        document.getElementById("btnNext").disabled = page === totalPages;
+        updatePageNumbers();
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayPage(currentPage);
+        }
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayPage(currentPage);
+        }
+    }
+
+    function goToPage(page) {
+        currentPage = page;
+        displayPage(currentPage);
+    }
+
+    function updatePageNumbers() {
+        const pageNumbers = document.getElementById("pageNumbers");
+        pageNumbers.innerHTML = "";
+        for (let i = 1; i <= totalPages; i++) {
+            const span = document.createElement("span");
+            span.textContent = i;
+            span.className = (i === currentPage) ? "active" : "";
+            span.onclick = function() { goToPage(i); };
+            pageNumbers.appendChild(span);
+        }
+    }
+
+    window.onload = function() {
+        displayPage(currentPage);
+    };
+</script>
+
 </html>
