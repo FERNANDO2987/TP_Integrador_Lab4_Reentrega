@@ -21,6 +21,7 @@ public class Usuario {
         this.admin = admin;
     }
 
+
     // Getters y Setters
     public int getId() { // Cambiado a int
         return id;

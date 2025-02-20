@@ -31,9 +31,12 @@ public class UsuarioNegImpl implements UsuarioNeg {
 	    Usuario usuarioValido = usuarioDao.loguear(usuario);
 	    
 	    if (usuarioValido != null) {
+	        // Mostrar el valor de admin en la consola
+	        System.out.println("Usuario: " + usuarioValido.getUsuario() + " | Admin: " + usuarioValido.isAdmin());
 	        return usuarioValido;
 	    } else {
-	    	return null;
+	        System.out.println("Inicio de sesión fallido para el usuario: " + nombreUsuario);
+	        return null;
 	    }
 	}
 
