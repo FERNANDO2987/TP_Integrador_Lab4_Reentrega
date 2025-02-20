@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ModificarClienteCompleto`(
     IN p_id_cliente INT,
     IN p_dni VARCHAR(255),
@@ -42,7 +43,7 @@ BEGIN
     END IF;
 END
 
-
+$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarOModifcarCliente`(  
     IN p_id_cliente INT,        
     IN p_dni VARCHAR(255),  
@@ -82,7 +83,7 @@ BEGIN
     END IF;  
 
 END
-
+$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarCliente`(
     IN p_id INT
 )
@@ -109,7 +110,7 @@ BEGIN
             SET MESSAGE_TEXT = 'El cliente no existe o ya fue eliminado.';
     END IF;
 END
-
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarOActualizarUsuario`(
     IN p_id_cliente INT,
@@ -144,7 +145,7 @@ BEGIN
     END IF;
 END
 
-
+$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerClientes`()
 BEGIN
     SELECT 
@@ -169,6 +170,7 @@ BEGIN
     ORDER BY create_date DESC;
 END
 
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerLocalidades`()
 BEGIN
@@ -181,6 +183,8 @@ BEGIN
  
 END
 
+$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPaises`()
 BEGIN
     SELECT 
@@ -192,6 +196,8 @@ BEGIN
  
 END
 
+$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerProvincias`()
 BEGIN
     SELECT 
@@ -201,6 +207,8 @@ BEGIN
     FROM 
         provincia;
 END
+
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
 BEGIN
@@ -217,6 +225,8 @@ BEGIN
         deleted = 0
         ORDER BY create_date DESC;
 END
+
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarUsuarioYCliente`(
     IN p_id INT
@@ -255,6 +265,7 @@ BEGIN
     END IF;
 END
 
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AprobarPrestamo`(
     IN p_id INT,
@@ -283,6 +294,7 @@ BEGIN
     END IF;
 END
 
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCantidadClientesPorProvincia`()
 BEGIN
@@ -296,6 +308,8 @@ BEGIN
     GROUP BY p.id, p.nombre -- Agrupar también por ID de provincia
     ORDER BY CantidadClientes DESC;
 END
+
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerMovimientosPorFecha`(
     IN fechaDesde DATE,
@@ -337,6 +351,7 @@ BEGIN
     
 END
 
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamos`()
 BEGIN
@@ -362,6 +377,7 @@ WHERE p.estado="pendiente" and p.deleted = 0;
 
 END
 
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerTodosLosPrestamos`()
 BEGIN
@@ -384,6 +400,8 @@ INNER JOIN clientes c ON p.id_cliente = c.id
 WHERE p.deleted = 0;
 
 END
+
+$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RechazarPrestamo`(
     IN p_id INT,

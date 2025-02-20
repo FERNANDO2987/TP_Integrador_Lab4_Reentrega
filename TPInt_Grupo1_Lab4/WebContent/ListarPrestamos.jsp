@@ -3,6 +3,14 @@
 <%@ page import="java.util.List" %>  
 <%@ page import="entidad.Prestamo" %>
 <%@ page import="entidad.Pais" %> 
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>

@@ -1,7 +1,14 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>  
 <%@ page import="java.util.List" %>  
-<%@ page import="entidad.Usuario" %>    
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuarioSession = (Usuario) session.getAttribute("usuario");
+        if (usuarioSession == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>    
 
 <!DOCTYPE html>  
 <html lang="es">  

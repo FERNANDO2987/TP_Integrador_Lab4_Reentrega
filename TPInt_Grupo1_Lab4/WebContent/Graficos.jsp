@@ -2,7 +2,14 @@
 <%@ page import="entidad.Prestamo" %>  
 <%@ page import="java.util.List" %>  
 <%@ page import="entidad.ProvinciaConClientes" %>  
-
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>
 <!DOCTYPE html>  
 <html lang="es">  
 <head>  

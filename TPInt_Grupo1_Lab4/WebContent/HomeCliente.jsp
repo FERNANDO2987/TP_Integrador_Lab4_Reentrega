@@ -146,6 +146,9 @@
             case 'inicio':
                 contenido.innerHTML = '<iframe src="servletGraficos" width="90%" height="900px"></iframe>';
                 break;
+            case 'datosPersonales':
+            	contenido.innerHTML = '<iframe src="DatosPersonales.jsp" class="w-full h-screen flex justify-center items-center"></iframe>';
+            	break;
     
          
         }

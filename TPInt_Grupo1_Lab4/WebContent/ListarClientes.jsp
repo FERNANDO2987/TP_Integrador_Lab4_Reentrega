@@ -3,6 +3,14 @@
 <%@ page import="java.util.List" %>  
 <%@ page import="entidad.Cliente" %>  
 <%@ page import="entidad.Pais" %>  
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>
 
 <!DOCTYPE html>  
 <html lang="es">  

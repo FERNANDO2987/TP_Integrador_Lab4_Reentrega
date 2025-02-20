@@ -6,6 +6,14 @@
 <%@ page import="entidad.Pais" %>  
 <%@ page import="java.text.DecimalFormat" %>  
 <%@ page import="java.math.BigDecimal" %>  
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>
 <!DOCTYPE html>  
 <html lang="es">  
 <head>  

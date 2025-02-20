@@ -14,6 +14,14 @@
 <%@ page import="negocioImpl.LocalidadNegImpl" %>
 <%@ page import="negocioImpl.ProvinciaNegImpl" %>
 <%@ page import="negocioImpl.ClienteNegImpl" %>
+<%@ page import="entidad.Usuario" %>
+<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+%>
 
 
 <html lang="es">
