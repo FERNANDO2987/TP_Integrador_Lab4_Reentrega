@@ -50,6 +50,7 @@ public class servletLogin extends HttpServlet {
 	            usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
 
 	            if (usuarioSesion != null) {
+	            	//completar con cliente el usuario
 	                HttpSession session = request.getSession();
 	                session.setAttribute("usuario", usuarioSesion);
 	                RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");

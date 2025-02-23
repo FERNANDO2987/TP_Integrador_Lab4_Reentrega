@@ -4,11 +4,12 @@ SELECT
 CLI.id, CLI.dni, CLI.cuil, CLI.nombre,
 CLI.apellido, CLI.sexo, CLI.id_pais, PAI.nombre as nombre_pais, CLI.fecha_nacimiento,
 CLI.direccion, CLI.id_localidad, LOC.nombre as nombre_localidad, CLI.id_provincia, PROV.nombre as nombre_provincia, CLI.correo,
-CLI.telefono, CLI.deleted 
+CLI.telefono, CLI.deleted, USU.usuario, USU.pass
 FROM clientes CLI
 LEFT JOIN localidades LOC on CLI.id_localidad = LOC.id
 LEFT JOIN provincia PROV on CLI.id_provincia = PROV.id
-LEFT JOIN paises PAI on CLI.id_pais = PAI.id;
+LEFT JOIN paises PAI on CLI.id_pais = PAI.id
+LEFT JOIN usuarios USU on USU.id_cliente = CLI.id;
 
 CREATE VIEW VW_Usuarios AS
 SELECT
@@ -329,5 +330,11 @@ select M.id,  M.detalle, M.importe, TM.id as TMid, TM.descripcion as TMdescripci
 left join tipos_movimiento TM on TM.id = M.id_tipos_movimiento
 left join cuentas C on C.nro_cuenta = M.nro_cuenta
 WHERE M.deleted = 0 and C.nro_cuenta = nro_cuenta_input;
+END;
+$$
+
+CREATE procedure SP_ObtenerClienteXUserPas(in userInput varchar(255), in passInput varchar(255))
+BEGIN
+SELECT * from vw_clientes where usuario like userInput and pass like passInput;
 END;
 $$
