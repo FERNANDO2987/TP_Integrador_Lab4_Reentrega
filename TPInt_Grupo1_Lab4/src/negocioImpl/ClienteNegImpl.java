@@ -361,6 +361,12 @@ private UsuarioDao usuarioDao = new  UsuarioDaoImpl();
 		    return errores; 
 	}
 
+	@Override
+	public Cliente ObtenerClienteXUsuarioPass(Usuario usuario) {
+		ClienteDao clienteDao = new ClienteDaoImpl();
+		return clienteDao.ObtenerClienteXUsuarioPass(usuario);
+	}
+
 
 
 

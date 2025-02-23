@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import entidad.Usuario;
+import negocio.ClienteNeg;
+import negocioImpl.ClienteNegImpl;
 import negocioImpl.UsuarioNegImpl;
 
 /**
@@ -49,8 +51,7 @@ public class servletLogin extends HttpServlet {
 	            Usuario usuarioSesion = new Usuario();
 	            usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
 
-	            if (usuarioSesion != null) {
-	            	//completar con cliente el usuario
+	            if (usuarioSesion != null) {      	
 	                HttpSession session = request.getSession();
 	                session.setAttribute("usuario", usuarioSesion);
 	                RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");

@@ -332,9 +332,15 @@ left join cuentas C on C.nro_cuenta = M.nro_cuenta
 WHERE M.deleted = 0 and C.nro_cuenta = nro_cuenta_input;
 END;
 $$
-
-CREATE procedure SP_ObtenerClienteXUserPas(in userInput varchar(255), in passInput varchar(255))
+DELIMITER $$
+CREATE procedure SP_ObtenerClienteXUserPass(in userInput varchar(255), in passInput varchar(255))
 BEGIN
 SELECT * from vw_clientes where usuario like userInput and pass like passInput;
 END;
 $$
+
+DELIMITER $$
+CREATE PROCEDURE SP_AgregarTransferencia(in cbuOrigen varchar(255), in cbuDestino varchar(255), in monto decimal(10,2), in detalle varchar(255))
+BEGIN
+
+END;

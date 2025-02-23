@@ -10,7 +10,9 @@ public class Usuario {
     private boolean admin;
 
     // Constructor vac�o
-    public Usuario() {}
+    public Usuario() {
+    	
+    }
 
     // Constructor con par�metros
     public Usuario(int id, Cliente cliente, String usuario, String password, boolean admin) {

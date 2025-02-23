@@ -15,6 +15,14 @@ public class Transferencia {
 		cuentaDestino = new Cuenta();
 	}
 	
+	public Transferencia(Cuenta cuentaOrigen, Cuenta cuentaDestino, BigDecimal monto,String detalle)
+	{
+		this.cuentaOrigen = cuentaOrigen;
+		this.cuentaDestino = cuentaDestino;
+		this.monto = monto;
+		this.detalle = detalle;
+	}
+	
 	public Cuenta getCuentaOrigen() {
 		return cuentaOrigen;
 	}

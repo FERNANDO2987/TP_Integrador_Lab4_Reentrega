@@ -24,7 +24,7 @@ import entidad.Cliente;
 import entidad.Localidad;
 import entidad.Pais;
 import entidad.Provincia;
-
+import entidad.Usuario;
 import entidad.UsuarioCliente;
 
 public class ClienteDaoImpl implements ClienteDao {
@@ -510,6 +510,63 @@ public class ClienteDaoImpl implements ClienteDao {
 		    return resultado;
 		
 		
+	}
+
+
+	@Override
+	public Cliente ObtenerClienteXUsuarioPass(Usuario usuario) {
+		Cliente cliente = new Cliente();
+	    final String query = "{CALL SP_ObtenerClienteXUserPass(?,?)}";
+	    cn.Open();
+	    
+	    try {
+	    	CallableStatement cst = cn.connection.prepareCall(query);
+	    	cst.setString(1, usuario.getUsuario());
+	    	cst.setString(2, usuario.getPassword());
+	        ResultSet rs = cst.executeQuery();
+
+	        while (rs.next()) {
+	            cliente.setId(rs.getInt("id"));
+	            cliente.setDni(rs.getString("dni"));
+	            cliente.setCuil(rs.getString("cuil"));
+	            cliente.setNombre(rs.getString("nombre"));
+	            cliente.setApellido(rs.getString("apellido"));
+	            cliente.setSexo(rs.getString("sexo"));
+
+	            // Evitar NullPointerException creando instancias si son necesarias
+	            if (cliente.getPaisNacimiento() == null) {
+	                cliente.setPaisNacimiento(new Pais());
+	            }
+	            cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
+	            cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
+
+	            if (cliente.getProvincia() == null) {
+	                cliente.setProvincia(new Provincia());
+	            }
+	            cliente.getProvincia().setId(rs.getInt("id_provincia"));
+	            cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
+
+	            if (cliente.getLocalidad() == null) {
+	                cliente.setLocalidad(new Localidad());
+	            }
+	            cliente.getLocalidad().setId(rs.getInt("id_localidad"));
+	            cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
+
+	            cliente.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+	            cliente.setDireccion(rs.getString("direccion"));
+	            cliente.setCorreo(rs.getString("correo"));
+	            cliente.setTelefono(rs.getString("telefono"));
+	        }
+	    } 
+	    catch (Exception e) {
+	        System.err.println("Error al obtener la lista de clientes: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return cliente;
+	
 	}
 
 	
