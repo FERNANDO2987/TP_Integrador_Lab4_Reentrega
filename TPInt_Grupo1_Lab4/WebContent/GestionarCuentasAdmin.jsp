@@ -37,9 +37,7 @@
             padding: 8px 12px;
             font-weight: bold;
         }
-        .fondoPant {
-        	background: #8D99AE;
-        }
+        
     </style>
 </head>
 <body>
@@ -120,7 +118,7 @@
         <% } %>
     </div>
     <% if(cuentas.size() < 3){ %>
-    <div class="row form-container mt-4">
+    <div class="row form mt-4">
         <form action="servletGestionarCuentas" method="post" class="w-100 container-sm border border-secondary shadow p-4 rounded">
             <input type="hidden" name="InputIdCliente" id="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
             <h4 class="text-center">Agregar Nueva Cuenta</h4>

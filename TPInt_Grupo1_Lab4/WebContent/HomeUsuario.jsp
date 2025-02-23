@@ -101,11 +101,9 @@
             </li>
             
              <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaPropia')">Transferencia cuenta propia</a>
+                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferencia')">Transferencia</a>
             </li>
-            <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaExterna')">Transferencia cuenta externa</a>
-            </li>
+
         </ul>
     </div>
 
@@ -125,8 +123,8 @@
                 contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
-            } else if (pagina === 'listarClientes') {
-                contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
+            } else if (pagina === 'transferencia'){
+            	contenido.innerHTML = '<iframe src="servletTransferencia" width="90%" height="900px"></iframe>';
             }
         }
 

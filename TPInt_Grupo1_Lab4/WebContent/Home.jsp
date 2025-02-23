@@ -35,11 +35,17 @@
 
         /* Contenido principal */
         .content {
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
-            overflow-y: auto;
-            flex: 1;
-            padding: 1rem;
+             margin-left: 0;
+		    transition: margin-left 0.3s ease;
+		    overflow-y: auto;
+		    flex: 1;
+		    padding: 1rem;
+		    height: 100vh;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+
+            
         }
 
         .content.shift {
@@ -135,7 +141,7 @@
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
                 break;
             case 'listarClientes':
-                contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
+                contenido.innerHTML = '<iframe src="servletListarClientes" width="93%" height="auto"></iframe>';
                 break;
         }
     }
