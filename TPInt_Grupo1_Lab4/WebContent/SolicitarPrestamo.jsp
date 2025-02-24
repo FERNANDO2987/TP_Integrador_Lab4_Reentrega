@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="entidad.Cliente" %>
 <%@ page import="entidad.Cuenta" %>
+<%@ page import="entidad.Usuario" %>
 <%@ page import="negocio.CuentaNeg" %>
 <%@ page import="negocioImpl.CuentaNegImpl" %> 
 <%@ page import="java.util.List" %> 
@@ -12,8 +13,23 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Insert title here</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
+    <style>  
+        .dropdown-toggle::after {  
+            display: none; /* Quitar el icono del dropdown */  
+        }  
+        .dropdown-menu {  
+            min-width: 0; /* Ajustar el ancho del menu */  
+        }  
+        .centered-header {
+    		text-align: center; /* Centrar el texto horizontalmente */
+    		margin: 0 auto;     /* Asegurar que el margen se maneje correctamente */
+		}
+	   .add-button-container {
+    	text-align: center;
+		}
+	</style> 
 
     <!-- jQuery and DataTables -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -49,6 +65,32 @@
 
 </head>
 <body>
+	<%
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+        String nombreUsuario = "Usuario desconocido";
+        if (usuario.getCliente() != null) {
+            nombreUsuario = usuario.getCliente().getNombre();
+        }
+    %>
+    
+    <!-- Lista de cuentas -->
+    <%
+		if (request.getAttribute("listaDeMisCuentas") == null) { 
+		response.sendRedirect("servletAgregarPrestamo");
+		} 
+		    	
+		List<Cuenta> listaDeOrigen = new ArrayList<Cuenta>();;
+		if(request.getAttribute("listaDeMisCuentas") != null)
+		{
+			listaDeOrigen = (List<Cuenta>) request.getAttribute("listaDeMisCuentas");
+		}
+    %>
+    
+
     <!-- Mensaje de Ã©xito -->
     <div class="alert alert-success" role="alert" id="successMessage" style="display:none;">
         ${successMessage}
@@ -59,52 +101,68 @@
         ${errorMessage}
     </div>
 
-    <!-- Uso de session
-    <%
-      Cliente usuario = (Cliente)session.getAttribute("usuario");
-      if (usuario == null) {
-        response.sendRedirect("Login.jsp");
-        return;
-      }
-      
-      List<Cuenta> listaDeOrigen = new ArrayList<Cuenta>();;
-      if(request.getAttribute("listaDeMisCuentas") != null)
-      {
-    	  listaDeOrigen = (List<Cuenta>) request.getAttribute("listaDeMisCuentas");
-      }
-    %>
-    -->
 
 
     <div class="container mt-5">
         <div class="row">
             <div class="col-6 mx-auto">
-                <h2 class="text-center mb-4">Solicitar PrÃ©stamo</h2>
-                <form action="servletAgregarPrestamo" method="post">
+                <h2 class="text-center mb-4">Solicitar Prestamo</h2>
+                <form action="servletAgregarPrestamo" method="post" onsubmit="return confirmarEnvio()">
                     <div class="form-group">
                         <label for="cuentaDestino">Cuenta</label>
 
                         <select class="form-control" id="cuentaDestino" name="cuentaDestino" required>
 	                    	<option value="">Seleccionar</option>
-                            <option value="">No hay cuentas disponibles</option>
+		                   <%
+			                            if (listaDeOrigen != null && !listaDeOrigen.isEmpty()) {
+			                              for (Cuenta c : listaDeOrigen) {
+		                    %>
+							<option value="<%= c.getNroCuenta() %>"><%=c.toString()%></option>
+							<%
+                           		}
+                           		} else {
+                      		%>
+                                 <option value="">No hay cuentas disponibles</option>
+                      		 <%
+                             	 }
+                        	 %>
+                        </select>
+                        
+                        <label class="mt-2" for="tipoPrestamo">Tipo de prestamo</label>
+                        <select class="form-control" id="tipoPrestamo" name="tipoPrestamo" required>
+                        	<option value="">Seleccionar</option>
+                        	<option value="Adelanto de sueldo">Adelanto de sueldo</option>
+                        	<option value="Prestamo personal">Prestamo personal</option>
+                        	<option value="Prestamo prendario">Prestamo prendario</option>
+                        	<option value="Prestamo hipotecario">Prestamo hipotecario</option>
                         </select>
                     </div>
+                    
+                    
                     <div class="form-group">
 		                <label for="monto">Monto Solicitado:</label>
 		                <input type="number" min="1" class="form-control" id="monto" name="monto" placeholder="Ingrese el monto a solicitar" required>
 		            </div>
+		            
+		            
 		            <div class="form-group">
 						<label for="cuotas">Cuotas:</label>
-		                <input type="number"  min="1" max="24"  class="form-control" id="cuotas" name="cuotas" placeholder="Ingrese la cantidad de cuotas" required>
+		                <input type="number"  min="1" max="100"  class="form-control" id="cuotas" name="cuotas" placeholder="Ingrese la cantidad de cuotas" required>
 		            </div>
-		            <input type="hidden" name="usuarioID" value="<%=usuario.getId() %>">
-					<input type="submit" class="btn btn-primary btn-block" name=btnSubmit value="Solicitar PrÃ©stamo">
-					<a class="btn btn-secondary w-100 mt-1" href="Home.jsp" > 	Volver al Home </a>
+		            
+		            <input type="hidden" name="usuarioID" value="<%=usuario.getCliente().getId() %>">
+					<input type="submit" class="btn btn-primary btn-block" name=btnSubmit value="Solicitar Prestamo">
+					<a class="btn btn-secondary w-100 mt-1" href="HomeUsuario.jsp" > Volver al Home </a>
                 </form>
             </div>
         </div>
     </div>
-
+	
+	<script>
+    	function confirmarEnvio() {
+       		return confirm("¿Estás seguro de que quieres solicitar el prestamo?");
+    	}
+	</script>
 
      <!-- Bootstrap JS and dependencies -->
      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
