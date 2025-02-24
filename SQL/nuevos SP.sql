@@ -299,11 +299,12 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarPrestamo`( -- Solicitar Prestamo
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarPrestamo`(
 	IN p_idCliente int,
     IN p_nroCuenta int,
     IN p_importe decimal(10,2),
-    IN p_cuotas int
+    IN p_cuotas int,
+    IN p_observaciones varchar(255)
 )
 BEGIN
 	INSERT INTO `bdbanco`.`prestamos`
@@ -311,16 +312,19 @@ BEGIN
 	`nro_cuenta`,
 	`importe`,
 	`cuotas`,
-	`valor_cuotas`)
+	`valor_cuotas`,
+    `observaciones`)
 	VALUES
 	(p_idCliente,
 	p_nroCuenta,
 	p_importe,
 	p_cuotas,
-	(p_importe/p_cuotas));
+	(p_importe/p_cuotas),
+    p_observaciones);
 
 END$$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE SP_MovimientosDeCuenta(IN nro_cuenta_input int)
