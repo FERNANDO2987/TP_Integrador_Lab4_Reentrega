@@ -104,7 +104,19 @@ public class PrestamoNegImpl implements PrestamoNeg{
 			System.err.println("Importe no valido");
 		    return false;
 		}
-
+		if (prestamo.getObservaciones() == "")
+		{
+			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
+			return false;
+		}
+		if (prestamo.getObservaciones() != "Adelanto de sueldo"	&&
+			prestamo.getObservaciones() != "Prestamo personal"	&&
+			prestamo.getObservaciones() != "Prestamo prendario"	&&
+			prestamo.getObservaciones() != "Prestamo hipotecario")
+		{
+			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
+			return false;
+		}
 		
 		return prestamoDao.AgregarPrestamo(prestamo);
 	}
