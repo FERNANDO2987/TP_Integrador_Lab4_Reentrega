@@ -149,13 +149,14 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	public boolean AgregarPrestamo(Prestamo prestamo) {
 		boolean estado = true;
 		cn.Open();
-		String query = "{CALL SP_AgregarPrestamo(?, ?, ?, ?)}";
+		String query = "{CALL SP_AgregarPrestamo(?, ?, ?, ?, ?)}";
 		
 		try(CallableStatement cst = (CallableStatement) cn.connection.prepareCall(query)) {
 			cst.setInt(1, prestamo.getCliente().getId());
 			cst.setInt(2, prestamo.getCuenta().getNroCuenta());
 			cst.setBigDecimal(3, prestamo.getImporte());
 			cst.setInt(4, prestamo.getCuotas());
+			cst.setString(5, prestamo.getObservaciones());
 			cst.executeUpdate();
 			
 		} catch(SQLException e){
