@@ -15,6 +15,35 @@ public class CuentaDaoImpl implements CuentaDao {
 		cn = new Conexion();
 	}
 	
+	public boolean existeEsteCbu(String cbu)
+	{
+		cn.Open();
+		final String query = "Select * from cuentas where cbu like ?";
+		boolean existe = false;
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setString(1, cbu);
+			ResultSet rs = cst.executeQuery();
+			if(rs.next())
+			{
+				return true;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		
+		
+		return false;
+		
+	}
+	
 	public boolean agregarCuenta(Cuenta cuenta) {
 		cn.Open();
 		String query = "CALL SP_agregarCuenta(?,?)";
