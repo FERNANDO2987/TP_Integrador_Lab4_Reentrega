@@ -339,8 +339,43 @@ SELECT * from vw_clientes where usuario like userInput and pass like passInput;
 END;
 $$
 
-DELIMITER $$
-CREATE PROCEDURE SP_AgregarTransferencia(in cbuOrigen varchar(255), in cbuDestino varchar(255), in monto decimal(10,2), in detalle varchar(255))
-BEGIN
 
-END;
+DELIMITER $$
+
+CREATE PROCEDURE SP_AgregarTransferencia(
+    IN cbuOrigen VARCHAR(255), 
+    IN cbuDestino VARCHAR(255), 
+    IN montoInput DECIMAL(10,2), 
+    IN detalleInput VARCHAR(255)
+)
+BEGIN
+	DECLARE cuentaOrigen INT DEFAULT 0;
+    DECLARE cuentaDestino INT DEFAULT 0;
+    
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        ROLLBACK; 
+    START TRANSACTION;
+
+		-- HACER EL MOVIMIENTO DEL LADO ORIGEN
+		
+		SELECT nro_cuenta INTO cuentaOrigen FROM cuentas WHERE cbu LIKE cbuOrigen;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput, 4, cuentaOrigen, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo - montoInput WHERE cbu LIKE cbuOrigen;
+
+		-- HACER EL MOVIMIENTO DEL LADO DESTINO
+		
+		SELECT nro_cuenta INTO cuentaDestino FROM cuentas WHERE cbu LIKE cbuDestino;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput, 4, cuentaDestino, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo + montoInput WHERE cbu LIKE cbuDestino;
+
+    COMMIT;
+END $$
+
+DELIMITER ;
+
