@@ -4,11 +4,15 @@ package datos;
 import java.util.List;
 
 import java.math.BigDecimal;
-import java.util.List;
+
+import java.time.LocalDate;
+
 import java.util.Map;
 
 
+import entidad.Cuenta;
 import entidad.Prestamo;
+import entidadDTO.CuentaDTO;
 
 public interface PrestamoDao {
 
@@ -24,6 +28,8 @@ public interface PrestamoDao {
 	 public boolean rechazarPrestamo(int idPrestamo);
 	 public boolean aprobarPrestamo(int idPrestamo);
 	 public List<Prestamo> ObtenerTodosLosPrestamos();
+	 public List<Prestamo> obtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
+	 public List<CuentaDTO> obtenerDatosCliente(int idCliente);
 	
 
 

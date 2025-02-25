@@ -11,6 +11,9 @@ import java.util.List;
 
 import datos.UsuarioDao;
 import entidad.Cliente;
+import entidad.Localidad;
+import entidad.Pais;
+import entidad.Provincia;
 import entidad.Usuario;
 import entidad.UsuarioCliente;
 
@@ -23,53 +26,67 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	
 	@Override
 	public Usuario loguear(Usuario usuario) {
-	       Usuario usuarioBD = null;
-	       ResultSet rs = null;
-	       cn = new Conexion();
-	       cn.Open();
-	       String query = "{CALL SP_ValidarUsuario(?, ?)}";
-	       try (CallableStatement stmt = cn.connection.prepareCall(query)) {
-	           stmt.setString(1, usuario.getUsuario());
-	           stmt.setString(2, usuario.getPassword()); 
-	           rs = stmt.executeQuery();
-	           if (rs != null && rs.next()) {
-	        	   usuarioBD = new Usuario();
-	        	   usuarioBD.getCliente().setId(rs.getInt("id"));
-	        	   usuarioBD.setUsuario(rs.getString("usuario"));
-	        	   usuarioBD.getCliente().setNombre(rs.getString("nombre"));
-	        	   usuarioBD.getCliente().setApellido(rs.getString("apellido"));
-	        	   usuarioBD.setAdmin(rs.getBoolean("admin"));
-	        	   usuarioBD.getCliente().setTelefono(rs.getString("telefono"));
-	        	   usuarioBD.getCliente().setCuil(rs.getString("cuil"));
-	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
-	        	   usuarioBD.getCliente().setDni(rs.getString("dni"));
-	        	   usuarioBD.getCliente().setCorreo(rs.getString("correo"));
-	        	   usuarioBD.getCliente().setDireccion(rs.getString("direccion"));
-	        	   usuarioBD.getCliente().setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
-	        	   usuarioBD.getCliente().setSexo(rs.getString("sexo"));
-	        	   usuarioBD.getCliente().getPaisNacimiento().setId(rs.getInt("id_pais"));
-	        	   usuarioBD.getCliente().getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
-	        	   usuarioBD.getCliente().getProvincia().setId(rs.getInt("id_provincia"));
-	        	   usuarioBD.getCliente().getProvincia().setNombre(rs.getString("nombre_provincia"));
-	        	   usuarioBD.getCliente().getLocalidad().setId(rs.getInt("id_localidad"));
-	        	   usuarioBD.getCliente().getLocalidad().setNombre(rs.getString("nombre_localidad"));
-		            
-		            System.out.println(usuarioBD.toString());
-	           }
-	       } catch (SQLException e) {
-	           e.printStackTrace();
-	       } finally {
-	           try {
-	               if (rs != null) {
-	                   rs.close();
-	               }
-	               cn.close();
-	           } catch (SQLException e) {
-	               e.printStackTrace();
-	           }
-	       }
-	       return usuarioBD;
-	   }
+	    Usuario usuarioBD = null;
+	    String query = "{CALL SP_ValidarUsuario(?, ?)}";
+
+	    try {
+	        cn.Open();
+	        try (CallableStatement stmt = cn.connection.prepareCall(query)) {
+	            stmt.setString(1, usuario.getUsuario());
+	            stmt.setString(2, usuario.getPassword());
+
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                if (rs.next()) {
+	                    usuarioBD = new Usuario();
+	                    usuarioBD.setUsuario(rs.getString("usuario"));
+	                    usuarioBD.setAdmin(rs.getBoolean("admin"));
+
+	                    if (!usuarioBD.isAdmin()) { // Si no es admin, cargar datos del cliente
+	                        Cliente cliente = new Cliente();
+	                        cliente.setId(rs.getInt("id"));
+	                        cliente.setNombre(rs.getString("nombre"));
+	                        cliente.setApellido(rs.getString("apellido"));
+	                        cliente.setTelefono(rs.getString("telefono"));
+	                        cliente.setCuil(rs.getString("cuil"));
+	                        cliente.setDni(rs.getString("dni"));
+	                        cliente.setCorreo(rs.getString("correo"));
+	                        cliente.setDireccion(rs.getString("direccion"));
+	                        cliente.setSexo(rs.getString("sexo"));
+
+	                        Date fechaNacimiento = rs.getDate("fecha_nacimiento");
+	                        if (fechaNacimiento != null) {
+	                            cliente.setFechaNacimiento(fechaNacimiento.toLocalDate());
+	                        }
+
+	                        // Pa铆s de nacimiento
+	                        cliente.setPaisNacimiento(new Pais());
+	                        cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
+	                        cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
+
+	                        // Provincia
+	                        cliente.setProvincia(new Provincia());
+	                        cliente.getProvincia().setId(rs.getInt("id_provincia"));
+	                        cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
+
+	                        // Localidad
+	                        cliente.setLocalidad(new Localidad());
+	                        cliente.getLocalidad().setId(rs.getInt("id_localidad"));
+	                        cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
+
+	                        usuarioBD.setCliente(cliente);
+	                    }
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return usuarioBD;
+	}
+
 
 	@Override
 	public Usuario obtenerUsuarioPorId(int id) {
@@ -89,7 +106,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        while (rs.next()) {
 	            Usuario usuario = new Usuario();
 
-	            // Asignaci髇 de propiedades
+	            // Asignaci贸n de propiedades
 	            usuario.setId(rs.getInt("id"));
 
 	            // Manejo del cliente relacionado
@@ -108,7 +125,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        }
 
 	    } catch (Exception e) {
-	        // Registro de la excepci髇
+	        // Registro de la excepci贸n
 	        System.err.println("Error al listar los usuarios: " + e.getMessage());
 	        e.printStackTrace();
 	    } finally {
@@ -130,7 +147,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 
 	        // Preparar la llamada al procedimiento almacenado
 	        try (CallableStatement cst = cn.connection.prepareCall(query)) {
-	            // Asignaci髇 de par醡etros
+	            // Asignaci贸n de par谩metros
 	            if (usuario.getCliente() != null) {
 	                cst.setInt(1, usuario.getCliente().getId()); // p_id_cliente
 	            } else {
@@ -148,7 +165,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	        System.err.println("Error al insertar o actualizar el usuario: " + e.getMessage());
 	        e.printStackTrace();
 	    } finally {
-	        cn.close(); // Cerrar la conexi髇
+	        cn.close(); // Cerrar la conexi贸n
 	    }
 
 	    return success;
@@ -161,9 +178,9 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	    UsuarioCliente usuario = null;
 	    String query = "SELECT * FROM UsuarioCliente WHERE idCliente = ?"; // Consulta SQL para obtener el usuario
 
-	    // Preparar la conexi髇 y consulta
+	    // Preparar la conexi贸n y consulta
 	    try (PreparedStatement ps = cn.connection.prepareStatement(query)) {
-	        // Establecer el par醡etro para la consulta
+	        // Establecer el par谩metro para la consulta
 	        ps.setInt(1, idCliente);
 
 	        // Ejecutar la consulta

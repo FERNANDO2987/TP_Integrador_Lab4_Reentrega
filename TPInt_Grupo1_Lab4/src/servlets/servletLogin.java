@@ -22,9 +22,7 @@ import negocioImpl.UsuarioNegImpl;
 public class servletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    UsuarioNegImpl usuarioNegocio = new UsuarioNegImpl();  
     public servletLogin() {
         super();
         // TODO Auto-generated constructor stub
@@ -38,31 +36,42 @@ public class servletLogin extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (request.getParameter("btnAceptar") != null) {
-	        String usuario = request.getParameter("usuario");
-	        String contrasenia = request.getParameter("contrasenia");
 
-	        if (usuario != null && contrasenia != null) {
-	            UsuarioNegImpl usuarioNegocio = new UsuarioNegImpl();
-	            Usuario usuarioSesion = new Usuario();
-	            usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
+	    if (request.getParameter("btnAceptar") != null) {  
+	        String usuario = request.getParameter("usuario");  
+	        String contrasenia = request.getParameter("contrasenia");  
 
-	            if (usuarioSesion != null) {      	
-	                HttpSession session = request.getSession();
-	                session.setAttribute("usuario", usuarioSesion);
-	                RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");
-	                rd.forward(request, response);
-	            } else {
-	                response.sendRedirect("Login.jsp?error=true");
-	            }
-	        } else {
-	            response.sendRedirect("Login.jsp?error=true");
-	        }
-	    }
+	        if (usuario != null && contrasenia != null) {  
+	        
+	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
+
+	            if (usuarioSesion != null) {  // Aseg�rate de que la sesi�n sea v�lida  
+	                HttpSession session = request.getSession();  
+	                session.setAttribute("usuario", usuarioSesion);  
+
+	                // Redirige dependiendo del tipo de usuario  
+	                if (usuarioSesion.isAdmin()== true) {  
+	                    RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");  
+	                    rd.forward(request, response);  
+	                } 
+	                
+	                // Redirige dependiendo del tipo de usuario  
+	                if (usuarioSesion.isAdmin()== false) {  
+	                    RequestDispatcher rd = request.getRequestDispatcher("HomeCliente.jsp");  
+	                    rd.forward(request, response);  
+	                } 
+	                
+	                
+	            } else {  
+	                // Si el usuario no existe o las credenciales son incorrectas  
+	                response.sendRedirect("Login.jsp?error=true");  
+	            }  
+	        } else {  
+	            response.sendRedirect("Login.jsp?error=true");  
+	        }  
+	    }  
 	}
 
 }

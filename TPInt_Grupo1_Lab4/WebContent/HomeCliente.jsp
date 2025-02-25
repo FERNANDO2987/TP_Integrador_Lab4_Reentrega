@@ -38,17 +38,11 @@
 
         /* Contenido principal */
         .content {
-             margin-left: 0;
-		    transition: margin-left 0.3s ease;
-		    overflow-y: auto;
-		    flex: 1;
-		    padding: 1rem;
-		    height: 100vh;
-		    display: flex;
-		    justify-content: center;
-		    align-items:�center;
-
-            
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            overflow-y: auto;
+            flex: 1;
+            padding: 1rem;
         }
 
         .content.shift {
@@ -111,7 +105,8 @@
 .logout-icon:hover {
     color: #2196F3; /* Color verde al pasar el mouse */
     transform: scale(1.2); /* Hacerlo un poco más grande */
-    cursor: pointer; /* Cambiar el cursor a mano */
+  
+     
 }
 
 
@@ -120,7 +115,6 @@
     transform: scale(1.1); /* Hacerlo un poco más grande */
     cursor: pointer; /* Cambiar el cursor a mano */
 }
-
 
 .tooltip {  
     display: none;  
@@ -140,7 +134,6 @@
     display: block; /* Muestra el tooltip al pasar el mouse por encima */  
 }
 
-
     </style>
 </head>
 <body class="bg-gray-100">
@@ -152,6 +145,7 @@
         }
         String nombreUsuario = (usuario.getCliente() != null) ? usuario.getCliente().getNombre() : "Usuario desconocido";
     %>
+
 
 <!-- Barra de navegación -->  
 <nav class="bg-gray-800 text-white flex items-center justify-between p-4 relative">  
@@ -187,13 +181,19 @@
     <div class="sidebar" id="sidebar">
         <br>
            <br>
-        <h4 class="text-white text-xl">Administrador</h4>
+        <h4 class="text-white text-xl">Cliente</h4>
+       
+        
         <ul class="space-y-2">
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('prestamos')">Préstamos</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarUsuarios')">Listar Usuarios</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('listarClientes')">Listar Clientes</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('historialPrestamos')">Historial Préstamos</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('pagarPrestamo')">Pagar Prestamo</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('datosPersonales')">Datos Personales</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('cuentasAsociadas')">Cuentas Asociadas</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaPropia')">Transferencia cuenta propia</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaExterna')">Transferencia cuenta externa</a></li>
+            
+            
         </ul>
     </div>
 
@@ -202,10 +202,24 @@
         <h5>Bienvenido, <%= nombreUsuario %></h5>
     </div>
 
-    <script>
+
+    
+    
+     <script>
         function cargarPagina(pagina) {
             let contenido = document.getElementById('contenidoPrincipal');
             contenido.innerHTML = ''; // Limpia el contenido antes de cargar
+
+
+        switch (pagina) {
+            case 'inicio':
+                contenido.innerHTML = '<iframe src="servletGraficos" width="90%" height="900px"></iframe>';
+                break;
+            case 'datosPersonales':
+            	contenido.innerHTML = '<iframe src="DatosPersonales.jsp" class="w-full h-screen flex justify-center items-center"></iframe>';
+            	break;
+    
+         
 
             let iframe = document.createElement('iframe');
             iframe.style.width = '100%';
@@ -216,21 +230,17 @@
                 case 'inicio':
                     iframe.src = 'servletGraficos';
                     break;
-                case 'prestamos':
-                    iframe.src = 'servletPrestamosClientes';
+                case 'datosPersonales':
+                    iframe.src = 'DatosPersonales.jsp';
                     break;
-                case 'historialPrestamos':
-                    iframe.src = 'servletListarTodosLosPrestamos';
+                case 'pagarPrestamo':
+                    iframe.src = 'servletDatosCuentas';
                     break;
-                case 'listarUsuarios':
-                    iframe.src = 'servletListarUsuarios';
-                    break;
-                case 'listarClientes':
-                    iframe.src = 'servletListarClientes';
-                    break;
+               
             }
 
             contenido.appendChild(iframe);
+
         }
 
         function toggleSidebar() {
@@ -257,5 +267,6 @@
         }
 
     </script>
+    
 </body>
 </html>
