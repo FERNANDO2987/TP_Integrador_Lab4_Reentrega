@@ -24,7 +24,7 @@ public class servletEliminarUsuario extends HttpServlet {
 	ClienteNeg clienteNeg = new ClienteNegImpl();
 	
 	 private static final String MENSAJE_EXITO = "Cliente eliminado con exito";
-	    private static final String MENSAJE_ERROR = "Error al eliminar Cliente";
+	private static final String MENSAJE_ERROR = "Error al eliminar Cliente";
     public servletEliminarUsuario() {
         super();
         // TODO Auto-generated constructor stub

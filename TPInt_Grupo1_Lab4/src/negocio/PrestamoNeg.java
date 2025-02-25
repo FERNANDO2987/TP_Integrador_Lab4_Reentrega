@@ -10,6 +10,7 @@ import java.util.Map;
 
 
 import entidad.Prestamo;
+import entidadDTO.CuentaDTO;
 
 public interface PrestamoNeg {
 
@@ -30,6 +31,9 @@ public interface PrestamoNeg {
 		public ArrayList<Prestamo> ListarTodosLosPrestamos();
 		
 		 public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
+		 public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente);
+			public List<CuentaDTO> obtenerEstadosPendientes(int idCliente);
+			public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) ;
 	 
 	
 	

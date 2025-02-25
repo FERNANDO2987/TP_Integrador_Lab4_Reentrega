@@ -11,6 +11,10 @@ import java.util.Map;
 import datos.PrestamoDao;
 import datosImpl.PrestamoDaoImpl;
 import entidad.Prestamo;
+import entidadDTO.CuentaDTO;
+import entidadDTO.CuotaDTO;
+import entidadDTO.MovimientoDTO;
+import entidadDTO.PrestamoDTO;
 import negocio.PrestamoNeg;
 
 public class PrestamoNegImpl implements PrestamoNeg{
@@ -223,5 +227,127 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		
 	}
 
+
+
+
+	@Override
+	public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente) {
+		 List<CuentaDTO> datos = prestamoDao.obtenerDatosCliente(idCliente);
+
+	        if (datos == null || datos.isEmpty()) {
+	            throw new RuntimeException("No se encontraron datos de la cuenta.");
+	        }
+
+	        return (ArrayList<CuentaDTO>) datos;
+	}
+
+	
+	
+	public List<CuentaDTO> obtenerEstadosPendientes(int idCliente) {  
+	    // Llamar al método original para obtener todas las cuentas  
+	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
+	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
+
+	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
+	    for (CuentaDTO cuenta : cuentas) {  
+	        CuentaDTO cuentaVigente = new CuentaDTO();  
+	        cuentaVigente.setNroCuenta(cuenta.getNroCuenta());  
+	        cuentaVigente.setCbu(cuenta.getCbu());  
+	        cuentaVigente.setSaldo(cuenta.getSaldo());  
+	        cuentaVigente.setCliente(cuenta.getCliente());  
+	        cuentaVigente.setTipoCuenta(cuenta.getTipoCuenta());  
+
+	        // Filtrar movimientos  
+	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
+	            // Aquí puedes agregar la lógica para determinar si el movimiento es vigente  
+	            // Por ejemplo, si el importe es mayor que cero  
+	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
+	                cuentaVigente.getMovimientos().add(movimiento);  
+	            }  
+	        }  
+
+	        // Filtrar préstamos  
+	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
+	            // Aquí puedes agregar la lógica para determinar si el préstamo es vigente  
+	            // Por ejemplo, si el estado es "activo"  
+	            if ("pendiente".equalsIgnoreCase(prestamo.getEstado())) {  
+	                cuentaVigente.getPrestamos().add(prestamo);  
+	            }  
+	        }  
+
+	        // Filtrar cuotas  
+	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
+	            // Aquí puedes agregar la lógica para determinar si la cuota es vigente  
+	            // Por ejemplo, si el estado de pago es "pendiente"  
+	            
+	                cuentaVigente.getCuotas().add(cuota);  
+	             
+	        }  
+
+	        // Solo agregar la cuenta si tiene movimientos, préstamos o cuotas vigentes  
+	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
+	            !cuentaVigente.getPrestamos().isEmpty() ||   
+	            !cuentaVigente.getCuotas().isEmpty()) {  
+	            cuentasVigentes.add(cuentaVigente);  
+	        }  
+	    }  
+
+	    return cuentasVigentes;  
+	}
+	
+	
+	public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) {  
+	    // Llamar al método original para obtener todas las cuentas  
+	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
+	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
+
+	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
+	    for (CuentaDTO cuenta : cuentas) {  
+	        CuentaDTO cuentaVigente = new CuentaDTO();  
+	        cuentaVigente.setNroCuenta(cuenta.getNroCuenta());  
+	        cuentaVigente.setCbu(cuenta.getCbu());  
+	        cuentaVigente.setSaldo(cuenta.getSaldo());  
+	        cuentaVigente.setCliente(cuenta.getCliente());  
+	        cuentaVigente.setTipoCuenta(cuenta.getTipoCuenta());  
+
+	        // Filtrar movimientos  
+	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
+	            // Aquí puedes agregar la lógica para determinar si el movimiento es vigente  
+	            // Por ejemplo, si el importe es mayor que cero  
+	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
+	                cuentaVigente.getMovimientos().add(movimiento);  
+	            }  
+	        }  
+
+	        // Filtrar préstamos  
+	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
+	            // Aquí puedes agregar la lógica para determinar si el préstamo es vigente  
+	            // Por ejemplo, si el estado es "activo"  
+	            if ("vigente".equalsIgnoreCase(prestamo.getEstado())) {  
+	                cuentaVigente.getPrestamos().add(prestamo);  
+	            }  
+	        }  
+
+	        // Filtrar cuotas  
+	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
+	            // Aquí puedes agregar la lógica para determinar si la cuota es vigente  
+	            // Por ejemplo, si el estado de pago es "pendiente"  
+	            
+	                cuentaVigente.getCuotas().add(cuota);  
+	             
+	        }  
+
+	        // Solo agregar la cuenta si tiene movimientos, préstamos o cuotas vigentes  
+	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
+	            !cuentaVigente.getPrestamos().isEmpty() ||   
+	            !cuentaVigente.getCuotas().isEmpty()) {  
+	            cuentasVigentes.add(cuentaVigente);  
+	        }  
+	    }  
+
+	    return cuentasVigentes;  
+	}
+	
+	
 
 }

@@ -202,7 +202,10 @@
         <h5>Bienvenido, <%= nombreUsuario %></h5>
     </div>
 
-    <script>
+
+    
+    
+     <script>
         function cargarPagina(pagina) {
             let contenido = document.getElementById('contenidoPrincipal');
             contenido.innerHTML = ''; // Limpia el contenido antes de cargar
@@ -216,7 +219,13 @@
                 case 'inicio':
                     iframe.src = 'servletGraficos';
                     break;
-            
+                case 'datosPersonales':
+                    iframe.src = 'DatosPersonales.jsp';
+                    break;
+                case 'pagarPrestamo':
+                    iframe.src = 'servletDatosCuentas';
+                    break;
+               
             }
 
             contenido.appendChild(iframe);
@@ -246,5 +255,6 @@
         }
 
     </script>
+    
 </body>
 </html>
