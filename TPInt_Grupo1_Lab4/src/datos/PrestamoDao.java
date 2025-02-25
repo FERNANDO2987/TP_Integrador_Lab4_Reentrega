@@ -6,12 +6,13 @@ import java.util.List;
 import java.math.BigDecimal;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import java.util.Map;
 
 
+import entidad.Cuenta;
 import entidad.Prestamo;
+import entidadDTO.CuentaDTO;
 
 public interface PrestamoDao {
 
@@ -28,6 +29,7 @@ public interface PrestamoDao {
 	 public boolean aprobarPrestamo(int idPrestamo);
 	 public List<Prestamo> ObtenerTodosLosPrestamos();
 	 public List<Prestamo> obtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
+	 public List<CuentaDTO> obtenerDatosCliente(int idCliente);
 	
 
 
