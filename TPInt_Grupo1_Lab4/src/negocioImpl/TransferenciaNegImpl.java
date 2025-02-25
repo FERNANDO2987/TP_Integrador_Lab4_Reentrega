@@ -29,8 +29,13 @@ public class TransferenciaNegImpl implements TransferenciaNeg {
 
 	@Override
 	public boolean validarDineroOrigen(Transferencia transferencia) {
+		CuentaDao cuentaDao = new CuentaDaoImpl();
+		transferencia.setCuentaOrigen(cuentaDao.leerUnaCuentaXCbu(transferencia.getCuentaOrigen().getCbu()));
+		if (transferencia.getCuentaOrigen().getSaldo().compareTo(transferencia.getMonto()) >= 0)
+		{
+			return true;
+		}
 		return false;
-		
 	}
 
 	@Override

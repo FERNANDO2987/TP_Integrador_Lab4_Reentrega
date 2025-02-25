@@ -15,5 +15,6 @@ public interface CuentaDao {
 	public List<Cuenta> leerCuentasActivasRelacionadasACliente(int id_cliente);
 	public List<Movimiento> leerMovimientosDeLaCuenta(int nro_cuenta);
 	public boolean existeEsteCbu(String cbu);
+	public Cuenta leerUnaCuentaXCbu(String cbu);
 	
 }

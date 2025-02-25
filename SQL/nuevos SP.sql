@@ -379,3 +379,10 @@ END $$
 
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE SP_ObtenerCuentaXcbu(IN cbuInput VARCHAR(255))
+BEGIN
+	select * from vw_cuentas where cbu like cbuInput;
+END;
+$$
+

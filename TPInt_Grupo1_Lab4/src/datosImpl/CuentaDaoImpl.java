@@ -131,6 +131,7 @@ public class CuentaDaoImpl implements CuentaDao {
 		try
 		{
 			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setInt(1, id_cuenta);
 			ResultSet rs = cst.executeQuery();
 			rs.next();
 			aux.setNroCuenta(rs.getInt("nro_cuenta"));
@@ -274,6 +275,37 @@ public class CuentaDaoImpl implements CuentaDao {
 		}
 		
 		return movimientos;
+	}
+
+	@Override
+	public Cuenta leerUnaCuentaXCbu(String cbu) {
+		cn.Open();
+		String query = "CALL SP_ObtenerCuentaXcbu(?)";
+		Cuenta aux = new Cuenta();
+		try
+		{
+			CallableStatement cst = cn.connection.prepareCall(query);
+			cst.setString(1, cbu);
+			ResultSet rs = cst.executeQuery();
+			rs.next();
+			aux.setNroCuenta(rs.getInt("nro_cuenta"));
+			aux.getCliente().setId(rs.getInt("id_cliente"));
+			aux.getTipoCuenta().setId(rs.getInt("id_tipo_cuenta"));
+			aux.getTipoCuenta().setDescripcion(rs.getString("descripcion_tipo_cuenta"));
+			aux.setCbu(rs.getString("cbu"));
+			aux.setSaldo(rs.getBigDecimal("saldo"));
+			aux.setDeleted(rs.getBoolean("deleted"));
+				
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return aux;
 	}
 
 }
