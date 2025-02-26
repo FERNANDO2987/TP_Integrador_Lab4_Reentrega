@@ -23,7 +23,34 @@
 	{
 		cuentas = new ArrayList<Cuenta>();
 	}
+	String stringAlert = (String)request.getAttribute("errorTransfer");
+	//si no esta nulo
+	if(stringAlert != null)
+	{
+		// si no esta vacio
+		if(!stringAlert.isEmpty())
+		{
+			if (stringAlert == "Transferencia Realizada con Exito")
+			{
+				%>
+					<div class="alert alert-success" role="alert">
+  					<%=stringAlert %>
+					</div>
+				<%
+				
+			}
+			else
+			{
+				%>
+					<div class="alert alert-danger" role="alert">
+ 					<%=stringAlert %>
+					</div>
+				<%
+			}
+		}
+	}
 %>
+
 <div class="container mt-5">
         <div class="card shadow-lg p-4">
             <h2 class="text-center mb-4">Transferencia Bancaria</h2>
@@ -54,7 +81,7 @@
                     <label for="detalle" class="form-label">Detalle</label>
                     <input type="text" class="form-control" id="detalle" placeholder="Ingrese un detalle opcional">
                 </div>
-                <button type="submit" id="btnTransferir" class="btn btn-primary w-100">Realizar Transferencia</button>
+                <button type="submit" name="btnTransferir" id="btnTransferir" class="btn btn-primary w-100">Realizar Transferencia</button>
             </form>
         </div>
     </div>
