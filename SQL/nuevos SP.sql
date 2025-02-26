@@ -361,7 +361,7 @@ BEGIN
 		SELECT nro_cuenta INTO cuentaOrigen FROM cuentas WHERE cbu LIKE cbuOrigen;
 		
 		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
-		VALUES (detalleInput, montoInput, 4, cuentaOrigen, CURDATE());
+		VALUES (detalleInput, montoInput * (-1), 4, cuentaOrigen, CURDATE());
 		
 		UPDATE cuentas SET saldo = saldo - montoInput WHERE cbu LIKE cbuOrigen;
 

@@ -30,7 +30,7 @@
 		// si no esta vacio
 		if(!stringAlert.isEmpty())
 		{
-			if (stringAlert == "Transferencia Realizada con Exito")
+			if (stringAlert.equals("Transferencia Realizada con Exito"))
 			{
 				%>
 					<div class="alert alert-success" role="alert">
@@ -57,7 +57,7 @@
             <form method="post" action="servletTransferencia">
                 <div class="mb-3">
                     <label for="cuentaOrigen" class="form-label">Cuenta Origen</label>
-                    <select class="form-control" id="cuentaOrigen" required>
+                    <select class="form-control" id="cuentaOrigen" name="cuentaOrigen" required>
                         <option selected disabled>Seleccione una cuenta de origen</option>
                         <%
                         for(Cuenta cuenta : cuentas)
@@ -71,15 +71,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="cuentaDestino" class="form-label">Cuenta Destino</label>
-                    <input type="text" class="form-control" id="cuentaDestino" placeholder="Ingrese el CBU de la cuenta que recibira el dinero" required>
+                    <input type="text" class="form-control" name="cuentaDestino" id="cuentaDestino" placeholder="Ingrese el CBU de la cuenta que recibira el dinero" required>
                 </div>
                 <div class="mb-3">
                     <label for="monto" class="form-label">Monto</label>
-                    <input type="number" class="form-control" id="monto" placeholder="Ingrese el monto" min="1" step="0.01" required>
+                    <input type="number" class="form-control" id="monto" name="monto" placeholder="Ingrese el monto" min="1" step="0.01" required>
                 </div>
                 <div class="mb-3">
                     <label for="detalle" class="form-label">Detalle</label>
-                    <input type="text" class="form-control" id="detalle" placeholder="Ingrese un detalle opcional">
+                    <input type="text" class="form-control" id="detalle" name="detalle" placeholder="Ingrese un detalle opcional">
                 </div>
                 <button type="submit" name="btnTransferir" id="btnTransferir" class="btn btn-primary w-100">Realizar Transferencia</button>
             </form>
