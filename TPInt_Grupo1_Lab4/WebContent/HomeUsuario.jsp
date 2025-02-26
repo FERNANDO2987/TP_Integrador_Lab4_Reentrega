@@ -88,7 +88,7 @@
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a>
             </li>
             <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a>
+                <a class="text-white hover:text-blue-500 block p-2" href="SolicitarPrestamo.jsp" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a>
             </li>
             <li>
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('pagarPrestamo')">Pagar Prestamo</a>
@@ -121,10 +121,10 @@
                 contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
                 contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
-            } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+            } else if (pagina === 'solicitarPrestamo') {
+                contenido.innerHTML = 'servletAgregarPrestamo';
             } else if (pagina === 'listarUsuarios') {
-                contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
+                contenido.innerHTML = '<iframe src="srevletAgregarPrestamo" width="90%" height="900px"></iframe>';
             } else if (pagina === 'listarClientes') {
                 contenido.innerHTML = '<iframe src="servletListarClientes" width="90%" height="900px"></iframe>';
             }
