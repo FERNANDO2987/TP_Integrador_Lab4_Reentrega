@@ -4,11 +4,12 @@ SELECT
 CLI.id, CLI.dni, CLI.cuil, CLI.nombre,
 CLI.apellido, CLI.sexo, CLI.id_pais, PAI.nombre as nombre_pais, CLI.fecha_nacimiento,
 CLI.direccion, CLI.id_localidad, LOC.nombre as nombre_localidad, CLI.id_provincia, PROV.nombre as nombre_provincia, CLI.correo,
-CLI.telefono, CLI.deleted 
+CLI.telefono, CLI.deleted, USU.usuario, USU.pass
 FROM clientes CLI
 LEFT JOIN localidades LOC on CLI.id_localidad = LOC.id
 LEFT JOIN provincia PROV on CLI.id_provincia = PROV.id
-LEFT JOIN paises PAI on CLI.id_pais = PAI.id;
+LEFT JOIN paises PAI on CLI.id_pais = PAI.id
+LEFT JOIN usuarios USU on USU.id_cliente = CLI.id;
 
 CREATE VIEW VW_Usuarios AS
 SELECT
@@ -331,3 +332,57 @@ left join cuentas C on C.nro_cuenta = M.nro_cuenta
 WHERE M.deleted = 0 and C.nro_cuenta = nro_cuenta_input;
 END;
 $$
+DELIMITER $$
+CREATE procedure SP_ObtenerClienteXUserPass(in userInput varchar(255), in passInput varchar(255))
+BEGIN
+SELECT * from vw_clientes where usuario like userInput and pass like passInput;
+END;
+$$
+
+
+DELIMITER $$
+
+CREATE PROCEDURE SP_AgregarTransferencia(
+    IN cbuOrigen VARCHAR(255), 
+    IN cbuDestino VARCHAR(255), 
+    IN montoInput DECIMAL(10,2), 
+    IN detalleInput VARCHAR(255)
+)
+BEGIN
+	DECLARE cuentaOrigen INT DEFAULT 0;
+    DECLARE cuentaDestino INT DEFAULT 0;
+    
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        ROLLBACK; 
+    START TRANSACTION;
+
+		-- HACER EL MOVIMIENTO DEL LADO ORIGEN
+		
+		SELECT nro_cuenta INTO cuentaOrigen FROM cuentas WHERE cbu LIKE cbuOrigen;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput * (-1), 4, cuentaOrigen, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo - montoInput WHERE cbu LIKE cbuOrigen;
+
+		-- HACER EL MOVIMIENTO DEL LADO DESTINO
+		
+		SELECT nro_cuenta INTO cuentaDestino FROM cuentas WHERE cbu LIKE cbuDestino;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput, 4, cuentaDestino, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo + montoInput WHERE cbu LIKE cbuDestino;
+
+    COMMIT;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE SP_ObtenerCuentaXcbu(IN cbuInput VARCHAR(255))
+BEGIN
+	select * from vw_cuentas where cbu like cbuInput;
+END;
+$$
+

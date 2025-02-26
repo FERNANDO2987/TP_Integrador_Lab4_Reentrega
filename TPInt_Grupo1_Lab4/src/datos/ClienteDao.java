@@ -2,11 +2,12 @@ package datos;
 
 import java.util.List;
 import entidad.Cliente;
-
+import entidad.Usuario;
 import entidad.UsuarioCliente;
 
 public interface ClienteDao {
 	public List<Cliente> ObtenerClientes();
+	public Cliente ObtenerClienteXUsuarioPass(Usuario usuario);
 	public boolean agregarOmodifcarCliente(Cliente cliente);
 	public boolean modificarCliente(Cliente cliente);
 	public boolean eliminarCliente(int idCliente);

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import entidad.Usuario;
+import negocio.ClienteNeg;
+import negocioImpl.ClienteNegImpl;
 import negocioImpl.UsuarioNegImpl;
 
 /**
@@ -45,7 +47,7 @@ public class servletLogin extends HttpServlet {
 	        
 	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
 
-	            if (usuarioSesion != null) {  // Asegúrate de que la sesión sea válida  
+	            if (usuarioSesion != null) {  // Asegï¿½rate de que la sesiï¿½n sea vï¿½lida  
 	                HttpSession session = request.getSession();  
 	                session.setAttribute("usuario", usuarioSesion);  
 

@@ -38,11 +38,17 @@
 
         /* Contenido principal */
         .content {
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
-            overflow-y: auto;
-            flex: 1;
-            padding: 1rem;
+             margin-left: 0;
+		    transition: margin-left 0.3s ease;
+		    overflow-y: auto;
+		    flex: 1;
+		    padding: 1rem;
+		    height: 100vh;
+		    display: flex;
+		    justify-content: center;
+		    align-items:�center;
+
+            
         }
 
         .content.shift {

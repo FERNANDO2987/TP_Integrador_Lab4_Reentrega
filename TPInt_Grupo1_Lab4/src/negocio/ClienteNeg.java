@@ -10,7 +10,7 @@ public interface ClienteNeg {
 
 	public ArrayList<Cliente> ListarClientes();
 	public boolean agregarCliente(Cliente cliente);
-
+	public Cliente ObtenerClienteXUsuarioPass(Usuario usuario);
 	public boolean EliminarCliente(int idCliente);
 	public boolean AgregarUsuario(Usuario usuario);
 	 public Map<String, String> AgregarCliente(Cliente cliente);
