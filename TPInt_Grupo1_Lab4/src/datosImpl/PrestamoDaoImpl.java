@@ -512,7 +512,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	                tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));
 	                cuenta.setTipoCuenta(tipoCuenta);
 
-	                // Mapeo del �ltimo Movimiento
+	                // Mapeo del último Movimiento
 	                MovimientoDTO movimiento = new MovimientoDTO();
 	                movimiento.setId(rs.getInt("id_movimiento"));
 	                movimiento.setDetalle(rs.getString("detalle_movimiento"));
@@ -524,29 +524,15 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 	                cuenta.getMovimientos().add(movimiento);
 
-	                    TipoCuentaDTO tipoCuenta = new TipoCuentaDTO();  
-	                    tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));  
-	                    cuenta.setTipoCuenta(tipoCuenta);  
-
-	                    cuentaMap.put(nroCuenta, cuenta);  
-	                    cuentas.add(cuenta);  
-	                }  
-
-	                // Movimiento  
-	                int idMovimiento = rs.getInt("id_movimiento");  
-	                if (idMovimiento > 0) {
-	                    MovimientoDTO movimiento = new MovimientoDTO();
-	                    movimiento.setId(idMovimiento);
-	                    movimiento.setDetalle(rs.getString("detalle"));
-	                    movimiento.setImporte(rs.getBigDecimal("importe"));
-	                    movimiento.setNroCuenta(rs.getInt("cuenta_mov"));
-
-	                    TipoMovimientoDTO tipoMovimiento = new TipoMovimientoDTO();
-	                    tipoMovimiento.setDescripcion(rs.getString("tipo_movimiento"));
-	                    movimiento.setTipoMovimiento(tipoMovimiento);
-
-	                    cuenta.getMovimientos().add(movimiento); // A�adir movimiento a la cuenta
-	                }
+	                // Mapeo del último Préstamo
+	                PrestamoDTO prestamo = new PrestamoDTO();
+	                prestamo.setId(rs.getInt("id_prestamo"));
+	                prestamo.setObservaciones(rs.getString("observaciones_prestamo"));
+	                prestamo.setImporte(rs.getBigDecimal("importe_prestamo"));
+	                prestamo.setCuotas(rs.getInt("cantidad_cuotas"));
+	                prestamo.setValorCuotas(rs.getBigDecimal("valor_cuotas"));
+	                prestamo.setEstado(rs.getString("estado_prestamo"));
+	                prestamo.setFechaAlta(rs.getString("fecha_Solicitud") != null ? LocalDate.parse(rs.getString("fecha_Solicitud")) : null);
 
 
 
@@ -561,7 +547,6 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	    }
 	    return cuentas;
 	}
-
 
 
 
