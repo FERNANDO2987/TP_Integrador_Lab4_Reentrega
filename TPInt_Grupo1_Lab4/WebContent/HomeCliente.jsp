@@ -204,7 +204,7 @@
 
     
     
-     <script>
+    <script>
         function cargarPagina(pagina) {
             let contenido = document.getElementById('contenidoPrincipal');
             contenido.innerHTML = ''; // Limpia el contenido antes de cargar
