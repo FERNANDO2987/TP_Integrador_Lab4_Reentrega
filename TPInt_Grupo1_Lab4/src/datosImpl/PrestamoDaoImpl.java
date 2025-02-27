@@ -116,7 +116,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	        cst.setInt(2, nroCuenta);
 
 	        cst.execute();
-	        pagoExitoso = true; // Si no hay excepci�n, el pago fue exitoso
+	        pagoExitoso = true; // Si no hay excepciï¿½n, el pago fue exitoso
 
 	    } catch (SQLException e) {
 	        e.printStackTrace(); // Loguear error
@@ -155,7 +155,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	                cuenta.setNroCuenta(rs.getInt("Nro_Cuenta")); // Dejarlo como String
 	                cuenta.setSaldo(rs.getBigDecimal("Saldo_Cuenta") != null ? rs.getBigDecimal("Saldo_Cuenta") : BigDecimal.ZERO);
 
-	                // Pr�stamo
+	                // Prï¿½stamo
 	                prestamo = new Prestamo();
 	                prestamo.setId(idPrestamo);
 	                prestamo.setObservaciones(rs.getString("Tipo_Prestamo"));
@@ -169,13 +169,13 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	                prestamo.setCliente(cliente);
 	                prestamo.setCuenta(cuenta);
 	            } else {
-	                System.out.println("No se encontr� ning�n pr�stamo con ID: " + idPrestamo);
+	                System.out.println("No se encontrï¿½ ningï¿½n prï¿½stamo con ID: " + idPrestamo);
 	            }
 	        }
 	    } catch (SQLException e) {
 	        System.err.println("Error SQL: " + e.getMessage());
 	        e.printStackTrace();
-	        throw new RuntimeException("Error al obtener pr�stamo por ID", e);
+	        throw new RuntimeException("Error al obtener prï¿½stamo por ID", e);
 	    } finally {
 	        cn.close();
 	    }
@@ -270,7 +270,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	        try (ResultSet rs = pst.executeQuery()) { // Ejecutar la consulta correctamente
 	            if (rs.next()) { 
 	                int count = rs.getInt(1); 
-	                estado = (count > 0); // Si count es mayor que 0, el estado ser� true
+	                estado = (count > 0); // Si count es mayor que 0, el estado serï¿½ true
 	            }
 	        }
 	    } catch (SQLException e) {
@@ -344,7 +344,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
                 montos.put("montoTotalAdjudicado", montoAdjudicado);
             }
         } catch (Exception e) {
-            System.err.println("Error al obtener los montos de pr�stamos pendientes: " + e.getMessage());
+            System.err.println("Error al obtener los montos de prï¿½stamos pendientes: " + e.getMessage());
             e.printStackTrace();
         } finally {
             cn.close();
@@ -365,9 +365,9 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	            cst.execute();
 	            int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
 
-	            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el pr�stamo fue aprobado
+	            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el prï¿½stamo fue aprobado
 	        } catch (Exception e) {
-	            System.err.println("Error al rechazar el pr�stamo: " + e.getMessage());
+	            System.err.println("Error al rechazar el prï¿½stamo: " + e.getMessage());
 	            e.printStackTrace();
 	        } finally {
 	            cn.close();
@@ -388,7 +388,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
             cst.execute();
             int resultadoSP = cst.getInt(2); // Obtener el valor de retorno
 
-            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el pr�stamo fue aprobado
+            resultado = resultadoSP > 0; // Si ROW_COUNT() > 0, el prï¿½stamo fue aprobado
         } catch (Exception e) {
             System.err.println("Error al aprobar el prestamo: " + e.getMessage());
             e.printStackTrace();
@@ -464,7 +464,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	                cuenta.setNroCuenta(nroCuenta);
 	                cuenta.setCliente(cliente);
 
-	                // Crear objeto de pr�stamo (o movimiento gen�rico)
+	                // Crear objeto de prï¿½stamo (o movimiento genï¿½rico)
 	                Prestamo movimiento = new Prestamo();
 	                movimiento.setId(id);
 	                movimiento.setCuenta(cuenta);
@@ -524,29 +524,15 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 	                cuenta.getMovimientos().add(movimiento);
 
-	                    TipoCuentaDTO tipoCuenta = new TipoCuentaDTO();  
-	                    tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));  
-	                    cuenta.setTipoCuenta(tipoCuenta);  
-
-	                    cuentaMap.put(nroCuenta, cuenta);  
-	                    cuentas.add(cuenta);  
-	                }  
-
-	                // Movimiento  
-	                int idMovimiento = rs.getInt("id_movimiento");  
-	                if (idMovimiento > 0) {
-	                    MovimientoDTO movimiento = new MovimientoDTO();
-	                    movimiento.setId(idMovimiento);
-	                    movimiento.setDetalle(rs.getString("detalle"));
-	                    movimiento.setImporte(rs.getBigDecimal("importe"));
-	                    movimiento.setNroCuenta(rs.getInt("cuenta_mov"));
-
-	                    TipoMovimientoDTO tipoMovimiento = new TipoMovimientoDTO();
-	                    tipoMovimiento.setDescripcion(rs.getString("tipo_movimiento"));
-	                    movimiento.setTipoMovimiento(tipoMovimiento);
-
-	                    cuenta.getMovimientos().add(movimiento); // A�adir movimiento a la cuenta
-	                }
+	                // Mapeo del �ltimo Pr�stamo
+	                PrestamoDTO prestamo = new PrestamoDTO();
+	                prestamo.setId(rs.getInt("id_prestamo"));
+	                prestamo.setObservaciones(rs.getString("observaciones_prestamo"));
+	                prestamo.setImporte(rs.getBigDecimal("importe_prestamo"));
+	                prestamo.setCuotas(rs.getInt("cantidad_cuotas"));
+	                prestamo.setValorCuotas(rs.getBigDecimal("valor_cuotas"));
+	                prestamo.setEstado(rs.getString("estado_prestamo"));
+	                prestamo.setFechaAlta(rs.getString("fecha_Solicitud") != null ? LocalDate.parse(rs.getString("fecha_Solicitud")) : null);
 
 
 
@@ -564,10 +550,10 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 
 
-
-
-
-
-
-
 }
+
+
+
+
+
+

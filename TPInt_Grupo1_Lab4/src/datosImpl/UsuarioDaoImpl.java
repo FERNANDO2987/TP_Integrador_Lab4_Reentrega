@@ -26,55 +26,66 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	
 	@Override
 	public Usuario loguear(Usuario usuario) {
+	    if (usuario == null) {
+	        throw new IllegalArgumentException("El usuario proporcionado es null.");
+	    }
+
 	    Usuario usuarioBD = null;
 	    String query = "{CALL SP_ValidarUsuario(?, ?)}";
 
 	    try {
 	        cn.Open();
+	        if (cn.connection == null) {
+	            throw new SQLException("No se pudo establecer la conexión con la base de datos.");
+	        }
+
 	        try (CallableStatement stmt = cn.connection.prepareCall(query)) {
 	            stmt.setString(1, usuario.getUsuario());
 	            stmt.setString(2, usuario.getPassword());
 
 	            try (ResultSet rs = stmt.executeQuery()) {
-	                if (rs.next()) {
-	                    usuarioBD = new Usuario();
-	                    usuarioBD.setUsuario(rs.getString("usuario"));
-	                    usuarioBD.setAdmin(rs.getBoolean("admin"));
+	                if (!rs.next()) {
+	                    System.out.println("No se encontró un usuario con esas credenciales.");
+	                    return null; // o lanzar una excepción
+	                }
 
-	                    if (!usuarioBD.isAdmin()) { // Si no es admin, cargar datos del cliente
-	                        Cliente cliente = new Cliente();
-	                        cliente.setId(rs.getInt("id"));
-	                        cliente.setNombre(rs.getString("nombre"));
-	                        cliente.setApellido(rs.getString("apellido"));
-	                        cliente.setTelefono(rs.getString("telefono"));
-	                        cliente.setCuil(rs.getString("cuil"));
-	                        cliente.setDni(rs.getString("dni"));
-	                        cliente.setCorreo(rs.getString("correo"));
-	                        cliente.setDireccion(rs.getString("direccion"));
-	                        cliente.setSexo(rs.getString("sexo"));
+	                usuarioBD = new Usuario();
+	                usuarioBD.setUsuario(rs.getString("usuario"));
+	                usuarioBD.setAdmin(rs.getBoolean("admin"));
 
-	                        Date fechaNacimiento = rs.getDate("fecha_nacimiento");
-	                        if (fechaNacimiento != null) {
-	                            cliente.setFechaNacimiento(fechaNacimiento.toLocalDate());
-	                        }
+	                if (!usuarioBD.isAdmin()) {
+	                    Cliente cliente = new Cliente();
+	                    cliente.setId(rs.getInt("id"));
+	                    cliente.setNombre(rs.getString("nombre"));
+	                    cliente.setApellido(rs.getString("apellido"));
+	                    cliente.setTelefono(rs.getString("telefono"));
+	                    cliente.setCuil(rs.getString("cuil"));
+	                    cliente.setDni(rs.getString("dni"));
+	                    cliente.setCorreo(rs.getString("correo"));
+	                    cliente.setDireccion(rs.getString("direccion"));
+	                    cliente.setSexo(rs.getString("sexo"));
 
-	                        // País de nacimiento
-	                        cliente.setPaisNacimiento(new Pais());
-	                        cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
-	                        cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
-
-	                        // Provincia
-	                        cliente.setProvincia(new Provincia());
-	                        cliente.getProvincia().setId(rs.getInt("id_provincia"));
-	                        cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
-
-	                        // Localidad
-	                        cliente.setLocalidad(new Localidad());
-	                        cliente.getLocalidad().setId(rs.getInt("id_localidad"));
-	                        cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
-
-	                        usuarioBD.setCliente(cliente);
+	                    Date fechaNacimiento = rs.getDate("fecha_nacimiento");
+	                    if (fechaNacimiento != null) {
+	                        cliente.setFechaNacimiento(fechaNacimiento.toLocalDate());
 	                    }
+
+	                    // País de nacimiento
+	                    cliente.setPaisNacimiento(new Pais());
+	                    cliente.getPaisNacimiento().setId(rs.getInt("id_pais"));
+	                    cliente.getPaisNacimiento().setNombre(rs.getString("nombre_pais"));
+
+	                    // Provincia
+	                    cliente.setProvincia(new Provincia());
+	                    cliente.getProvincia().setId(rs.getInt("id_provincia"));
+	                    cliente.getProvincia().setNombre(rs.getString("nombre_provincia"));
+
+	                    // Localidad
+	                    cliente.setLocalidad(new Localidad());
+	                    cliente.getLocalidad().setId(rs.getInt("id_localidad"));
+	                    cliente.getLocalidad().setNombre(rs.getString("nombre_localidad"));
+
+	                    usuarioBD.setCliente(cliente);
 	                }
 	            }
 	        }
@@ -86,6 +97,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 
 	    return usuarioBD;
 	}
+
 
 
 	@Override

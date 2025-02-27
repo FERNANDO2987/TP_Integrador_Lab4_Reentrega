@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import entidad.Usuario;
-import negocio.ClienteNeg;
-import negocioImpl.ClienteNegImpl;
+
 import negocioImpl.UsuarioNegImpl;
 
 /**
