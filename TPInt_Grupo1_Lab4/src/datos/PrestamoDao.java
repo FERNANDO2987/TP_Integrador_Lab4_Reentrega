@@ -29,7 +29,9 @@ public interface PrestamoDao {
 	 public boolean aprobarPrestamo(int idPrestamo);
 	 public List<Prestamo> ObtenerTodosLosPrestamos();
 	 public List<Prestamo> obtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
-	 public List<CuentaDTO> obtenerDatosCliente(int idCliente);
+	 public List<CuentaDTO> obtenerInformacionCuenta(int idCliente);
+	 public Prestamo obtenerPrestamoPorId(int idPrestamo);
+    public boolean procesarPago(int idPrestamo, int nroCuenta);
 	
 
 

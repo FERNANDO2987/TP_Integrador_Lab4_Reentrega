@@ -3,10 +3,11 @@ package negocioImpl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import java.util.Map;
-
+import java.util.Set;
 
 import datos.PrestamoDao;
 import datosImpl.PrestamoDaoImpl;
@@ -234,9 +235,10 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 
 
+
 	@Override
 	public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente) {
-		 List<CuentaDTO> datos = prestamoDao.obtenerDatosCliente(idCliente);
+		 List<CuentaDTO> datos = prestamoDao.obtenerInformacionCuenta(idCliente);
 
 	        if (datos == null || datos.isEmpty()) {
 	            throw new RuntimeException("No se encontraron datos de la cuenta.");
@@ -246,67 +248,87 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	}
 
 	
-	
 	public List<CuentaDTO> obtenerEstadosPendientes(int idCliente) {  
 	    // Llamar al m�todo original para obtener todas las cuentas  
-	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
-	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
+	    List<CuentaDTO> cuentas = prestamoDao.obtenerInformacionCuenta(idCliente);  
+	    
+	    // Asegurarse de que cuentas no sea null  
+	    if (cuentas == null) {  
+	        cuentas = new ArrayList<>(); // Inicializa como lista vac�a si es null  
+	    }  
+	    
+	    List<CuentaDTO> cuentasPendientes = new ArrayList<>();  
 
 	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
 	    for (CuentaDTO cuenta : cuentas) {  
-	        CuentaDTO cuentaVigente = new CuentaDTO();  
-	        cuentaVigente.setNroCuenta(cuenta.getNroCuenta());  
-	        cuentaVigente.setCbu(cuenta.getCbu());  
-	        cuentaVigente.setSaldo(cuenta.getSaldo());  
-	        cuentaVigente.setCliente(cuenta.getCliente());  
-	        cuentaVigente.setTipoCuenta(cuenta.getTipoCuenta());  
+	        if (cuenta == null) continue; // Ignora cuentas nulas  
+
+	        CuentaDTO cuentaPendiente = new CuentaDTO();  
+	        cuentaPendiente.setNroCuenta(cuenta.getNroCuenta());  
+	        cuentaPendiente.setCbu(cuenta.getCbu());  
+	        cuentaPendiente.setSaldo(cuenta.getSaldo());  
+	        cuentaPendiente.setCliente(cuenta.getCliente());  
+	        cuentaPendiente.setTipoCuenta(cuenta.getTipoCuenta());  
+
+	        // Inicializar listas si no lo est�n ya  
+	        cuentaPendiente.setMovimientos(new ArrayList<>());  
+	        cuentaPendiente.setPrestamos(new ArrayList<>());  
+	        cuentaPendiente.setCuotas(new ArrayList<>());  
 
 	        // Filtrar movimientos  
-	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si el movimiento es vigente  
-	            // Por ejemplo, si el importe es mayor que cero  
-	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
-	                cuentaVigente.getMovimientos().add(movimiento);  
+	        if (cuenta.getMovimientos() != null) {  
+	            for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
+	                if (movimiento != null && movimiento.getImporte() != null && movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
+	                	cuentaPendiente.getMovimientos().add(movimiento);  
+	                }  
 	            }  
 	        }  
 
 	        // Filtrar pr�stamos  
-	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si el pr�stamo es vigente  
-	            // Por ejemplo, si el estado es "activo"  
-	            if ("pendiente".equalsIgnoreCase(prestamo.getEstado())) {  
-	                cuentaVigente.getPrestamos().add(prestamo);  
+	        if (cuenta.getPrestamos() != null) {  
+	            for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
+	                if (prestamo != null && "pendiente".equalsIgnoreCase(prestamo.getEstado())) {  
+	                	cuentaPendiente.getPrestamos().add(prestamo);  
+	                }  
 	            }  
 	        }  
 
 	        // Filtrar cuotas  
-	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si la cuota es vigente  
-	            // Por ejemplo, si el estado de pago es "pendiente"  
-	            
-	                cuentaVigente.getCuotas().add(cuota);  
-	             
+	        if (cuenta.getCuotas() != null) {  
+	            for (CuotaDTO cuota : cuenta.getCuotas()) {  
+	                // Verificar si el estado de pago es pendiente (true)  
+	                if (cuota != null && cuota.isEstadoPago()) {  
+	                	cuentaPendiente.getCuotas().add(cuota);  
+	                }  
+	            }  
 	        }  
 
-	        // Solo agregar la cuenta si tiene movimientos, pr�stamos o cuotas vigentes  
-	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
-	            !cuentaVigente.getPrestamos().isEmpty() ||   
-	            !cuentaVigente.getCuotas().isEmpty()) {  
-	            cuentasVigentes.add(cuentaVigente);  
+	        // Solo agregar la cuenta si tiene movimientos, pr�stamos o cuotas pendiente  
+	        if (!cuentaPendiente.getMovimientos().isEmpty() ||   
+	            !cuentaPendiente.getPrestamos().isEmpty() ||   
+	            !cuentaPendiente.getCuotas().isEmpty()) {  
+	        	cuentasPendientes.add(cuentaPendiente);  
 	        }  
 	    }  
 
-	    return cuentasVigentes;  
+	    return cuentasPendientes;  
 	}
-	
 	
 	public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) {  
 	    // Llamar al m�todo original para obtener todas las cuentas  
-	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
+	    List<CuentaDTO> cuentas = prestamoDao.obtenerInformacionCuenta(idCliente);  
+	    
+	    // Asegurarse de que cuentas no sea null  
+	    if (cuentas == null) {  
+	        cuentas = new ArrayList<>(); // Inicializa como lista vac�a si es null  
+	    }  
+	    
 	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
 
 	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
 	    for (CuentaDTO cuenta : cuentas) {  
+	        if (cuenta == null) continue; // Ignora cuentas nulas  
+
 	        CuentaDTO cuentaVigente = new CuentaDTO();  
 	        cuentaVigente.setNroCuenta(cuenta.getNroCuenta());  
 	        cuentaVigente.setCbu(cuenta.getCbu());  
@@ -314,31 +336,37 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	        cuentaVigente.setCliente(cuenta.getCliente());  
 	        cuentaVigente.setTipoCuenta(cuenta.getTipoCuenta());  
 
+	        // Inicializar listas si no lo est�n ya  
+	        cuentaVigente.setMovimientos(new ArrayList<>());  
+	        cuentaVigente.setPrestamos(new ArrayList<>());  
+	        cuentaVigente.setCuotas(new ArrayList<>());  
+
 	        // Filtrar movimientos  
-	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si el movimiento es vigente  
-	            // Por ejemplo, si el importe es mayor que cero  
-	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
-	                cuentaVigente.getMovimientos().add(movimiento);  
+	        if (cuenta.getMovimientos() != null) {  
+	            for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
+	                if (movimiento != null && movimiento.getImporte() != null && movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
+	                    cuentaVigente.getMovimientos().add(movimiento);  
+	                }  
 	            }  
 	        }  
 
 	        // Filtrar pr�stamos  
-	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si el pr�stamo es vigente  
-	            // Por ejemplo, si el estado es "activo"  
-	            if ("vigente".equalsIgnoreCase(prestamo.getEstado())) {  
-	                cuentaVigente.getPrestamos().add(prestamo);  
+	        if (cuenta.getPrestamos() != null) {  
+	            for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
+	                if (prestamo != null && "vigente".equalsIgnoreCase(prestamo.getEstado())) {  
+	                    cuentaVigente.getPrestamos().add(prestamo);  
+	                }  
 	            }  
 	        }  
 
 	        // Filtrar cuotas  
-	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	            // Aqu� puedes agregar la l�gica para determinar si la cuota es vigente  
-	            // Por ejemplo, si el estado de pago es "pendiente"  
-	            
-	                cuentaVigente.getCuotas().add(cuota);  
-	             
+	        if (cuenta.getCuotas() != null) {  
+	            for (CuotaDTO cuota : cuenta.getCuotas()) {  
+	                // Verificar si el estado de pago es pendiente (true)  
+	                if (cuota != null && cuota.isEstadoPago()) {  
+	                    cuentaVigente.getCuotas().add(cuota);  
+	                }  
+	            }  
 	        }  
 
 	        // Solo agregar la cuenta si tiene movimientos, pr�stamos o cuotas vigentes  
@@ -351,6 +379,24 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	    return cuentasVigentes;  
 	}
+
+
+
+	@Override
+	public Prestamo ObtenerPrestamoPorId(int idPrestamo) {
+	    Prestamo prestamo = prestamoDao.obtenerPrestamoPorId(idPrestamo);
+
+	    if (prestamo == null) {
+	        throw new RuntimeException("No se encontraron pr�stamos con ID: " + idPrestamo);
+	    }
+
+	    return prestamo;
+	}
+
+
+
+
+
 	
 	
 

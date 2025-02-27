@@ -33,6 +33,7 @@ public interface PrestamoNeg {
 		 public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente);
 			public List<CuentaDTO> obtenerEstadosPendientes(int idCliente);
 			public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) ;
+			public Prestamo ObtenerPrestamoPorId(int idPrestamo);
 	 
 	
 	
