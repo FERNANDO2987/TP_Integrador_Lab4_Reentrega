@@ -1,45 +1,32 @@
 package principal;
 
-
-import java.util.List;
-
-import datos.CuentaDao;
-
-
-import datos.PrestamoDao;
-import datosImpl.CuentaDaoImpl;
-import datosImpl.PrestamoDaoImpl;
-import negocio.PrestamoNeg;
 import negocioImpl.PrestamoNegImpl;
+
+import java.math.BigDecimal;
+
+import entidad.Cliente;
+import entidad.Cuenta;
+import entidad.Prestamo;
+
 
 public class Principal {
 
     public static void main(String[] args) {
-    	CuentaDao cuentaDao = new CuentaDaoImpl();
-    	System.out.println(cuentaDao.existeEsteCbu("2025020712301"));
-
-    	  PrestamoNeg prestamoNeg = new PrestamoNegImpl();
-    	  
-    	  
-    	  PrestamoDao prestamoDao = new PrestamoDaoImpl();
-    	  
-    	  
-    	   int idPrestamo = 7;  // ID de préstamo a procesar
-           int nroCuenta = 6; // Número de cuenta del cliente
-           
-           // Ejecutar el método
-           boolean pagoRealizado = prestamoDao.procesarPago(idPrestamo, nroCuenta);
-
-
-           // Mostrar resultado en consola
-           if (pagoRealizado) {
-               System.out.println("✅ Pago realizado con éxito.");
-           } else {
-               System.out.println("❌ Error al procesar el pago.");
-           }
-
-         
-
+    	PrestamoNegImpl negocio = new PrestamoNegImpl();
+    	Prestamo p = new Prestamo();
+    	Cliente cliente = new Cliente();
+    	Cuenta cuenta = new Cuenta();
+    	BigDecimal importe = BigDecimal.valueOf(666);
+    	
+    	cliente.setId(2);
+    	cuenta.setNroCuenta(222222);
+    	p.setCliente(cliente);
+    	p.setCuenta(cuenta);
+    	p.setImporte(importe);
+    	p.setCuotas(6);
+    	p.setObservaciones("Prestamo personal");
+    	
+    	negocio.AgregarPrestamo(p);
     }
     
 }

@@ -512,7 +512,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	                tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));
 	                cuenta.setTipoCuenta(tipoCuenta);
 
-	                // Mapeo del �ltimo Movimiento
+	                // Mapeo del último Movimiento
 	                MovimientoDTO movimiento = new MovimientoDTO();
 	                movimiento.setId(rs.getInt("id_movimiento"));
 	                movimiento.setDetalle(rs.getString("detalle_movimiento"));
@@ -524,7 +524,10 @@ public class PrestamoDaoImpl implements PrestamoDao{
 
 	                cuenta.getMovimientos().add(movimiento);
 
+
 	                // Mapeo del �ltimo Pr�stamo
+
+
 	                PrestamoDTO prestamo = new PrestamoDTO();
 	                prestamo.setId(rs.getInt("id_prestamo"));
 	                prestamo.setObservaciones(rs.getString("observaciones_prestamo"));
