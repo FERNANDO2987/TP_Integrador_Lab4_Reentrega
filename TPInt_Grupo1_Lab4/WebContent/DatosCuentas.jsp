@@ -180,7 +180,7 @@
      <div class="flex space-x-2">
     <select id="filtroEstado" class="border-gray-300 rounded px-2 py-1">
         <option value="">Cualquier estado</option>
-        <option value="vigente">Vigente</option>
+        <option value="aprobado">Aprobado</option>
         <option value="en revision">En Revision</option>
         <option value="finalizado">Finalizado</option>
          <option value="rechazado">Rechazado</option>
@@ -230,7 +230,7 @@
                         if (prestamo != null && prestamo.getEstado() != null) {  
                             if (prestamo.getEstado().equalsIgnoreCase("vigente")) {   
                         %>  
-                                <span class="bg-blue-500 text-white px-2 py-1 rounded">Vigente</span>  
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded">Aprobado</span>  
                         <%   
                             } else if (prestamo.getEstado().equalsIgnoreCase("pendiente")) {   
                         %>  

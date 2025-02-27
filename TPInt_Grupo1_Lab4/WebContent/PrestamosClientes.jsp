@@ -143,7 +143,7 @@
     <input type="text" id="filterNombre" class="form-control w-full p-2 rounded-lg border-gray-300" placeholder="Filtrar por Nombre..." onkeyup="filterTable()">  
     <select id="filterEstado" class="form-control w-full p-2 rounded-lg border-gray-300" onchange="filterTable()">  
         <option value="">Filtrar por Estado</option>  
-        <option value="Vigente">Vigente</option>  
+        <option value=Aprobado">Aprobado</option>  
         <option value="Finalizado">Finalizado</option>  
         <option value="Rechazado">Rechazado</option>  
         <option value="En Revisión">DNI</option>  

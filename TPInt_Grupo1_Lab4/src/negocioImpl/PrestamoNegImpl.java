@@ -349,7 +349,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	        // Filtrar préstamos  
 	        if (cuenta.getPrestamos() != null) {  
 	            for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	                if (prestamo != null && "vigente".equalsIgnoreCase(prestamo.getEstado())) {  
+	                if (prestamo != null && "aprobado".equalsIgnoreCase(prestamo.getEstado())) {  
 	                    cuentaVigente.getPrestamos().add(prestamo);  
 	                }  
 	            }  
