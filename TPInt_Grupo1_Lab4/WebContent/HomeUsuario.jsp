@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Sistema de Gestión Bancaria</title>
+    <title>Sistema de Gestiï¿½n Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
@@ -19,19 +19,19 @@
             color: #fff;
             position: fixed;
             width: 200px; /* Ancho de la barra lateral */
-            top: 0; /* Asegura que la barra lateral esté alineada arriba */
+            top: 0; /* Asegura que la barra lateral estï¿½ alineada arriba */
             left: -200px; /* Inicialmente oculta */
-            transition: left 0.3s ease; /* Animación para el desplazamiento */
-            z-index: 1; /* Asegura que la barra lateral esté detrás del botón */
+            transition: left 0.3s ease; /* Animaciï¿½n para el desplazamiento */
+            z-index: 1; /* Asegura que la barra lateral estï¿½ detrï¿½s del botï¿½n */
             overflow-y: auto; /* Permite que la barra lateral tenga su propio scroll si es necesario */
         }
         .sidebar.show {
-            left: 0; /* Cuando se muestra, se mueve a la posición 0 */
+            left: 0; /* Cuando se muestra, se mueve a la posiciï¿½n 0 */
         }
         /* Contenido */
         .content {
             margin-left: 0;
-            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transición para el título */
+            transition: margin-left 0.3s ease, margin-top 0.3s ease; /* Se agrega transiciï¿½n para el tï¿½tulo */
             overflow-y: auto; /* Asegura que el contenido se desplace verticalmente sin problemas */
             flex: 1;  
             padding: 1px;  
@@ -39,22 +39,22 @@
         .content.shift {
             margin-left: 200px;
         }
-        /* Icono del menú */
+        /* Icono del menï¿½ */
         .menu-icon {
             cursor: pointer;
             font-size: 35px;
             color: white;
-            z-index: 2; /* Asegura que el icono esté por encima de la barra lateral */
+            z-index: 2; /* Asegura que el icono estï¿½ por encima de la barra lateral */
             position: fixed;
             top: 10px;
             left: 25px;
         }
-        /* Título */
+        /* Tï¿½tulo */
         .title {
-            transition: margin-left 0.3s ease; /* Añadir transición */
+            transition: margin-left 0.3s ease; /* Aï¿½adir transiciï¿½n */
         }
         .title.shift {
-            margin-left: 200px; /* Mover título cuando la barra lateral se abre */
+            margin-left: 200px; /* Mover tï¿½tulo cuando la barra lateral se abre */
         }
         /* Formulario */
         .content form {
@@ -64,12 +64,12 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Barra de navegación -->
+    <!-- Barra de navegaciï¿½n -->
     <nav class="bg-gray-800 text-white flex justify-between items-center p-4">
-        <!-- Icono para abrir/cerrar el menú -->
+        <!-- Icono para abrir/cerrar el menï¿½ -->
         <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span> 
 <div class="flex justify-end items-center text-xl title relative left-16" id="title">
-    Sistema de Gestión Bancaria
+    Sistema de Gestiï¿½n Bancaria
 </div>
 
 
@@ -88,7 +88,7 @@
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('inicio')">Inicio</a>
             </li>
             <li>
-                <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a>
+                <a class="text-white hover:text-blue-500 block p-2" href="SolicitarPrestamo.jsp" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a>
             </li>
             <li>
                 <a class="text-white hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('pagarPrestamo')">Pagar Prestamo</a>
@@ -109,18 +109,18 @@
 
     <!-- Contenido principal -->
     <div class="content ml-0 transition-all" id="contenidoPrincipal">
-        <h2 class="text-3xl font-bold p-6">¡Bienvenido/a Cliente!</h2>
+        <h2 class="text-3xl font-bold p-6">ï¿½Bienvenido/a Cliente!</h2>
     </div>
 
     <script>
         function cargarPagina(pagina) {
             var contenido = document.getElementById('contenidoPrincipal');
             if (pagina === 'inicio') {
-                contenido.innerHTML = '<h2>¡Bienvenido/a admin!</h2>';
+                contenido.innerHTML = '<h2>ï¿½Bienvenido/a admin!</h2>';
             } else if (pagina === 'clientes') {
-                contenido.innerHTML = '<h2>Clientes</h2><p>Aquí va la información de los clientes.</p>';
-            } else if (pagina === 'prestamos') {
-                contenido.innerHTML = '<h2>Préstamos</h2><p>Aquí va la información de los préstamos.</p>';
+                contenido.innerHTML = '<h2>Clientes</h2><p>Aquï¿½ va la informaciï¿½n de los clientes.</p>';
+            } else if (pagina === 'solicitarPrestamo') {
+                contenido.innerHTML = 'servletAgregarPrestamo';
             } else if (pagina === 'listarUsuarios') {
                 contenido.innerHTML = '<iframe src="servletListarUsuarios" width="90%" height="900px"></iframe>';
             } else if (pagina === 'transferencia'){

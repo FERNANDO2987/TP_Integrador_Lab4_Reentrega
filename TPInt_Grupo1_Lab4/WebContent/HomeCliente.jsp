@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Gestión Bancaria</title>
+    <title>Sistema de Gestión Bancaria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
@@ -49,7 +49,7 @@
             margin-left: 200px;
         }
 
-        /* Icono del menú */
+        /* Icono del menú */
         .menu-icon {
             cursor: pointer;
             font-size: 30px;
@@ -60,7 +60,7 @@
             top: 12px;
         }
 
-        /* Título del sistema */
+        /* Título del sistema */
         #tituloSistema {
             transition: margin-left 0.3s ease;
         }
@@ -93,18 +93,18 @@
     overflow: hidden;
 }
 
-/* Estilo del icono cuando el menú está abierto */
-/* Estilo del icono cuando el mouse pasa sobre él */
+/* Estilo del icono cuando el menú está abierto */
+/* Estilo del icono cuando el mouse pasa sobre él */
 .menu-icon:hover {
     color: #2196F3; /* Color verde al pasar el mouse */
-    transform: scale(1.3); /* Hacerlo un poco más grande */
+    transform: scale(1.3); /* Hacerlo un poco más grande */
     cursor: pointer; /* Cambiar el cursor a mano */
 }
 
 
 .logout-icon:hover {
     color: #2196F3; /* Color verde al pasar el mouse */
-    transform: scale(1.2); /* Hacerlo un poco más grande */
+    transform: scale(1.2); /* Hacerlo un poco más grande */
   
      
 }
@@ -112,7 +112,7 @@
 
 .menu2-icon:hover {
     color: #2196F3; /* Color verde al pasar el mouse */
-    transform: scale(1.1); /* Hacerlo un poco más grande */
+    transform: scale(1.1); /* Hacerlo un poco más grande */
     cursor: pointer; /* Cambiar el cursor a mano */
 }
 
@@ -147,14 +147,14 @@
     %>
 
 
-<!-- Barra de navegación -->  
+<!-- Barra de navegación -->  
 <nav class="bg-gray-800 text-white flex items-center justify-between p-4 relative">  
-    <!-- Icono del menú -->  
+    <!-- Icono del menú -->  
     <span class="menu-icon" onclick="toggleSidebar()">&#9776;</span>   
 
-    <!-- Título centrado -->  
+    <!-- Título centrado -->  
     <div id="tituloSistema" class="text-xl text-center flex-1">  
-        Sistema de Gestión Bancaria  
+        Sistema de Gestión Bancaria  
     </div>  
 
     <!-- Nombre del usuario con imagen -->  
@@ -163,11 +163,11 @@
        <br> <span class="text-white font-semibold"><%= nombreUsuario %></span>  
     </div>  
 
-    <!-- Botón de Logout -->  
+    <!-- Botón de Logout -->  
 <div class="logout-icon">  
     <a href="servletLogout?id=<%= usuario.getId() %>"  
        class="text-white hover:text-blue-500"  
-       onclick="return confirm('¿Estás seguro que quieres salir?');"  
+       onclick="return confirm('¿Estás seguro que quieres salir?');"  
        onmouseover="showTooltip(this)"  
        onmouseout="hideTooltip()">  
         Logout  
@@ -234,7 +234,7 @@
             var sidebar = document.getElementById('sidebar');
             var contenidoPrincipal = document.getElementById('contenidoPrincipal');
             var tituloSistema = document.getElementById('tituloSistema');
-            var menuIcon = document.querySelector('.menu-icon'); // Icono del menú
+            var menuIcon = document.querySelector('.menu-icon'); // Icono del menú
 
             // Alternar visibilidad de la barra lateral
             sidebar.classList.toggle('show');
@@ -253,7 +253,7 @@
             }
         }
 
-    </script>
+    </script>
     
 </body>
 </html>
