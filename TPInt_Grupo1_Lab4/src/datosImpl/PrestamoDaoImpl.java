@@ -15,28 +15,22 @@ import java.util.List;
 import datos.PrestamoDao;
 import entidad.Cliente;
 import entidad.Cuenta;
-import entidad.Cuota;
-import entidad.Movimiento;
+
 import entidad.Prestamo;
-import entidad.TipoCuenta;
-import entidad.TipoMovimiento;
+
 import entidadDTO.ClienteDTO;
 import entidadDTO.CuentaDTO;
-import entidadDTO.CuotaDTO;
+
 import entidadDTO.MovimientoDTO;
 import entidadDTO.PrestamoDTO;
 import entidadDTO.TipoCuentaDTO;
 import entidadDTO.TipoMovimientoDTO;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
-import datos.PrestamoDao;
-import entidad.Cliente;
-import entidad.Prestamo;
+
 
 
 
@@ -111,6 +105,87 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		return prestamos;
 	}
 	
+	
+
+	@Override
+	public boolean procesarPago(int idPrestamo, int nroCuenta) {
+	    cn.Open();
+	    String query = "{CALL ProcesarPagoCuota(?, ?)}";
+	    boolean pagoExitoso = false;
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setInt(1, idPrestamo);
+	        cst.setInt(2, nroCuenta);
+
+	        cst.execute();
+	        pagoExitoso = true; // Si no hay excepción, el pago fue exitoso
+
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Loguear error
+	    } finally {
+	        cn.close();
+	    }
+
+	    return pagoExitoso;
+	}
+
+	
+	
+	@Override
+	public Prestamo obtenerPrestamoPorId(int idPrestamo) {
+	    Prestamo prestamo = null;
+	    cn.Open();
+	    String query = "{CALL ObtenerPrestamoPorId(?)}";
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setInt(1, idPrestamo);
+	        System.out.println("Ejecutando SP con ID: " + idPrestamo);
+
+	        try (ResultSet rs = cst.executeQuery()) {
+	            if (rs.next()) {
+	                System.out.println("Datos encontrados para ID: " + idPrestamo);
+
+	                // Cliente
+	                Cliente cliente = new Cliente();
+	                cliente.setId(rs.getInt("ID_Cliente"));
+	                cliente.setDni(rs.getString("DNI"));
+	                cliente.setNombre(rs.getString("Nombre"));
+	                cliente.setApellido(rs.getString("Apellido"));
+
+	                // Cuenta
+	                Cuenta cuenta = new Cuenta();
+	                cuenta.setNroCuenta(rs.getInt("Nro_Cuenta")); // Dejarlo como String
+	                cuenta.setSaldo(rs.getBigDecimal("Saldo_Cuenta") != null ? rs.getBigDecimal("Saldo_Cuenta") : BigDecimal.ZERO);
+
+	                // Préstamo
+	                prestamo = new Prestamo();
+	                prestamo.setId(idPrestamo);
+	                prestamo.setObservaciones(rs.getString("Tipo_Prestamo"));
+	                prestamo.setFechaAlta(rs.getDate("Fecha_Solicitud").toLocalDate());
+	                prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+	                prestamo.setCuotas(rs.getInt("Cuotas"));
+	                prestamo.setValorCuotas(rs.getBigDecimal("Valor_Cuotas") != null ? rs.getBigDecimal("Valor_Cuotas") : BigDecimal.ZERO);
+	                prestamo.setEstado(rs.getString("Estado"));
+
+	                // Asignar Cliente y Cuenta
+	                prestamo.setCliente(cliente);
+	                prestamo.setCuenta(cuenta);
+	            } else {
+	                System.out.println("No se encontró ningún préstamo con ID: " + idPrestamo);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error SQL: " + e.getMessage());
+	        e.printStackTrace();
+	        throw new RuntimeException("Error al obtener préstamo por ID", e);
+	    } finally {
+	        cn.close();
+	    }
+
+	    return prestamo;
+	}
+
+
 	
 
 	@Override
@@ -440,114 +515,74 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	    return movimientos;
 	}
 
+	
+	@Override
+	public List<CuentaDTO> obtenerInformacionCuenta(int idCliente) {
+	    List<CuentaDTO> cuentas = new ArrayList<>();
+	    cn.Open();
 
-	public List<CuentaDTO> obtenerDatosCliente(int idCliente) {  
-	    List<CuentaDTO> cuentas = new ArrayList<>();  
-	    cn.Open();  
+	    String query = "{CALL ObtenerInformacionCuenta(?)}";
+	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	        cst.setInt(1, idCliente);
+	        try (ResultSet rs = cst.executeQuery()) {
+	            while (rs.next()) {
+	                CuentaDTO cuenta = new CuentaDTO();
+	                cuenta.setNroCuenta(rs.getInt("nro_cuenta"));
+	                cuenta.setCbu(rs.getString("cbu"));
+	                cuenta.setSaldo(rs.getBigDecimal("saldo"));
 
-	    String query = "SELECT " +  
-	            "c.nro_cuenta, c.id_cliente, tc.descripcion AS tipo_cuenta, c.cbu, c.saldo, " +  
-	            "m.id AS id_movimiento, m.detalle, m.importe, m.nro_cuenta AS cuenta_mov, tm.descripcion AS tipo_movimiento, " +  
-	            "p.id AS id_prestamo, p.observaciones, p.importe AS importe_prestamo, p.cuotas, p.valor_cuotas, " +  
-	            "p.estado AS estado_prestamo, p.fecha_alta, p.nro_cuenta AS cuenta_prestamo, " +  
-	            "cu.id AS id_cuota, cu.id_prestamo, cu.nro_cuota, cu.monto, cu.fecha_pago, cu.estado_pago " +  
-	            "FROM cuentas c " +  
-	            "LEFT JOIN tipos_cuenta tc ON c.id_tipo_cuenta = tc.id " +  
-	            "LEFT JOIN movimientos m ON m.nro_cuenta = c.nro_cuenta AND m.deleted = 0 " +  
-	            "LEFT JOIN tipos_movimiento tm ON m.id_tipos_movimiento = tm.id " +  
-	            "LEFT JOIN prestamos p ON p.id_cliente = c.id_cliente AND p.deleted = 0 " +  
-	            "LEFT JOIN cuotas cu ON cu.id_prestamo = p.id AND cu.deleted = 0 " +  
-	            "WHERE c.id_cliente = ? AND c.deleted = 0";  
+	                // Mapeo de Cliente
+	                ClienteDTO cliente = new ClienteDTO();
+	                cliente.setId(rs.getInt("id_cliente"));
+	                cuenta.setCliente(cliente);
 
-	    try (PreparedStatement pst = cn.connection.prepareStatement(query)) {  
-	        pst.setInt(1, idCliente);  
-	        try (ResultSet rs = pst.executeQuery()) {  
-	            
-	            Map<Integer, CuentaDTO> cuentaMap = new HashMap<>();  
+	                // Mapeo de TipoCuenta
+	                TipoCuentaDTO tipoCuenta = new TipoCuentaDTO();
+	                tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));
+	                cuenta.setTipoCuenta(tipoCuenta);
 
-	            while (rs.next()) {  
-	                int nroCuenta = rs.getInt("nro_cuenta");  
+	                // Mapeo del último Movimiento
+	                MovimientoDTO movimiento = new MovimientoDTO();
+	                movimiento.setId(rs.getInt("id_movimiento"));
+	                movimiento.setDetalle(rs.getString("detalle_movimiento"));
+	                movimiento.setImporte(rs.getBigDecimal("importe_movimiento"));
 
-	                CuentaDTO cuenta = cuentaMap.get(nroCuenta);  
-	                if (cuenta == null) {  
-	                    cuenta = new CuentaDTO();  
-	                    cuenta.setNroCuenta(nroCuenta);  
-	                    cuenta.setCbu(rs.getString("cbu"));  
-	                    cuenta.setSaldo(rs.getBigDecimal("saldo"));  
+	                TipoMovimientoDTO tipoMovimiento = new TipoMovimientoDTO();
+	                tipoMovimiento.setDescripcion(rs.getString("tipo_movimiento"));
+	                movimiento.setTipoMovimiento(tipoMovimiento);
 
-	                    ClienteDTO cliente = new ClienteDTO();  
-	                    cliente.setId(rs.getInt("id_cliente"));  
-	                    cuenta.setCliente(cliente);  
+	                cuenta.getMovimientos().add(movimiento);
 
-	                    TipoCuentaDTO tipoCuenta = new TipoCuentaDTO();  
-	                    tipoCuenta.setDescripcion(rs.getString("tipo_cuenta"));  
-	                    cuenta.setTipoCuenta(tipoCuenta);  
-
-	                    cuentaMap.put(nroCuenta, cuenta);  
-	                    cuentas.add(cuenta);  
-	                }  
-
-	                // Movimiento  
-	                int idMovimiento = rs.getInt("id_movimiento");  
-	                if (idMovimiento > 0) {
-	                    MovimientoDTO movimiento = new MovimientoDTO();
-	                    movimiento.setId(idMovimiento);
-	                    movimiento.setDetalle(rs.getString("detalle"));
-	                    movimiento.setImporte(rs.getBigDecimal("importe"));
-	                    movimiento.setNroCuenta(rs.getInt("cuenta_mov"));
-
-	                    TipoMovimientoDTO tipoMovimiento = new TipoMovimientoDTO();
-	                    tipoMovimiento.setDescripcion(rs.getString("tipo_movimiento"));
-	                    movimiento.setTipoMovimiento(tipoMovimiento);
-
-	                    cuenta.getMovimientos().add(movimiento); // Añadir movimiento a la cuenta
-	                }
+	                // Mapeo del último Préstamo
+	                PrestamoDTO prestamo = new PrestamoDTO();
+	                prestamo.setId(rs.getInt("id_prestamo"));
+	                prestamo.setObservaciones(rs.getString("observaciones_prestamo"));
+	                prestamo.setImporte(rs.getBigDecimal("importe_prestamo"));
+	                prestamo.setCuotas(rs.getInt("cantidad_cuotas"));
+	                prestamo.setValorCuotas(rs.getBigDecimal("valor_cuotas"));
+	                prestamo.setEstado(rs.getString("estado_prestamo"));
+	                prestamo.setFechaAlta(rs.getString("fecha_Solicitud") != null ? LocalDate.parse(rs.getString("fecha_Solicitud")) : null);
 
 
-	                // Prestamo  
-	                int idPrestamo = rs.getInt("id_prestamo");  
-	                if (idPrestamo > 0) {  
-	                    PrestamoDTO prestamo = new PrestamoDTO();  
-	                    prestamo.setId(idPrestamo);  
-	                    prestamo.setObservaciones(rs.getString("observaciones"));  
-	                    prestamo.setImporte(rs.getBigDecimal("importe_prestamo"));  
-	                    prestamo.setCuotas(rs.getInt("cuotas"));  
-	                    prestamo.setValorCuotas(rs.getBigDecimal("valor_cuotas"));  
-	                    prestamo.setEstado(rs.getString("estado_prestamo"));  
-	                    prestamo.setFechaAlta(rs.getDate("fecha_alta").toLocalDate());  
-	                    
-	                    cuenta.getPrestamos().add(prestamo);
 
-	                }
+	                cuenta.getPrestamos().add(prestamo);
 
-	                    // Cuota  
-	                    int idCuota = rs.getInt("id_cuota");  
-	                    if (idCuota > 0) {  
-	                        CuotaDTO cuota = new CuotaDTO();  
-	                        cuota.setId(idCuota);  
-	                        cuota.setNroCuota(rs.getInt("nro_cuota"));  
-	                        cuota.setMonto(rs.getBigDecimal("monto"));  
-	                        cuota.setFechaPago(rs.getTimestamp("fecha_pago") != null ? rs.getTimestamp("fecha_pago").toLocalDateTime() : null);  
-	                        cuota.setEstadoPago(rs.getBoolean("estado_pago"));  
-	                        
-	                        cuenta.getCuotas().add(cuota);
-	                       
-
-	                    } 
-	                        
-	                    }  
-	                }  
-	             
-	         
-	    } catch (SQLException e) {  
-	        e.printStackTrace();  
-	    } finally {  
-	        cn.close();  
-	    }  
-
-	    return cuentas;  
+	                // Agregar la cuenta a la lista
+	                cuentas.add(cuenta);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return cuentas;
 	}
-        
+
+
+
+
+
+
+
 
 
 }
