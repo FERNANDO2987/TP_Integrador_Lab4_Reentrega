@@ -205,21 +205,10 @@
 
     
     
-     <script>
+    <script>
         function cargarPagina(pagina) {
             let contenido = document.getElementById('contenidoPrincipal');
             contenido.innerHTML = ''; // Limpia el contenido antes de cargar
-
-
-        switch (pagina) {
-            case 'inicio':
-                contenido.innerHTML = '<iframe src="servletGraficos" width="90%" height="900px"></iframe>';
-                break;
-            case 'datosPersonales':
-            	contenido.innerHTML = '<iframe src="DatosPersonales.jsp" class="w-full h-screen flex justify-center items-center"></iframe>';
-            	break;
-    
-         
 
             let iframe = document.createElement('iframe');
             iframe.style.width = '100%';
@@ -227,7 +216,7 @@
             iframe.style.border = 'none';
 
             switch (pagina) {
-                case 'inicio':
+                 case 'inicio':
                     iframe.src = 'servletGraficos';
                     break;
                 case 'datosPersonales':
@@ -236,11 +225,9 @@
                 case 'pagarPrestamo':
                     iframe.src = 'servletDatosCuentas';
                     break;
-               
             }
 
             contenido.appendChild(iframe);
-
         }
 
         function toggleSidebar() {
