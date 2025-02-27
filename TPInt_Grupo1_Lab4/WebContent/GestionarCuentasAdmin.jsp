@@ -49,7 +49,7 @@
     </style>
 </head>
 <body>
-<div>
+<div class = "p-2">
     <div class="row justify-content-around">
         <% List<TipoCuenta> tiposCuenta = (List<TipoCuenta>) request.getAttribute("tiposCuenta");
            List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentas");
@@ -58,7 +58,7 @@
         <form action="servletGestionarCuentas" method="post">
             <input type="hidden" name="InputIdCliente" value="<%=request.getAttribute("idCliente") %>">
             <input type="hidden" name="idCuenta" value="<%=cuenta.getNroCuenta()%>">
-            <div class="col">
+            <div class="col p-2">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">CBU: <%=cuenta.getCbu() %></h5>
