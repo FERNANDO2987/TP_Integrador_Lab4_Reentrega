@@ -98,13 +98,15 @@
                     <h3 class="font-semibold text-gray-700">Observacion: <%= prestamo.getObservaciones() %></h3>
                     <p class="text-sm text-gray-600">Saldo otorgado: <strong>$ <%= prestamo.getImporte() %></strong></p>
                     <p class="text-sm text-gray-600">Cuotas pendientes: <strong><%= prestamo.getCuotas() %></strong></p>
+                    <p class="text-sm text-gray-600">ID: <strong><%= prestamo.getId() %></strong></p>
                     <div class="flex justify-between items-center mt-2">
                         <p class="text-red-500 text-sm">Vencimiento: <%= prestamo.getFechaAlta() %></p>
                        
                         
-              <a href="servletPagarPrestamo?id=<%= prestamo.getId() %>" class="btn-pagar bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" disabled>
-               <i class="fas fa-hand-holding-usd"></i> Pagar  
-               </a>
+            <a href="servletPagarPrestamo?idPrestamo=<%=prestamo.getId() %>" class="btn-pagar bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+    <i class="fas fa-hand-holding-usd"></i> Pagar  
+</a>
+
 
 
                              
@@ -205,39 +207,60 @@
                 <th class="border p-2">Cuotas</th>
             </tr>
         </thead>
-        <tbody id="tableBody"> 
-    <% if (datosClientes != null) { %>
-        <% for (CuentaDTO cuenta : datosClientes) { %>
-            <% for (PrestamoDTO prestamo : cuenta.getPrestamos()) { %>
-                <tr class="border">
-                    <td class="border p-2"><%= prestamo.getId() %></td>
-                    <td class="border p-2"><%= cuenta.getNroCuenta() %></td>
-                    <td class="border p-2"><%= prestamo.getFechaAlta() %></td>
-                    <td class="border p-2 motivo"><%= prestamo.getObservaciones() %></td>
-
-               <td class="border p-2 estado">
-    <% if (prestamo.getEstado().equalsIgnoreCase("vigente")) { %>
-        <span class="bg-blue-500 text-white px-2 py-1 rounded">Vigente</span>
-    <% } else if (prestamo.getEstado().equalsIgnoreCase("pendiente")) { %>
-        <span class="bg-yellow-500 text-white px-2 py-1 rounded">En Revision</span>
-    <% } else if (prestamo.getEstado().equalsIgnoreCase("rechazado")) { %>
-        <span class="bg-red-500 text-white px-2 py-1 rounded">Rechazado</span>
-    <% } else { %>
-        <span class="bg-yellow-500 text-white px-2 py-1 rounded">En Revisión</span>
-    <% } %>
-</td>
-
-
-                    <td class="border p-2">$ <%= prestamo.getImporte() %></td>
-                    <td class="border p-2"><%= prestamo.getCuotas() %></td>
-                </tr>
-            <% } %>
-        <% } %>
-    <% } else { %>
-        <tr>
-            <td colspan="7" class="text-center text-gray-600 p-4">No hay préstamos disponibles.</td>
-        </tr>
-    <% } %>
+                          <tbody id="tableBody">   
+    <% if (datosClientes != null) { %>  
+        <% for (CuentaDTO cuenta : datosClientes) { %>  
+            <% for (PrestamoDTO prestamo : cuenta.getPrestamos()) { %>  
+               <%   
+                    // Verificar que los campos relevantes no sean null o valores no válidos  
+                    if (prestamo.getFechaAlta() != null &&   
+                        prestamo.getObservaciones() != null &&   
+                        prestamo.getImporte() != null &&   
+                        prestamo.getCuotas() != 0 && // Verifica que no sean cero si eso tiene sentido en tu lógica  
+                        cuenta.getNroCuenta() != 0) {  
+                %>
+                <tr class="border">  
+                    <td class="border p-2"><%= prestamo.getId() %></td>  
+                    <td class="border p-2"><%= cuenta.getNroCuenta() %></td>  
+                    <td class="border p-2"><%= prestamo.getFechaAlta() %></td>  
+                    <td class="border p-2 motivo"><%= prestamo.getObservaciones() %></td>  
+                    
+                    <td class="border p-2 estado">  
+                        <%   
+                        if (prestamo != null && prestamo.getEstado() != null) {  
+                            if (prestamo.getEstado().equalsIgnoreCase("vigente")) {   
+                        %>  
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded">Vigente</span>  
+                        <%   
+                            } else if (prestamo.getEstado().equalsIgnoreCase("pendiente")) {   
+                        %>  
+                                <span class="bg-yellow-500 text-white px-2 py-1 rounded">En Revision</span>  
+                        <%   
+                            } else if (prestamo.getEstado().equalsIgnoreCase("rechazado")) {   
+                        %>  
+                                <span class="bg-red-500 text-white px-2 py-1 rounded">Rechazado</span>  
+                        <%   
+                            } else {   
+                        %>  
+                                <span class="bg-gray-500 text-white px-2 py-1 rounded">Estado desconocido</span>  
+                        <%   
+                            }  
+                        }    
+                        %>  
+                    </td>  
+                    
+                    <td class="border p-2">$ <%= prestamo.getImporte() %></td>  
+                    <td class="border p-2"><%= prestamo.getCuotas() %></td>  
+                </tr>  
+                <%   
+                    } // Cierre de la verificación  
+                } // Cierre del bucle de préstamos  
+            } // Cierre del bucle de cuentas  
+        } else { %>  
+            <tr>  
+                <td colspan="7" class="text-center text-gray-600 p-4">No hay préstamos disponibles.</td>  
+            </tr>  
+    <% } %>  
 </tbody>
 
     </table>
@@ -246,6 +269,11 @@
       <span id="pageNumbers"></span>
       <button onclick="nextPage()" id="btnNext" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Siguiente</button>
   </div>
+
+<br>
+<br>
+<br>
+<br>
 
 </div>
 
