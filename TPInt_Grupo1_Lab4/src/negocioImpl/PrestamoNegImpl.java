@@ -18,8 +18,6 @@ import entidadDTO.PrestamoDTO;
 import negocio.PrestamoNeg;
 
 public class PrestamoNegImpl implements PrestamoNeg{
-
-
 	private PrestamoDao prestamoDao = new PrestamoDaoImpl();
 	public PrestamoNegImpl(PrestamoDao prestamoDao)
 	{
@@ -52,7 +50,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		return new ArrayList<>(prestamos);
 	}
 	
-	
+	@Override
 	public ArrayList<Prestamo> ListarPrestamos() {
 		   List<Prestamo> prestamos = prestamoDao.ObtenerPrestamos();
 
@@ -85,7 +83,6 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo, String observacion) {
-		
 		if(idPrestamo < 1)
 		{
 	        System.err.println("El ID del prestamo no es )vï¿½lido.");
@@ -106,7 +103,6 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	@Override
 	public boolean AgregarPrestamo(Prestamo prestamo) {
-		
 		if (prestamo.getCliente() == null || prestamo.getCuenta() == null) {
 		    System.err.println("El cliente o la cuenta no estï¿½n definidos");
 		    return false;
@@ -119,12 +115,22 @@ public class PrestamoNegImpl implements PrestamoNeg{
 			System.err.println("Importe no valido");
 		    return false;
 		}
-
+		if (prestamo.getObservaciones() == "")
+		{
+			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
+			return false;
+		}
+		if (prestamo.getObservaciones() != "Adelanto de sueldo"	&&
+			prestamo.getObservaciones() != "Prestamo personal"	&&
+			prestamo.getObservaciones() != "Prestamo prendario"	&&
+			prestamo.getObservaciones() != "Prestamo hipotecario")
+		{
+			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
+			return false;
+		}
 		
 		return prestamoDao.AgregarPrestamo(prestamo);
 	}
-	
-
 
 
 	@Override
@@ -173,8 +179,6 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	    }
 	    return prestamoDao.rechazarPrestamo(idPrestamo);
 	}
-	
-	
 
 	@Override
 	public boolean AprobarPrestamo(int idPrestamo) {
@@ -200,13 +204,13 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	@Override
 	public ArrayList<Prestamo> ListarTodosLosPrestamos() {
-		  List<Prestamo> prestamos = prestamoDao.ObtenerTodosLosPrestamos();
+		List<Prestamo> prestamos = prestamoDao.ObtenerTodosLosPrestamos();
 
-	        if (prestamos == null || prestamos.isEmpty()) {
-	            throw new RuntimeException("No se encontraron prestamos.");
-	        }
+        if (prestamos == null || prestamos.isEmpty()) {
+            throw new RuntimeException("No se encontraron prestamos.");
+        }
 
-	        return (ArrayList<Prestamo>) prestamos;
+        return (ArrayList<Prestamo>) prestamos;
 	}
 
 
@@ -244,7 +248,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	
 	
 	public List<CuentaDTO> obtenerEstadosPendientes(int idCliente) {  
-	    // Llamar al método original para obtener todas las cuentas  
+	    // Llamar al mï¿½todo original para obtener todas las cuentas  
 	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
 	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
 
@@ -259,16 +263,16 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	        // Filtrar movimientos  
 	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	            // Aquí puedes agregar la lógica para determinar si el movimiento es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si el movimiento es vigente  
 	            // Por ejemplo, si el importe es mayor que cero  
 	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
 	                cuentaVigente.getMovimientos().add(movimiento);  
 	            }  
 	        }  
 
-	        // Filtrar préstamos  
+	        // Filtrar prï¿½stamos  
 	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	            // Aquí puedes agregar la lógica para determinar si el préstamo es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si el prï¿½stamo es vigente  
 	            // Por ejemplo, si el estado es "activo"  
 	            if ("pendiente".equalsIgnoreCase(prestamo.getEstado())) {  
 	                cuentaVigente.getPrestamos().add(prestamo);  
@@ -277,14 +281,14 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	        // Filtrar cuotas  
 	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	            // Aquí puedes agregar la lógica para determinar si la cuota es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si la cuota es vigente  
 	            // Por ejemplo, si el estado de pago es "pendiente"  
 	            
 	                cuentaVigente.getCuotas().add(cuota);  
 	             
 	        }  
 
-	        // Solo agregar la cuenta si tiene movimientos, préstamos o cuotas vigentes  
+	        // Solo agregar la cuenta si tiene movimientos, prï¿½stamos o cuotas vigentes  
 	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
 	            !cuentaVigente.getPrestamos().isEmpty() ||   
 	            !cuentaVigente.getCuotas().isEmpty()) {  
@@ -297,7 +301,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	
 	
 	public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) {  
-	    // Llamar al método original para obtener todas las cuentas  
+	    // Llamar al mï¿½todo original para obtener todas las cuentas  
 	    List<CuentaDTO> cuentas = prestamoDao.obtenerDatosCliente(idCliente);  
 	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
 
@@ -312,16 +316,16 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	        // Filtrar movimientos  
 	        for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	            // Aquí puedes agregar la lógica para determinar si el movimiento es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si el movimiento es vigente  
 	            // Por ejemplo, si el importe es mayor que cero  
 	            if (movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
 	                cuentaVigente.getMovimientos().add(movimiento);  
 	            }  
 	        }  
 
-	        // Filtrar préstamos  
+	        // Filtrar prï¿½stamos  
 	        for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	            // Aquí puedes agregar la lógica para determinar si el préstamo es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si el prï¿½stamo es vigente  
 	            // Por ejemplo, si el estado es "activo"  
 	            if ("vigente".equalsIgnoreCase(prestamo.getEstado())) {  
 	                cuentaVigente.getPrestamos().add(prestamo);  
@@ -330,14 +334,14 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	        // Filtrar cuotas  
 	        for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	            // Aquí puedes agregar la lógica para determinar si la cuota es vigente  
+	            // Aquï¿½ puedes agregar la lï¿½gica para determinar si la cuota es vigente  
 	            // Por ejemplo, si el estado de pago es "pendiente"  
 	            
 	                cuentaVigente.getCuotas().add(cuota);  
 	             
 	        }  
 
-	        // Solo agregar la cuenta si tiene movimientos, préstamos o cuotas vigentes  
+	        // Solo agregar la cuenta si tiene movimientos, prï¿½stamos o cuotas vigentes  
 	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
 	            !cuentaVigente.getPrestamos().isEmpty() ||   
 	            !cuentaVigente.getCuotas().isEmpty()) {  

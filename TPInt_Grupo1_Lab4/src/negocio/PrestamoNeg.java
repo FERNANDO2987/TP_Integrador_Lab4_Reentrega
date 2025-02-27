@@ -23,7 +23,6 @@ public interface PrestamoNeg {
 	public boolean AprobarPrestamo(int idPrestamo, String observacion);
 	public boolean AgregarPrestamo(Prestamo prestamo);
 
-	
 	public ArrayList<Prestamo> ListarPrestamos();
 	 public Map<String, BigDecimal> ObtenerMontosPendientes();
 	 public boolean RechazarPrestamo(int idPrestamo);
