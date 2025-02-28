@@ -124,64 +124,68 @@ public class servletAgregarPrestamo extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			
+	    try {
+	        Cuenta cuenta = new Cuenta();
+	        Cliente cliente = new Cliente();
 
-			
-			Cuenta cuenta = new Cuenta();
-			Cliente cliente = new Cliente();
-			
-			cuenta.setNroCuenta( request.getParameter("cuentaDestino") != null && request.getParameter("cuentaDestino") != ""? Integer.parseInt(request.getParameter("cuentaDestino")) : -1);
-			cliente.setId(request.getParameter("usuarioID") != null && request.getParameter("usuarioID") != ""? Integer.parseInt(request.getParameter("usuarioID")) : -1);
-			String tipoPrestamo = request.getParameter("tipoPrestamo");
-			String imp = request.getParameter("monto");
-			String cuo = request.getParameter("cuotas");
-	        
-			imp = imp.trim();
-			cuo = cuo.trim();
-			
+	        // Validar y obtener parámetros
+	        String cuentaDestinoParam = request.getParameter("cuentaDestino");
+	        int nroCuenta = (cuentaDestinoParam != null && !cuentaDestinoParam.trim().isEmpty()) ? Integer.parseInt(cuentaDestinoParam) : -1;
+	        cuenta.setNroCuenta(nroCuenta);
 
-			// Validar campos obligatorios
-			if (imp == null || imp.isEmpty() || 
-				cuo == null || cuo.isEmpty() ||
-				tipoPrestamo == "" ||
-				cliente.getId() == -1 || cuenta.getNroCuenta() == -1)
-			{
-				request.setAttribute("errorMessage", "Todos los campos son obligatorios.");
-	            doGet(request, response); // Volver a cargar la página con el error
+	        String usuarioIDParam = request.getParameter("usuarioID");
+	        int usuarioID = (usuarioIDParam != null && !usuarioIDParam.trim().isEmpty()) ? Integer.parseInt(usuarioIDParam) : -1;
+	        cliente.setId(usuarioID);
+
+	        String tipoPrestamo = request.getParameter("tipoPrestamo");
+	        String imp = request.getParameter("monto");
+	        String cuo = request.getParameter("cuotas");
+
+	        // Validar campos obligatorios
+	        if (imp == null || imp.trim().isEmpty() || 
+	            cuo == null || cuo.trim().isEmpty() || 
+	            tipoPrestamo == null || tipoPrestamo.trim().isEmpty() || 
+	            cliente.getId() == -1 || cuenta.getNroCuenta() == -1) {
+	            request.setAttribute("errorMessage", "Todos los campos son obligatorios.");
+	            request.getRequestDispatcher("pagina.jsp").forward(request, response);
 	            return;
-			}
-
-			// convertir y llamar datos de session
-			int cuotas = Integer.parseInt(cuo);
-			BigDecimal importe = new BigDecimal(imp);
-			
-			
-			// Crear el prestamo
-			Prestamo p = new Prestamo();
-			p.setCliente(cliente);
-			p.setCuenta(cuenta);
-			p.setCuotas(cuotas);
-			p.setImporte(importe);
-			p.setObservaciones(tipoPrestamo);
-			
-	        // Insertar en la base de datos
-			boolean estado = neg.AgregarPrestamo(p); 
-
-
-	        // Definir mensajes de éxito/error
-	        if (estado) {
-	            request.setAttribute("successMessage", "Objeto agregado correctamente.");
-	        } else {
-	            request.setAttribute("errorMessage", "Error al agregar el objeto.");
 	        }
+
+	        // Convertir datos
+	        try {
+	            int cuotas = Integer.parseInt(cuo);
+	            BigDecimal importe = new BigDecimal(imp);
+
+	            // Crear el prestamo
+	            Prestamo p = new Prestamo();
+	            p.setCliente(cliente);
+	            p.setCuenta(cuenta);
+	            p.setCuotas(cuotas);
+	            p.setImporte(importe);
+	            p.setObservaciones(tipoPrestamo);
+
+	            // Insertar en la base de datos
+	            boolean estado = neg.AgregarPrestamo(p);
+
+	            // Definir mensajes de éxito/error
+	            if (estado) {
+	                request.setAttribute("successMessage", "Objeto agregado correctamente.");
+	            } else {
+	                request.setAttribute("errorMessage", "Error al agregar el objeto.");
+	            }
+	        } catch (NumberFormatException e) {
+	            request.setAttribute("errorMessage", "Formato de número incorrecto.");
+	        }
+
 	        // Volver a cargar la página con los mensajes
-	        doGet(request, response);
+	        request.getRequestDispatcher("SolicitarPrestamo.jsp").forward(request, response);
+
 	    } catch (Exception e) {
 	        request.setAttribute("errorMessage", "Error inesperado: " + e.getMessage());
 	        e.printStackTrace();
-	        doGet(request, response);
+	        request.getRequestDispatcher("pagina.jsp").forward(request, response);
 	    }
 	}
+
 
 }

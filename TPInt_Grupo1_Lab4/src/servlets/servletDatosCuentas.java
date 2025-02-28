@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Usuario;
-import entidadDTO.CuentaDTO;
+import entidadDTO.PrestamoDTO;
 import negocio.PrestamoNeg;
 import negocioImpl.PrestamoNegImpl;
 
@@ -22,8 +22,8 @@ public class servletDatosCuentas extends HttpServlet {
   
 	PrestamoNeg prestamoNeg = new PrestamoNegImpl();
 	
-	 private static final String MENSAJE_EXITO = "Cuenta Exitosa.";
-	    private static final String MENSAJE_ERROR = "Error al obtener cuentas.";
+	 private static final String MENSAJE_EXITO = "Prestamos Disponible.";
+	    private static final String MENSAJE_ERROR = "No hay prestamos disponibles.";
 	
     public servletDatosCuentas() {
         super();
@@ -43,30 +43,37 @@ public class servletDatosCuentas extends HttpServlet {
 	        
 	        try {
 	            // Obtener solo los préstamos del usuario autenticado
-	            List<CuentaDTO> cuentasPendientes = prestamoNeg.obtenerEstadosPendientes(idCliente);
-	            List<CuentaDTO> cuentasVigentes = prestamoNeg.obtenerEstadosVigentes(idCliente);
-	            List<CuentaDTO> datosClientes = prestamoNeg.ObtenerDatosCliente(idCliente);
+	           // List<CuentaDTO> cuentasPendientes = prestamoNeg.obtenerEstadosPendientes(idCliente);
+	            List<PrestamoDTO> prestamosAprobados = prestamoNeg.ListarPrestamosPorEstadosAprobados(idCliente);
+	            List<PrestamoDTO> prestamosPendientes = prestamoNeg.ListarPrestamosPorEstadosPendientes(idCliente);
+	            List<PrestamoDTO> datosPrestamos = prestamoNeg.ListarPrestamosPorCliente(idCliente);
 	            
 	            
-	            
-	            if (cuentasVigentes != null && !cuentasVigentes.isEmpty()) {
-	                request.setAttribute("cuentasVigentes", cuentasVigentes);
+	            if (prestamosAprobados != null && !prestamosAprobados.isEmpty()) {
+	                request.setAttribute("prestamosAprobados", prestamosAprobados);
+	                  
 	            } else {
-	                request.setAttribute("error", "No se encontraron cuentas.");
+	                request.setAttribute("error", "No se encontraron prestamos aprobados.");
+	           
+	                request.setAttribute("mensajeError", MENSAJE_EXITO); 
 	            }
 	            
-	            if (cuentasPendientes != null && !cuentasPendientes.isEmpty()) {
-	                request.setAttribute("cuentasPendientes", cuentasPendientes);
+	            if (prestamosPendientes != null && !prestamosPendientes.isEmpty()) {
+	                request.setAttribute("prestamosPendientes", prestamosPendientes);
+	                   
 	            } else {
-	                request.setAttribute("error", "No se encontraron cuentas.");
+	                request.setAttribute("error", "No se encontraron prestamos pendientes.");
+	                request.setAttribute("mensajeError", MENSAJE_EXITO);  
 	            }
 	           
 	        
 	            
-	            if (datosClientes != null && !datosClientes.isEmpty()) {
-	                request.setAttribute("datosClientes", datosClientes);
+	            if (datosPrestamos != null && !datosPrestamos.isEmpty()) {
+	                request.setAttribute("datosPrestamos", datosPrestamos);
+	            
 	            } else {
-	                request.setAttribute("error", "No se encontraron datos del Clientes.");
+	                request.setAttribute("error", "No se encontraron prestamos.");
+	                request.setAttribute("mensajeError", MENSAJE_EXITO);  
 	            }
 	           
 	            
@@ -77,6 +84,7 @@ public class servletDatosCuentas extends HttpServlet {
 	            e.printStackTrace();
 	            request.setAttribute("error", "Ocurrió un error al obtener las cuentas del cliente.");
 	            request.getRequestDispatcher("DatosCuentas.jsp").forward(request, response);
+	            request.setAttribute("mensajeError", MENSAJE_EXITO);
 	        }
 	}
 

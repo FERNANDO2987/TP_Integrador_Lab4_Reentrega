@@ -1,101 +1,113 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>  
-<%@ page import="entidad.Prestamo" %>  
-<%@ page import="java.util.List" %>  
-<%@ page import="entidad.ProvinciaConClientes" %>  
-<%@ page import="entidad.Usuario" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="entidad.Prestamo"%>
+<%@ page import="java.util.List"%>
+<%@ page import="entidad.ProvinciaConClientes"%>
+<%@ page import="entidad.Usuario"%>
 <%
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario == null) {
-            response.sendRedirect("Login.jsp");
-            return;
-        }
+	Usuario usuario = (Usuario) session.getAttribute("usuario");
+	if (usuario == null) {
+		response.sendRedirect("Login.jsp");
+		return;
+	}
 %>
-<!DOCTYPE html>  
-<html lang="es">  
-<head>  
-    <meta charset="ISO-8859-1">  
-    <title>Flujo de Dinero</title>  
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">  
-    <style>  
-        .chart-container {  
-            position: relative;  
-            margin-top: 20px;  
-        }  
-        .date-pick {  
-            display: flex;  
-            align-items: center;  
-            gap: 10px;  
-        }  
-        .button {  
-            background-color: #eb3b1f;  
-            color: white;  
-            padding: 0.5rem 1rem;  
-            border: none;  
-            border-radius: 0.375rem;  
-            cursor: pointer;  
-            transition: background-color 0.3s;  
-        }  
-        .button:hover {  
-            background-color: #c62c1a;  
-        }  
-    </style>  
-</head>  
-<body class="bg-gray-100 flex flex-col p-6">  
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="ISO-8859-1">
+<title>Flujo de Dinero</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+<style>
+.chart-container {
+	position: relative;
+	margin-top: 20px;
+}
 
-    <div class="flex w-full max-w-screen-xl mx-auto">  
-        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl">  
-        <h2 class="text-2xl font-bold mb-4 text-center">Flujo de Dinero</h2>  
-        
-        <form action="servletGraficos" method="GET" class="flex justify-between items-center mb-4">  
-            <div class="flex flex-col">  
-                <label class="block text-sm font-semibold">Desde:</label>  
-                <input type="date" name="fechaDesde" required class="border p-2 rounded">  
-            </div>  
-            <div class="flex flex-col">  
-                <label class="block text-sm font-semibold">Hasta:</label>  
-                <input type="date" name="fechaHasta" required class="border p-2 rounded">  
-            </div>  
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">  
-                Aplicar filtro  
-            </button>  
-        </form>  
-            <div class="chart-container">  
-                <canvas id="prestamosChart"></canvas>  
-            </div>  
-        </div>  
+.date-pick {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 
-        <div class="bg-white p-6 rounded-lg shadow-md w-1/3 ml-6">  
-            <h2 class="text-2xl font-bold mb-4 text-center">Clientes por provincia</h2>  
-            <div class="chart-container">  
-                <canvas id="clientesPorProvinciaChart"></canvas>  
-            </div>  
-        </div>  
-    </div>  
+.button {
+	background-color: #eb3b1f;
+	color: white;
+	padding: 0.5rem 1rem;
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
 
-<script>  
+.button:hover {
+	background-color: #c62c1a;
+}
+</style>
+</head>
+<body class="bg-gray-100 flex flex-col p-6">
+
+	<div class="flex w-full max-w-screen-xl mx-auto">
+		<div class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl">
+			<h2 class="text-2xl font-bold mb-4 text-center">Flujo de Dinero</h2>
+
+			<form action="servletGraficos" method="GET"
+				class="flex justify-between items-center mb-4">
+				<div class="flex flex-col">
+					<label class="block text-sm font-semibold">Desde:</label> <input
+						type="date" name="fechaDesde" required class="border p-2 rounded">
+				</div>
+				<div class="flex flex-col">
+					<label class="block text-sm font-semibold">Hasta:</label> <input
+						type="date" name="fechaHasta" required class="border p-2 rounded">
+				</div>
+				<button type="submit"
+					class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+					Aplicar filtro</button>
+			</form>
+			<div class="chart-container">
+				<canvas id="prestamosChart"></canvas>
+			</div>
+		</div>
+
+		<div class="bg-white p-6 rounded-lg shadow-md w-1/3 ml-6">
+			<h2 class="text-2xl font-bold mb-4 text-center">Clientes por
+				provincia</h2>
+			<div class="chart-container">
+				<canvas id="clientesPorProvinciaChart"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<script>  
     // Obtener datos de préstamos desde la lista enviada por el servlet  
     var prestamos = [];  
-    <% if (request.getAttribute("prestamos") != null) {  
-        List<Prestamo> prestamosList = (List<Prestamo>) request.getAttribute("prestamos");  
-        for (Prestamo p : prestamosList) { %>  
+    <%if (request.getAttribute("prestamos") != null) {
+				List<Prestamo> prestamosList = (List<Prestamo>) request.getAttribute("prestamos");
+				for (Prestamo p : prestamosList) {%>  
             prestamos.push({  
-                tipoMovimiento: "<%= p.getObservaciones() %>",  
-                cantidad: <%= p.getImporte() %>  
+                tipoMovimiento: "<%=p.getObservaciones()%>",  
+                cantidad: <%=p.getImporte()%>  
             });  
-    <% }} %>  
+    <%}
+			}%>  
 
     // Obtener datos de provincias con clientes  
     var provinciasData = [];  
-    <% if (request.getAttribute("provincias") != null) {  
-        List<ProvinciaConClientes> provinciasList = (List<ProvinciaConClientes>) request.getAttribute("provincias");  
-        for (ProvinciaConClientes provincia : provinciasList) { %>  
+    <%if (request.getAttribute("provincias") != null) {
+				List<ProvinciaConClientes> provinciasList = (List<ProvinciaConClientes>) request
+						.getAttribute("provincias");
+				for (ProvinciaConClientes provincia : provinciasList) {%>  
             provinciasData.push({  
-                nombre: "<%= provincia.getProvincia().getNombre() %>",  
-                cantidad: <%= provincia.getCantidadClientes() %>  
+                nombre: "<%=provincia.getProvincia().getNombre()%>",  
+                cantidad: <%=provincia.getCantidadClientes()%>  
             });  
-    <% }} %>  
+    <%}
+			}%>  
 
     // Definir colores específicos para cada provincia  
     const coloresProvincias = [  
@@ -166,7 +178,7 @@
             responsive: true  
         }  
     });  
-</script>  
+</script>
 
-</body>  
+</body>
 </html>

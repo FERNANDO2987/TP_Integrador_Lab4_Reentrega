@@ -42,27 +42,18 @@ public class servletLogin extends HttpServlet {
 	        String usuario = request.getParameter("usuario");  
 	        String contrasenia = request.getParameter("contrasenia");  
 
-	        if (usuario != null && contrasenia != null) {  
+	        if (usuario != null && !usuario.isEmpty() && contrasenia != null && !contrasenia.isEmpty()) {  
 	        
 	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
 
-	            if (usuarioSesion != null) {  // Asegï¿½rate de que la sesiï¿½n sea vï¿½lida  
+	            if (usuarioSesion != null) {  // Asegúrate de que la sesión sea válida  
 	                HttpSession session = request.getSession();  
 	                session.setAttribute("usuario", usuarioSesion);  
 
 	                // Redirige dependiendo del tipo de usuario  
-	                if (usuarioSesion.isAdmin()== true) {  
-	                    RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");  
-	                    rd.forward(request, response);  
-	                } 
-	                
-	                // Redirige dependiendo del tipo de usuario  
-	                if (usuarioSesion.isAdmin()== false) {  
-	                    RequestDispatcher rd = request.getRequestDispatcher("HomeCliente.jsp");  
-	                    rd.forward(request, response);  
-	                } 
-	                
-	                
+	                String destino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
+	                RequestDispatcher rd = request.getRequestDispatcher(destino);  
+	                rd.forward(request, response);  
 	            } else {  
 	                // Si el usuario no existe o las credenciales son incorrectas  
 	                response.sendRedirect("Login.jsp?error=true");  
@@ -72,5 +63,6 @@ public class servletLogin extends HttpServlet {
 	        }  
 	    }  
 	}
+
 
 }

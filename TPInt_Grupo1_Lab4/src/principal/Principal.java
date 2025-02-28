@@ -1,32 +1,57 @@
 package principal;
 
-import negocioImpl.PrestamoNegImpl;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-import entidad.Cliente;
-import entidad.Cuenta;
-import entidad.Prestamo;
+import datos.PrestamoDao;
+import datosImpl.PrestamoDaoImpl;
+
+
+
+import entidadDTO.PrestamoDTO;
+
+
+
+
 
 
 public class Principal {
 
     public static void main(String[] args) {
-    	PrestamoNegImpl negocio = new PrestamoNegImpl();
-    	Prestamo p = new Prestamo();
-    	Cliente cliente = new Cliente();
-    	Cuenta cuenta = new Cuenta();
-    	BigDecimal importe = BigDecimal.valueOf(666);
     	
-    	cliente.setId(2);
-    	cuenta.setNroCuenta(222222);
-    	p.setCliente(cliente);
-    	p.setCuenta(cuenta);
-    	p.setImporte(importe);
-    	p.setCuotas(6);
-    	p.setObservaciones("Prestamo personal");
     	
-    	negocio.AgregarPrestamo(p);
+    	
+    	
+         PrestamoDao prestamoDao = new PrestamoDaoImpl();
+
+         
+         int idCliente = 78;
+          
+       
+
+     
+         // Prueba del método listarPrestamosPorCliente con un ID de cliente
+         int clienteId = 78; // Cambia esto por un ID válido en tu base de datos
+         System.out.println("\n=== LISTADO DE PRÉSTAMOS POR CLIENTE ID: " + clienteId + " ===");
+         List<PrestamoDTO> prestamosCliente = prestamoDao.listarPrestamosPorCliente(clienteId);
+         for (PrestamoDTO p : prestamosCliente) {
+             System.out.println("ID Préstamo: " + p.getId());
+             System.out.println("Observaciones: " + p.getObservaciones());
+             System.out.println("Fecha Solicitud: " + p.getFechaAlta());
+             System.out.println("Importe: " + p.getImporte());
+             System.out.println("Cuotas: " + p.getCuotas());
+             System.out.println("Valor de Cuota: " + p.getValorCuotas());
+             System.out.println("Estado: " + p.getEstado());
+             System.out.println("Cuenta CBU: " + p.getCuenta().getCbu());
+             System.out.println("Saldo: " + p.getCuenta().getSaldo());
+             System.out.println("Tipo de Cuenta: " + p.getCuenta().getTipoCuenta().getDescripcion());
+          
+             System.out.println("-----------------------------------");
+         }
+        
+       
+
+    	
     }
     
 }

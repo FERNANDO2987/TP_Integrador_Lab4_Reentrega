@@ -3,6 +3,7 @@ package negocioImpl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -11,10 +12,9 @@ import java.util.Set;
 
 import datos.PrestamoDao;
 import datosImpl.PrestamoDaoImpl;
+
 import entidad.Prestamo;
-import entidadDTO.CuentaDTO;
-import entidadDTO.CuotaDTO;
-import entidadDTO.MovimientoDTO;
+
 import entidadDTO.PrestamoDTO;
 import negocio.PrestamoNeg;
 
@@ -102,35 +102,55 @@ public class PrestamoNegImpl implements PrestamoNeg{
 		return prestamoDao.AprobarPrestamo(idPrestamo, observacion);
 	}
 
+	
+
 	@Override
 	public boolean AgregarPrestamo(Prestamo prestamo) {
-		if (prestamo.getCliente() == null || prestamo.getCuenta() == null) {
-		    System.err.println("El cliente o la cuenta no estï¿½n definidos");
-		    return false;
-		}
-		if (!(prestamo.getCuotas() > 0)) {
-		    System.err.println("Numero de cuotas no valido");
-		    return false;
-		}
-		if (!(prestamo.getImporte().compareTo(BigDecimal.ZERO) > 0)) {
-			System.err.println("Importe no valido");
-		    return false;
-		}
-		if (prestamo.getObservaciones() == "")
-		{
-			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
-			return false;
-		}
-		if (prestamo.getObservaciones() != "Adelanto de sueldo"	&&
-			prestamo.getObservaciones() != "Prestamo personal"	&&
-			prestamo.getObservaciones() != "Prestamo prendario"	&&
-			prestamo.getObservaciones() != "Prestamo hipotecario")
-		{
-			System.err.println("Tipo de prestamo vacio o no valido: " + prestamo.getObservaciones());
-			return false;
-		}
-		
-		return prestamoDao.AgregarPrestamo(prestamo);
+	    if (prestamo == null) {
+	        System.err.println("El objeto prestamo es null");
+	        return false;
+	    }
+
+	    if (prestamo.getCliente() == null || prestamo.getCuenta() == null) {
+	        System.err.println("El cliente o la cuenta no están definidos");
+	        return false;
+	    }
+
+	    Integer cuotas = prestamo.getCuotas(); // Almacena el valor en una variable auxiliar
+
+	    if (cuotas == null || cuotas <= 0) {
+	        System.err.println("Número de cuotas no válido");
+	        return false;
+	    }
+
+	    if (prestamo.getImporte() == null || prestamo.getImporte().compareTo(BigDecimal.ZERO) <= 0) {
+	        System.err.println("Importe no válido");
+	        return false;
+	    }
+
+	    if (prestamo.getObservaciones() == null || prestamo.getObservaciones().isEmpty()) {
+	        System.err.println("Tipo de préstamo vacío o no válido");
+	        return false;
+	    }
+
+	    Set<String> tiposValidos = new HashSet<>(Arrays.asList(
+	    	    "Adelanto de sueldo",
+	    	    "Prestamo personal",
+	    	    "Prestamo prendario",
+	    	    "Prestamo hipotecario"
+	    	));
+
+	    if (!tiposValidos.contains(prestamo.getObservaciones())) {
+	        System.err.println("Tipo de préstamo inválido: " + prestamo.getObservaciones());
+	        return false;
+	    }
+
+	    if (prestamoDao == null) {
+	        System.err.println("prestamoDao no ha sido inicializado");
+	        return false;
+	    }
+
+	    return prestamoDao.AgregarPrestamo(prestamo);
 	}
 
 
@@ -172,11 +192,11 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	    // Validar si el prï¿½stamo existe
 	    if (prestamo == null) {
-	        throw new RuntimeException("No se encontrï¿½ el prï¿½stamo con ID: " + idPrestamo);
+	        throw new RuntimeException("No se encontro el prestamo con ID: " + idPrestamo);
 	    }
 
 	    if (!"pendiente".equalsIgnoreCase(prestamo.getEstado())) {
-	        throw new RuntimeException("El prï¿½stamo no estï¿½ en estado 'pendiente'. No se puede aprobar.");
+	        throw new RuntimeException("El prestamo no esta en estado 'pendiente'. No se puede aprobar.");
 	    }
 	    return prestamoDao.rechazarPrestamo(idPrestamo);
 	}
@@ -194,11 +214,11 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 	    // Validar si el prï¿½stamo existe
 	    if (prestamo == null) {
-	        throw new RuntimeException("No se encontrï¿½ el prï¿½stamo con ID: " + idPrestamo);
+	        throw new RuntimeException("No se encontro el prestamo con ID: " + idPrestamo);
 	    }
 
 	    if (!"pendiente".equalsIgnoreCase(prestamo.getEstado())) {
-	        throw new RuntimeException("El prï¿½stamo no estï¿½ en estado 'pendiente'. No se puede aprobar.");
+	        throw new RuntimeException("El prestamo no esta en estado 'pendiente'. No se puede aprobar.");
 	    }
 	    return prestamoDao.aprobarPrestamo(idPrestamo);
 	}
@@ -236,149 +256,8 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 
 
-	@Override
-	public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente) {
-		 List<CuentaDTO> datos = prestamoDao.obtenerInformacionCuenta(idCliente);
-
-	        if (datos == null || datos.isEmpty()) {
-	            throw new RuntimeException("No se encontraron datos de la cuenta.");
-	        }
-
-	        return (ArrayList<CuentaDTO>) datos;
-	}
-
 	
-	public List<CuentaDTO> obtenerEstadosPendientes(int idCliente) {  
-	    // Llamar al mï¿½todo original para obtener todas las cuentas  
-	    List<CuentaDTO> cuentas = prestamoDao.obtenerInformacionCuenta(idCliente);  
-	    
-	    // Asegurarse de que cuentas no sea null  
-	    if (cuentas == null) {  
-	        cuentas = new ArrayList<>(); // Inicializa como lista vacï¿½a si es null  
-	    }  
-	    
-	    List<CuentaDTO> cuentasPendientes = new ArrayList<>();  
 
-	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
-	    for (CuentaDTO cuenta : cuentas) {  
-	        if (cuenta == null) continue; // Ignora cuentas nulas  
-
-	        CuentaDTO cuentaPendiente = new CuentaDTO();  
-	        cuentaPendiente.setNroCuenta(cuenta.getNroCuenta());  
-	        cuentaPendiente.setCbu(cuenta.getCbu());  
-	        cuentaPendiente.setSaldo(cuenta.getSaldo());  
-	        cuentaPendiente.setCliente(cuenta.getCliente());  
-	        cuentaPendiente.setTipoCuenta(cuenta.getTipoCuenta());  
-
-	        // Inicializar listas si no lo estï¿½n ya  
-	        cuentaPendiente.setMovimientos(new ArrayList<>());  
-	        cuentaPendiente.setPrestamos(new ArrayList<>());  
-	        cuentaPendiente.setCuotas(new ArrayList<>());  
-
-	        // Filtrar movimientos  
-	        if (cuenta.getMovimientos() != null) {  
-	            for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	                if (movimiento != null && movimiento.getImporte() != null && movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
-	                	cuentaPendiente.getMovimientos().add(movimiento);  
-	                }  
-	            }  
-	        }  
-
-	        // Filtrar prï¿½stamos  
-	        if (cuenta.getPrestamos() != null) {  
-	            for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	                if (prestamo != null && "pendiente".equalsIgnoreCase(prestamo.getEstado())) {  
-	                	cuentaPendiente.getPrestamos().add(prestamo);  
-	                }  
-	            }  
-	        }  
-
-	        // Filtrar cuotas  
-	        if (cuenta.getCuotas() != null) {  
-	            for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	                // Verificar si el estado de pago es pendiente (true)  
-	                if (cuota != null && cuota.isEstadoPago()) {  
-	                	cuentaPendiente.getCuotas().add(cuota);  
-	                }  
-	            }  
-	        }  
-
-	        // Solo agregar la cuenta si tiene movimientos, prï¿½stamos o cuotas pendiente  
-	        if (!cuentaPendiente.getMovimientos().isEmpty() ||   
-	            !cuentaPendiente.getPrestamos().isEmpty() ||   
-	            !cuentaPendiente.getCuotas().isEmpty()) {  
-	        	cuentasPendientes.add(cuentaPendiente);  
-	        }  
-	    }  
-
-	    return cuentasPendientes;  
-	}
-	
-	public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) {  
-	    // Llamar al mï¿½todo original para obtener todas las cuentas  
-	    List<CuentaDTO> cuentas = prestamoDao.obtenerInformacionCuenta(idCliente);  
-	    
-	    // Asegurarse de que cuentas no sea null  
-	    if (cuentas == null) {  
-	        cuentas = new ArrayList<>(); // Inicializa como lista vacï¿½a si es null  
-	    }  
-	    
-	    List<CuentaDTO> cuentasVigentes = new ArrayList<>();  
-
-	    // Filtrar cuentas para obtener solo las que tienen estados vigentes  
-	    for (CuentaDTO cuenta : cuentas) {  
-	        if (cuenta == null) continue; // Ignora cuentas nulas  
-
-	        CuentaDTO cuentaVigente = new CuentaDTO();  
-	        cuentaVigente.setNroCuenta(cuenta.getNroCuenta());  
-	        cuentaVigente.setCbu(cuenta.getCbu());  
-	        cuentaVigente.setSaldo(cuenta.getSaldo());  
-	        cuentaVigente.setCliente(cuenta.getCliente());  
-	        cuentaVigente.setTipoCuenta(cuenta.getTipoCuenta());  
-
-	        // Inicializar listas si no lo estï¿½n ya  
-	        cuentaVigente.setMovimientos(new ArrayList<>());  
-	        cuentaVigente.setPrestamos(new ArrayList<>());  
-	        cuentaVigente.setCuotas(new ArrayList<>());  
-
-	        // Filtrar movimientos  
-	        if (cuenta.getMovimientos() != null) {  
-	            for (MovimientoDTO movimiento : cuenta.getMovimientos()) {  
-	                if (movimiento != null && movimiento.getImporte() != null && movimiento.getImporte().compareTo(BigDecimal.ZERO) > 0) {  
-	                    cuentaVigente.getMovimientos().add(movimiento);  
-	                }  
-	            }  
-	        }  
-
-	        // Filtrar prï¿½stamos  
-	        if (cuenta.getPrestamos() != null) {  
-	            for (PrestamoDTO prestamo : cuenta.getPrestamos()) {  
-	                if (prestamo != null && "aprobado".equalsIgnoreCase(prestamo.getEstado())) {  
-	                    cuentaVigente.getPrestamos().add(prestamo);  
-	                }  
-	            }  
-	        }  
-
-	        // Filtrar cuotas  
-	        if (cuenta.getCuotas() != null) {  
-	            for (CuotaDTO cuota : cuenta.getCuotas()) {  
-	                // Verificar si el estado de pago es pendiente (true)  
-	                if (cuota != null && cuota.isEstadoPago()) {  
-	                    cuentaVigente.getCuotas().add(cuota);  
-	                }  
-	            }  
-	        }  
-
-	        // Solo agregar la cuenta si tiene movimientos, prï¿½stamos o cuotas vigentes  
-	        if (!cuentaVigente.getMovimientos().isEmpty() ||   
-	            !cuentaVigente.getPrestamos().isEmpty() ||   
-	            !cuentaVigente.getCuotas().isEmpty()) {  
-	            cuentasVigentes.add(cuentaVigente);  
-	        }  
-	    }  
-
-	    return cuentasVigentes;  
-	}
 
 
 
@@ -387,13 +266,68 @@ public class PrestamoNegImpl implements PrestamoNeg{
 	    Prestamo prestamo = prestamoDao.obtenerPrestamoPorId(idPrestamo);
 
 	    if (prestamo == null) {
-	        throw new RuntimeException("No se encontraron prï¿½stamos con ID: " + idPrestamo);
+	        throw new RuntimeException("No se encontraron prestamos con ID: " + idPrestamo);
 	    }
 
 	    return prestamo;
 	}
 
 
+
+
+	@Override
+	public List<PrestamoDTO> ListarPrestamosPorCliente(int clienteId) {
+	    List<PrestamoDTO> prestamos = prestamoDao.listarPrestamosPorCliente(clienteId);
+
+	    if (prestamos == null || prestamos.isEmpty()) {
+	        return new ArrayList<>(); // Retorna una lista vacía
+	    }
+
+	    return prestamos; // Retorna los préstamos encontrados
+	}
+
+
+
+
+
+	@Override
+	public List<PrestamoDTO> ListarPrestamosPorEstadosPendientes(int clienteId) {
+				
+				List<PrestamoDTO> prestamos = prestamoDao.listarPrestamosPorEstadosPendientes(clienteId);
+
+		        if (prestamos == null || prestamos.isEmpty()) {
+		            throw new RuntimeException("No se encontraron prestamos pendientes.");
+		        }
+
+		        return (ArrayList<PrestamoDTO>) prestamos;
+				
+	}
+
+
+
+
+	@Override
+	public List<PrestamoDTO> ListarPrestamosPorEstadosAprobados(int clienteId) {
+		List<PrestamoDTO> prestamos = prestamoDao.listarPrestamosPorEstadosAprobados(clienteId);
+		if(prestamos == null || prestamos.isEmpty())
+		{
+			System.err.println("No se encontraron prestamos pendientes");
+			return new ArrayList<>();
+		}
+		System.out.println("Prestamos encontrados: " + prestamos.size());
+		return new ArrayList<>(prestamos);
+	}
+
+
+
+	@Override
+	public String PagarCuota(int idPrestamo) {
+	    if (idPrestamo <= 0) {
+	        System.err.println("La cuota no se puede pagar.");
+	        return "ID de préstamo no válido.";
+	    }
+	    return prestamoDao.pagarCuota(idPrestamo);
+	}
 
 
 

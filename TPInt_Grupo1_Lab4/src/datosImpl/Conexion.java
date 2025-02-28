@@ -21,7 +21,7 @@ public class Conexion {
 	{
 		try
 		{
-			//Class.forName("com.mysql.jdbc.jc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(url, user, pass);
 		}
 		catch(Exception e)

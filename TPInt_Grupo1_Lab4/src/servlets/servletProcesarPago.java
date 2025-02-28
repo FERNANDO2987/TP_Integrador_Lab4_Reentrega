@@ -7,16 +7,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class servletProcesarPago
- */
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
+
+
 @WebServlet("/servletProcesarPago")
 public class servletProcesarPago extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+  
+	PrestamoNeg prestamoNeg = new PrestamoNegImpl();
+	
+	 private static final String MENSAJE_EXITO = "La cuota fue pagada con exito";
+	private static final String MENSAJE_ERROR = "Error al pagar la cuota";
+	
     public servletProcesarPago() {
         super();
         // TODO Auto-generated constructor stub
@@ -30,39 +34,44 @@ public class servletProcesarPago extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		  try {
-	            // Obtener parámetros enviados desde el formulario
-	            String idPrestamoStr = request.getParameter("idPrestamo");
-	            String nroCuentaStr = request.getParameter("nroCuenta");
+	    String idParam = request.getParameter("id");
+	    if (idParam != null && !idParam.isEmpty()) {
+	        try {
+	            int idPrestamo = Integer.parseInt(idParam);
 
-	            // Validar que los parámetros no sean nulos o vacíos
-	            if (idPrestamoStr == null || nroCuentaStr == null || idPrestamoStr.isEmpty() || nroCuentaStr.isEmpty()) {
-	                request.setAttribute("error", "Debe seleccionar una cuenta.");
-	                request.getRequestDispatcher("pagarPrestamo.jsp").forward(request, response);
-	                return;
-	            }
+	            // Llamada al método que paga la cuota y recibe un mensaje
+	            String mensaje = prestamoNeg.PagarCuota(idPrestamo);
 
-	            // Convertir valores a tipos adecuados
-	            int idPrestamo = Integer.parseInt(idPrestamoStr);
-	            int nroCuenta = Integer.parseInt(nroCuentaStr);
-
-	            // Aquí iría la lógica de negocio para procesar el pago del préstamo
-	            boolean pagoExitoso = true;
-
-	            if (pagoExitoso) {
-	                response.sendRedirect("confirmacion.jsp");
+	            if (mensaje != null && !mensaje.isEmpty()) {
+	                // Si el mensaje indica éxito
+	                if (mensaje.contains("exito")) { // O cualquier lógica de éxito que definas en el mensaje
+	                    request.setAttribute("mensajeExito", MENSAJE_EXITO);  
+	                } else {
+	                    // Si el mensaje indica algún error
+	                    request.setAttribute("mensajeError", mensaje);  
+	                }
 	            } else {
-	                request.setAttribute("error", "No se pudo procesar el pago.");
-	                request.getRequestDispatcher("pagarPrestamo.jsp").forward(request, response);
+	                // En caso de que no se reciba un mensaje
+	                request.setAttribute("mensajeError", "Error desconocido.");
 	            }
-	        } catch (NumberFormatException e) {
-	            request.setAttribute("error", "Datos inválidos.");
-	            request.getRequestDispatcher("pagarPrestamo.jsp").forward(request, response);
+
+	        } catch (Exception e) {
+	            // Captura cualquier excepción y establece un mensaje de error general
+	            request.getSession().setAttribute("mensajeError", "Error inesperado: " + e.getMessage());
+	            e.printStackTrace(); // Para depuración
 	        }
+	    } else {
+	        request.getSession().setAttribute("mensajeError", "No se proporcionó un ID de préstamo.");
+	    }
+
+	    // Redirige al servlet que lista los clientes
+	    request.getRequestDispatcher("PagarPrestamo.jsp").forward(request, response);
 	}
 
-}
+	
+	
+	}
+
+

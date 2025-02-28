@@ -10,9 +10,10 @@ import java.time.LocalDate;
 import java.util.Map;
 
 
-import entidad.Cuenta;
+
 import entidad.Prestamo;
-import entidadDTO.CuentaDTO;
+import entidadDTO.PrestamoDTO;
+
 
 public interface PrestamoDao {
 
@@ -29,10 +30,10 @@ public interface PrestamoDao {
 	 public boolean aprobarPrestamo(int idPrestamo);
 	 public List<Prestamo> ObtenerTodosLosPrestamos();
 	 public List<Prestamo> obtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
-	 public List<CuentaDTO> obtenerInformacionCuenta(int idCliente);
 	 public Prestamo obtenerPrestamoPorId(int idPrestamo);
-    public boolean procesarPago(int idPrestamo, int nroCuenta);
-	
-
+	 public String pagarCuota(int idPrestamo);
+    public List<PrestamoDTO> listarPrestamosPorCliente(int clienteId);
+    public List<PrestamoDTO> listarPrestamosPorEstadosPendientes(int clienteId);
+    public List<PrestamoDTO> listarPrestamosPorEstadosAprobados(int clienteId);
 
 }
