@@ -180,6 +180,10 @@ html, body {
 
 
 
+
+    <!-- Barra lateral -->
+
+
     <!-- Contenido principal -->
     <div class="content" id="contenidoPrincipal">
         <h5>Bienvenido, <%= nombreUsuario %></h5>
@@ -206,6 +210,9 @@ html, body {
 				onclick="cargarPagina('cuentasAsociadas')">Mis Cuentas</a></li>
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
 				onclick="cargarPagina('transferencia')">Transferir</a></li>
+
+
+
 
 		</ul>
 	</div>
