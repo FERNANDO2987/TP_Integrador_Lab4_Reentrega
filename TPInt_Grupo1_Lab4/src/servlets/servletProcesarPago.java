@@ -68,7 +68,7 @@ public class servletProcesarPago extends HttpServlet {
 	    }
 
 	    //request.getRequestDispatcher("DatosCuentas.jsp").forward(request, response);
-	    request.getRequestDispatcher("servletDatosCuentas").forward(request, response);
+	    request.getRequestDispatcher("PagarPrestamo.jsp").forward(request, response);
 	}
 
 	

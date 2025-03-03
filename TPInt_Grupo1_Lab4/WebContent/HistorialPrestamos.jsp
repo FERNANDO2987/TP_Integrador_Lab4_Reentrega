@@ -219,6 +219,20 @@
 					<%
 						}
 					%>
+					
+					<%
+			} 
+    
+			}else {
+		%>
+		<div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"
+			role="alert">
+			<i class="fas fa-info-circle"></i> No se encontraron historial de
+			prestamos.
+		</div>
+		<%
+			}
+		%>
 				</tbody>
 			</table>
 		</div>
@@ -230,17 +244,7 @@
 			<button onclick="nextPage()" id="btnNext"
 				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Siguiente</button>
 		</div>
-		<%
-			} else {
-		%>
-		<div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"
-			role="alert">
-			<i class="fas fa-info-circle"></i> No se encontraron historial de
-			prestamos.
-		</div>
-		<%
-			}
-		%>
+		
 
 		<br> <br>
 
@@ -300,59 +304,6 @@ window.onload = function() {
 };  
 </script>
 
-	<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const prestamos = <%=prestamos != null ? prestamos.size() : 0%>;
-
-    if (prestamos > 0) {
-        // Obtener los datos desde la tabla
-        let estados = { "aprobado": 0, "finalizado": 0, "rechazado": 0, "pendiente": 0 };
-        
-        <%for (Prestamo prestamo : prestamos) {%>
-            estados["<%=prestamo.getEstado()%>
-		"]++;
-	<%}%>
-		// Configuración del gráfico
-				const ctx = document.getElementById("prestamosChart")
-						.getContext("2d");
-				new Chart(ctx, {
-					type : "bar",
-					data : {
-						labels : Object.keys(estados),
-						datasets : [ {
-							label : "Cantidad de Préstamos",
-							data : Object.values(estados),
-							backgroundColor : [ "#3B82F6", "#10B981",
-									"#EF4444", "#F59E0B" ],
-							borderColor : [ "#1E40AF", "#047857", "#B91C1C",
-									"#B45309" ],
-							borderWidth : 1
-						} ]
-					},
-					options : {
-						responsive : true,
-						maintainAspectRatio : false,
-						plugins : {
-							legend : {
-								display : false
-							},
-							tooltip : {
-								enabled : true
-							}
-						},
-						scales : {
-							y : {
-								beginAtZero : true,
-								ticks : {
-									stepSize : 1
-								}
-							}
-						}
-					}
-				});
-			}
-		});
-	</script>
 
 	<script>
 		const rowsPerPage = 5;
