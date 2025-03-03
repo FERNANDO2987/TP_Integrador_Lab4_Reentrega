@@ -189,7 +189,6 @@
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('pagarPrestamo')">Pagar Prestamo</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('datosPersonales')">Datos Personales</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('cuentasAsociadas')">Cuentas Asociadas</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferencia')">Transferir</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('misCuentas')">Mis Cuentas</a></li>
             
