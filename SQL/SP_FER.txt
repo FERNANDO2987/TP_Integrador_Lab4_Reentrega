@@ -1,0 +1,826 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarOModifcarCliente`(  
+    IN p_id_cliente INT,        
+    IN p_dni VARCHAR(255),  
+    IN p_cuil VARCHAR(255),  
+    IN p_nombre VARCHAR(255),  
+    IN p_apellido VARCHAR(255),  
+    IN p_sexo VARCHAR(255),  
+    IN p_id_pais INT,  
+    IN p_fecha_nacimiento DATE,  
+    IN p_direccion VARCHAR(255),  
+    IN p_id_localidad INT,  
+    IN p_id_provincia INT,  
+    IN p_correo VARCHAR(255),  
+    IN p_telefono VARCHAR(255),  
+    OUT p_id_generado INT  -- Salida para devolver el ID  
+)
+BEGIN  
+    DECLARE v_cliente_id INT DEFAULT NULL;  
+
+    -- Verificar si ya existe un cliente con el mismo DNI y CUIL
+    SELECT id INTO v_cliente_id   
+    FROM clientes   
+    WHERE dni = p_dni AND cuil = p_cuil  
+    LIMIT 1;  
+
+    IF v_cliente_id IS NOT NULL THEN  
+        -- Si existe un cliente con el mismo DNI y CUIL, no se debe insertar ni actualizar
+        SET p_id_generado = NULL;  -- Indica que no se insertó ni actualizó  
+    ELSE  
+        -- Si no existe un cliente con el mismo DNI y CUIL, procedemos a insertar el nuevo cliente
+        INSERT INTO clientes (dni, cuil, nombre, apellido, sexo, id_pais, fecha_nacimiento, direccion, id_localidad, id_provincia, correo, telefono)  
+        VALUES (p_dni, p_cuil, p_nombre, p_apellido, p_sexo, p_id_pais, p_fecha_nacimiento, p_direccion, p_id_localidad, p_id_provincia, p_correo, p_telefono);  
+
+        -- Obtener el ID del cliente insertado
+        SET v_cliente_id = LAST_INSERT_ID();  
+        SET p_id_generado = v_cliente_id;  
+    END IF;  
+
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AprobarPrestamo`(
+    IN p_id INT,
+    OUT p_result INT
+)
+BEGIN
+    DECLARE v_importe DECIMAL(10,2);
+    DECLARE v_nro_cuenta INT;
+    DECLARE v_estado_prestamo VARCHAR(255); 
+    DECLARE v_cuotas INT;
+    DECLARE v_valor_cuotas DECIMAL(10,2);
+    DECLARE contador INT;
+
+    -- Manejo de errores
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK; 
+        SET p_result = 0;
+    END;
+    
+    START TRANSACTION;
+    
+    -- Obtener datos del préstamo
+    SELECT 
+        nro_cuenta, 
+        cuotas, 
+        valor_cuotas, 
+        estado, 
+        importe
+    INTO 
+        v_nro_cuenta, 
+        v_cuotas, 
+        v_valor_cuotas, 
+        v_estado_prestamo, 
+        v_importe
+    FROM prestamos
+    WHERE id = p_id;
+
+    -- Validar estado del préstamo
+     -- Validar estado del préstamo
+    IF v_estado_prestamo IS NULL OR v_estado_prestamo <> 'pendiente' THEN
+        SET p_result = 0;
+        -- Salir con error sin hacer ROLLBACK aquí
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El préstamo no está pendiente o no existe';
+    END IF;
+
+
+    -- Agregar movimiento
+    CALL SP_AgregarMovimiento('Prestamo aprobado', v_importe, 2, v_nro_cuenta);
+
+    -- Actualizar estado del préstamo
+    UPDATE prestamos
+    SET estado = 'aprobado', fecha_alta = NOW()
+    WHERE id = p_id;
+
+    -- Sumar dinero a la cuenta
+    UPDATE cuentas
+    SET saldo = saldo + v_importe
+    WHERE nro_cuenta = v_nro_cuenta;
+
+    -- Crear cuotas
+    SET contador = v_cuotas;
+    WHILE contador > 0 DO
+        INSERT INTO cuotas (id_prestamo, nro_cuota, monto)
+        VALUES (p_id, contador, v_valor_cuotas);
+        SET contador = contador - 1;
+    END WHILE;
+
+    COMMIT;
+    
+    -- Operación exitosa
+    SET p_result = 1;
+
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarCliente`(
+    IN p_id INT
+)
+BEGIN
+    -- Verificar que el cliente existe y no está eliminado
+    IF EXISTS (SELECT 1 FROM clientes WHERE id = p_id AND deleted = 0) THEN
+        START TRANSACTION;
+            -- Realizar la baja lógica del cliente
+            UPDATE clientes
+            SET 
+                deleted = 1,
+                delete_date = NOW()
+            WHERE id = p_id;
+            
+            -- Realizar la baja lógica del usuario asociado (si existe)
+            UPDATE usuarios
+            SET 
+                deleted = 1,
+                delete_date = NOW()
+            WHERE id_cliente = p_id;
+        COMMIT;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El cliente no existe o ya fue eliminado.';
+    END IF;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarUsuario`(
+    IN p_id INT
+)
+BEGIN
+    -- Verificar si el cliente existe y no está eliminado
+    IF EXISTS (SELECT 1 FROM usuarios WHERE id = p_id AND deleted = 0) THEN
+        -- Realizar la baja lógica
+        UPDATE usuarios
+        SET 
+            deleted = 1,
+            delete_date = NOW()
+        WHERE id = p_id;
+    ELSE
+        -- Lanzar un error si el cliente ya está eliminado o no existe
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El usuario no existe o ya fue eliminado.';
+    END IF;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarUsuarioYCliente`(
+    IN p_id INT
+)
+BEGIN
+    DECLARE v_id_cliente INT;
+
+    -- Verificar que el usuario exista y no esté eliminado, y obtener su id_cliente
+    SELECT id_cliente
+      INTO v_id_cliente
+      FROM usuarios
+     WHERE id = p_id
+       AND deleted = 0;
+
+    -- Si el usuario no existe o ya está eliminado, se lanza un error.
+    IF v_id_cliente IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El usuario no existe o ya fue eliminado.';
+    ELSE
+        -- Opcional: Iniciar una transacción para asegurar atomicidad
+        START TRANSACTION;
+        
+        -- Dar de baja al usuario (baja lógica)
+        UPDATE usuarios
+           SET deleted = 1,
+               delete_date = NOW()
+         WHERE id = p_id;
+         
+        -- Dar de baja al cliente asociado (baja lógica)
+        UPDATE clientes
+           SET deleted = 1,
+               delete_date = NOW()
+         WHERE id = v_id_cliente;
+        
+        COMMIT;
+    END IF;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarOActualizarUsuario`(
+    IN p_id_cliente INT,
+    IN p_usuario VARCHAR(255),
+    IN p_pass VARCHAR(255),
+    IN p_admin BIT
+)
+BEGIN
+    DECLARE v_id INT;
+
+    -- Verificar si el usuario ya existe por id_cliente o usuario
+    SELECT `id` INTO v_id
+    FROM `usuarios`
+    WHERE `id_cliente` = p_id_cliente OR `usuario` = p_usuario;
+
+    -- Si existe, se actualiza el registro
+    IF v_id IS NOT NULL THEN
+        UPDATE `usuarios`
+        SET
+            `id_cliente` = p_id_cliente, -- Actualiza el id_cliente si es necesario
+            `usuario` = p_usuario,
+            `pass` = p_pass,
+            `admin` = p_admin,
+            `create_date` = CURRENT_TIMESTAMP,
+            `deleted` = 0,
+            `delete_date` = NULL
+        WHERE `id` = v_id; -- Asegura que se actualice el registro correcto
+    ELSE
+        -- Si no existe, se inserta un nuevo registro
+        INSERT INTO `usuarios` (`id_cliente`, `usuario`, `pass`, `admin`, `create_date`, `deleted`)
+        VALUES (p_id_cliente, p_usuario, p_pass, p_admin, CURRENT_TIMESTAMP, 0);
+    END IF;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosDeClientesPorEstados`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorCliente`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.estado = 'aprobado' 
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorClientesPendientes`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.estado = 'pendiente' 
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ModificarClienteCompleto`(
+    IN p_id_cliente INT,
+    IN p_dni VARCHAR(255),
+    IN p_cuil VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_apellido VARCHAR(255),
+    IN p_sexo VARCHAR(255),
+    IN p_id_pais INT,
+    IN p_fecha_nacimiento DATE,
+    IN p_direccion VARCHAR(255),
+    IN p_id_localidad INT,
+    IN p_id_provincia INT,
+    IN p_correo VARCHAR(255),
+    IN p_telefono VARCHAR(255),
+    OUT p_id_generado INT  -- Salida para devolver el ID modificado o NULL si no existe
+)
+BEGIN
+    -- Verificar si existe el cliente con el ID proporcionado
+    IF EXISTS (SELECT 1 FROM clientes WHERE id = p_id_cliente) THEN
+        -- Actualizar todos los campos del cliente
+        UPDATE clientes
+        SET 
+            dni = p_dni,
+            cuil = p_cuil,
+            nombre = p_nombre,
+            apellido = p_apellido,
+            sexo = p_sexo,
+            id_pais = p_id_pais,
+            fecha_nacimiento = p_fecha_nacimiento,
+            direccion = p_direccion,
+            id_localidad = p_id_localidad,
+            id_provincia = p_id_provincia,
+            correo = p_correo,
+            telefono = p_telefono
+        WHERE id = p_id_cliente;
+        
+        -- Asignar el ID del cliente modificado a la variable de salida
+        SET p_id_generado = p_id_cliente;
+    ELSE
+        -- Si no existe el cliente, asignamos NULL
+        SET p_id_generado = NULL;
+    END IF;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCantidadClientesPorProvincia`()
+BEGIN
+    SELECT 
+        p.id AS IdProvincia,  -- Se agrega el ID de la provincia
+        p.nombre AS Provincia,
+        COUNT(c.id) AS CantidadClientes
+    FROM clientes c
+    INNER JOIN provincia p ON c.id_provincia = p.id
+    WHERE c.deleted = 0 -- Excluir clientes eliminados
+    GROUP BY p.id, p.nombre -- Agrupar también por ID de provincia
+    ORDER BY CantidadClientes DESC;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerClientes`()
+BEGIN
+    SELECT 
+        c.id AS IdCliente,
+        c.dni AS DNI,
+        c.cuil AS CUIL,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        c.sexo AS Sexo,
+        p.nombre AS Pais,
+        pr.nombre AS Provincia,
+        l.nombre AS Localidad,
+        c.fecha_nacimiento AS FechaNacimiento,
+        c.direccion AS Direccion,
+        c.correo AS Correo,
+        c.telefono AS Telefono
+    FROM clientes c
+    INNER JOIN paises p ON c.id_pais = p.id
+    INNER JOIN provincia pr ON c.id_provincia = pr.id
+    INNER JOIN localidades l ON c.id_localidad = l.id
+    WHERE c.deleted = 0 -- Excluye clientes marcados como eliminados
+    ORDER BY create_date DESC;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerDatosBanco`(
+    IN p_nro_cuenta INT
+)
+BEGIN
+    -- Obtener movimientos de la cuenta
+    SELECT 
+        m.id AS id_movimiento,
+        m.detalle,
+        m.importe,
+        tm.descripcion AS tipo_movimiento,
+        m.create_date
+    FROM movimientos m
+    INNER JOIN tipos_movimiento tm ON m.id_tipos_movimiento = tm.id
+    WHERE m.nro_cuenta = p_nro_cuenta AND m.deleted = 0;
+
+    -- Obtener información de la cuenta
+    SELECT 
+        c.nro_cuenta,
+        c.id_cliente,
+        tc.descripcion AS tipo_cuenta,
+        c.cbu,
+        c.saldo,
+        c.create_date
+    FROM cuentas c
+    INNER JOIN tipos_cuenta tc ON c.id_tipo_cuenta = tc.id
+    WHERE c.nro_cuenta = p_nro_cuenta AND c.deleted = 0;
+
+    -- Obtener préstamos asociados a la cuenta
+    SELECT 
+        p.id AS id_prestamo,
+        p.observaciones,
+        p.importe,
+        p.cuotas,
+        p.valor_cuotas,
+        p.estado,
+        p.fecha_alta,
+        p.create_date
+    FROM prestamos p
+    WHERE p.nro_cuenta = p_nro_cuenta AND p.deleted = 0;
+
+    -- Obtener cuotas de préstamos asociados
+    SELECT 
+        cu.id AS id_cuota,
+        cu.id_prestamo,
+        cu.nro_cuota,
+        cu.monto,
+        cu.fecha_pago,
+        cu.estado_pago,
+        cu.create_date
+    FROM cuotas cu
+    INNER JOIN prestamos p ON cu.id_prestamo = p.id
+    WHERE p.nro_cuenta = p_nro_cuenta AND cu.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerDatosBancoPorCliente`(IN p_id_cliente INT)
+BEGIN
+    -- Datos de la cuenta
+    SELECT 
+        c.nro_cuenta, c.id_cliente, tc.descripcion AS tipo_cuenta, 
+        c.cbu, c.saldo, 
+        NULL AS id_movimiento, NULL AS detalle, NULL AS importe, NULL AS cuenta_mov, NULL AS tipo_movimiento, 
+        NULL AS id_prestamo, NULL AS observaciones, NULL AS importe_prestamo, NULL AS cuotas, NULL AS valor_cuotas, 
+        NULL AS estado_prestamo, NULL AS fecha_alta, NULL AS cuenta_prestamo, 
+        NULL AS id_cuota, NULL AS id_prestamo_cuota, NULL AS nro_cuota, NULL AS monto, NULL AS fecha_pago, NULL AS estado_pago
+    FROM cuentas c
+    LEFT JOIN tipos_cuenta tc ON c.id_tipo_cuenta = tc.id
+    WHERE c.id_cliente = p_id_cliente AND c.deleted = 0
+
+    UNION ALL
+
+    -- Datos de los movimientos
+    SELECT 
+        c.nro_cuenta, c.id_cliente, NULL, NULL, NULL,
+        m.id AS id_movimiento, m.detalle, m.importe, m.nro_cuenta AS cuenta_mov, tm.descripcion AS tipo_movimiento,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+    FROM cuentas c
+    LEFT JOIN movimientos m ON m.nro_cuenta = c.nro_cuenta AND m.deleted = 0
+    LEFT JOIN tipos_movimiento tm ON m.id_tipos_movimiento = tm.id
+    WHERE c.id_cliente = p_id_cliente AND c.deleted = 0
+
+    UNION ALL
+
+    -- Datos de los préstamos
+    SELECT 
+        c.nro_cuenta, c.id_cliente, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL,
+        p.id AS id_prestamo, p.observaciones, p.importe, p.cuotas, p.valor_cuotas, p.estado, p.fecha_alta, p.nro_cuenta,
+        NULL, NULL, NULL, NULL, NULL, NULL
+    FROM cuentas c
+    LEFT JOIN prestamos p ON p.id_cliente = c.id_cliente AND p.deleted = 0
+    WHERE c.id_cliente = p_id_cliente AND c.deleted = 0
+
+    UNION ALL
+
+    -- Datos de las cuotas
+    SELECT 
+        c.nro_cuenta, c.id_cliente, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        cu.id AS id_cuota, cu.id_prestamo, cu.nro_cuota, cu.monto, cu.fecha_pago, cu.estado_pago
+    FROM cuentas c
+    LEFT JOIN prestamos p ON p.id_cliente = c.id_cliente AND p.deleted = 0
+    LEFT JOIN cuotas cu ON cu.id_prestamo = p.id AND cu.deleted = 0
+    WHERE c.id_cliente = p_id_cliente AND c.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerLocalidades`()
+BEGIN
+    SELECT 
+        id,
+        nombre
+ 
+    FROM 
+        localidades;
+ 
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerMovimientosPorFecha`(
+    IN fechaDesde DATE,
+    IN fechaHasta DATE
+)
+BEGIN
+    SELECT 
+        'Prestamo' AS tipo_movimiento,
+        p.id AS id_movimiento,
+        p.nro_cuenta,
+        c.nombre AS nombre_cliente,
+        c.apellido AS apellido_cliente,
+        p.importe,
+        p.create_date AS fecha_movimiento,
+        p.observaciones AS descripcion_movimiento
+    FROM prestamos p
+    JOIN clientes c ON p.id_cliente = c.id
+    WHERE p.deleted = 0
+    AND p.create_date BETWEEN fechaDesde AND fechaHasta
+
+    UNION ALL
+
+    SELECT 
+        'Transferencia' AS tipo_movimiento,
+        m.id AS id_movimiento,
+        m.nro_cuenta,
+        c.nombre AS nombre_cliente,
+        c.apellido AS apellido_cliente,
+        m.importe,
+        m.create_date AS fecha_movimiento,
+        m.detalle AS descripcion_movimiento
+    FROM movimientos m
+    JOIN cuentas cu ON m.nro_cuenta = cu.nro_cuenta
+    JOIN clientes c ON cu.id_cliente = c.id
+    WHERE m.deleted = 0
+    AND m.id_tipos_movimiento = (SELECT id FROM tipos_movimiento WHERE descripcion = 'Transferencia')
+    AND m.create_date BETWEEN fechaDesde AND fechaHasta
+    ORDER BY fecha_movimiento DESC;
+    
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPaises`()
+BEGIN
+    SELECT 
+        id,
+        nombre
+ 
+    FROM 
+        paises;
+ 
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamoPorId`(IN prestamo_id INT)
+BEGIN
+    SELECT 
+        c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuotas,
+        p.estado AS Estado,
+        (SELECT cu.saldo FROM cuentas cu WHERE cu.id_cliente = c.id LIMIT 1) AS Saldo_Cuenta
+
+    FROM prestamos p
+    INNER JOIN clientes c ON p.id_cliente = c.id
+    WHERE p.id = prestamo_id
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamos`()
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.observaciones AS Tipo_Prestamo
+     
+
+
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+
+
+WHERE p.estado="pendiente" and p.deleted = 0;
+
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamosPorCliente`(IN ClienteID INT)
+BEGIN  
+    -- Validar que el ClienteID no sea NULL
+    IF ClienteID IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ClienteID no puede ser NULL';
+    END IF;
+
+    -- Consulta optimizada
+    SELECT   
+        p.id,  
+        p.observaciones AS Tipo_Prestamo,  
+        p.id_cliente AS ID_Cliente,  
+        p.nro_cuenta AS Nro_Cuenta,  
+        p.fecha_alta AS Fecha_Solicitada_Prestamo,  
+        p.importe AS Importe_Prestamo_Solicitado,  
+        p.cuotas AS Cantidad_Cuotas_APagar,  
+        p.valor_cuotas AS Valor_Cuota_Prestamo,  
+        p.estado AS Estado_Prestamo,  
+        
+        cu.nro_cuenta AS Cuenta_Asociada,  
+        cu.id_tipo_cuenta AS Tipo_Cuenta,  
+        cu.cbu AS CBU,  
+        cu.saldo AS Saldo
+        
+    FROM prestamos p  
+    INNER JOIN cuentas cu ON p.nro_cuenta = cu.nro_cuenta  
+
+    WHERE p.id_cliente = ClienteID;
+      
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamosPorId`(IN cliente_id INT)
+BEGIN
+    SELECT 
+        c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.observaciones AS Tipo_Prestamo
+    FROM prestamos p
+    INNER JOIN clientes c ON p.id_cliente = c.id
+    WHERE p.estado = 'pendiente' 
+        AND p.deleted = 0
+        AND c.id = cliente_id;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerProvincias`()
+BEGIN
+    SELECT 
+        id,
+        nombre
+ 
+    FROM 
+        provincia;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerTodosLosPrestamos`()
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado
+     
+
+
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+WHERE p.deleted = 0;
+
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuarios`()
+BEGIN
+    SELECT 
+        id,
+        id_cliente,
+        usuario,
+        pass,
+        admin
+ 
+    FROM 
+        usuarios
+    WHERE 
+        deleted = 0
+        ORDER BY create_date DESC;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `PagarCuota`(  
+    IN p_id_prestamo INT  
+)
+BEGIN  
+    DECLARE v_monto DECIMAL(10,2);  
+    DECLARE v_cuotas_pendientes INT;  
+    DECLARE v_importe DECIMAL(10,2);  
+    DECLARE v_cuotas INT;  
+    DECLARE v_id_cuota INT;  
+    DECLARE v_nro_cuenta INT;  
+    DECLARE v_saldo_actual DECIMAL(10,2);  
+    DECLARE v_mensaje VARCHAR(255);  
+
+    -- Manejo de errores
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION  
+    BEGIN  
+        ROLLBACK;  
+        SELECT 'Error en el proceso de pago. Intente nuevamente.' AS mensaje;  
+    END;  
+
+    START TRANSACTION;  
+
+    -- Obtener datos del préstamo en una sola consulta  
+    SELECT importe, cuotas, nro_cuenta INTO v_importe, v_cuotas, v_nro_cuenta  
+    FROM prestamos  
+    WHERE id = p_id_prestamo  
+    FOR UPDATE;  -- Bloquea el registro para evitar modificaciones concurrentes  
+
+    -- Obtener la cuota más antigua no pagada  
+    SELECT id, monto INTO v_id_cuota, v_monto  
+    FROM cuotas  
+    WHERE id_prestamo = p_id_prestamo AND estado_pago = 0  
+    ORDER BY nro_cuota ASC  
+    LIMIT 1  
+    FOR UPDATE;  
+
+    -- Si no hay cuotas pendientes, finalizar  
+    IF v_monto IS NULL THEN  
+        SET v_mensaje = 'No hay más cuotas pendientes. El préstamo ya está finalizado.';  
+    ELSE  
+        -- Obtener saldo actual de la cuenta asociada  
+        SELECT saldo INTO v_saldo_actual  
+        FROM cuentas  
+        WHERE nro_cuenta = v_nro_cuenta  
+        FOR UPDATE;  
+
+        -- Verificar si hay saldo suficiente  
+        IF v_saldo_actual < v_monto THEN  
+            SET v_mensaje = 'Saldo insuficiente en la cuenta para pagar la cuota.';  
+        ELSE  
+            -- Descontar el monto pagado del saldo de la cuenta  
+            UPDATE cuentas  
+            SET saldo = saldo - v_monto  
+            WHERE nro_cuenta = v_nro_cuenta;  
+
+            -- Marcar la cuota como pagada  
+            UPDATE cuotas   
+            SET fecha_pago = CURRENT_DATE(), estado_pago = 1  
+            WHERE id = v_id_cuota;  
+
+            -- Actualizar el importe del préstamo  
+            UPDATE prestamos   
+            SET importe = GREATEST(importe - v_monto, 0)  
+            WHERE id = p_id_prestamo;  
+
+            -- Descontar una cuota  
+            UPDATE prestamos   
+            SET cuotas = GREATEST(cuotas - 1, 0)  
+            WHERE id = p_id_prestamo;  
+
+            -- Contar cuántas cuotas quedan pendientes  
+            SELECT COUNT(*) INTO v_cuotas_pendientes  
+            FROM cuotas  
+            WHERE id_prestamo = p_id_prestamo AND estado_pago = 0;  
+
+            -- Si no quedan cuotas, marcar el préstamo como finalizado  
+            IF v_cuotas_pendientes = 0 THEN  
+                UPDATE prestamos   
+                SET estado = 'finalizado'  
+                WHERE id = p_id_prestamo;  
+
+                SET v_mensaje = 'El préstamo ha sido completamente pagado y está finalizado.';  
+            ELSE  
+                SET v_mensaje = CONCAT(v_cuotas_pendientes, ' cuotas pendientes.');  
+            END IF;  
+        END IF;  
+    END IF;  
+
+    COMMIT;  
+
+    -- Retornar mensaje  
+    SELECT v_mensaje AS mensaje;  
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RechazarPrestamo`(
+    IN p_id INT,
+    OUT p_result INT
+)
+BEGIN
+    DECLARE v_estado VARCHAR(255);
+
+
+    -- Obtener el estado actual del préstamo
+    SELECT estado INTO v_estado 
+    FROM prestamos 
+    WHERE id = p_id;
+
+    -- Verificar si el estado es 'pendiente'
+    IF v_estado = 'pendiente' THEN
+        -- Actualizar el estado a 'vigente'
+        UPDATE prestamos 
+        SET estado = 'rechazado',
+              fecha_alta = NOW()  
+        WHERE id = p_id;
+        
+        -- Retornar 1 si la actualización fue exitosa
+        SET p_result = ROW_COUNT();
+    ELSE
+        -- Retornar 0 si el préstamo no estaba en estado 'pendiente'
+        SET p_result = 0;
+    END IF;
+END
