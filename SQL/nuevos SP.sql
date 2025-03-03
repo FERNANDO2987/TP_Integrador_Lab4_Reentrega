@@ -416,3 +416,30 @@ END$$
 DELIMITER ;
 
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamos`()
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado,
+        p.create_date AS Fecha_Solicitud,
+        p.observaciones AS Tipo_Prestamo
+     
+
+
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+
+
+WHERE p.estado="pendiente" and p.deleted = 0;
+
+END$$
+DELIMITER ;
