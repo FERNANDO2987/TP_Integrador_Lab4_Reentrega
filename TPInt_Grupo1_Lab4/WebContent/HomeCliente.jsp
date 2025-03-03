@@ -180,7 +180,9 @@ html, body {
 
 
 
+
     <!-- Barra lateral -->
+
 
     <!-- Contenido principal -->
     <div class="content" id="contenidoPrincipal">
@@ -205,9 +207,11 @@ html, body {
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
 				onclick="cargarPagina('datosPersonales')">Datos Personales</a></li>
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
-				onclick="cargarPagina('cuentasAsociadas')">Cuentas Asociadas</a></li>
+				onclick="cargarPagina('cuentasAsociadas')">Mis Cuentas</a></li>
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
 				onclick="cargarPagina('transferencia')">Transferir</a></li>
+
+
 
 
 		</ul>
@@ -251,6 +255,10 @@ html, body {
 
 			case 'transferencia':
 				iframe.src = 'servletTransferencia';
+				break;
+				
+			case 'cuentasAsociadas' :
+				iframe.src = 'servletMirarMisCuentasCliente';
 				break;
 
 			}
