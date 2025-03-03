@@ -192,9 +192,8 @@ html, body {
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('solicitarPrestamo')">Solicitar Prestamo</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('pagarPrestamo')">Pagar Prestamo</a></li>
             <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('datosPersonales')">Datos Personales</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('cuentasAsociadas')">Cuentas Asociadas</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaPropia')">Transferencia cuenta propia</a></li>
-            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferenciaCuentaExterna')">Transferencia cuenta externa</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('transferencia')">Transferir</a></li>
+            <li><a class="menu2-icon hover:text-blue-500 block p-2" href="#" onclick="cargarPagina('misCuentas')">Mis Cuentas</a></li>
             
             
         </ul>
@@ -212,6 +211,7 @@ html, body {
 
 
 
+
 		<ul class="space-y-2">
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
 				onclick="cargarPagina('inicio')">Inicio</a></li>
@@ -225,6 +225,33 @@ html, body {
 				onclick="cargarPagina('cuentasAsociadas')">Cuentas Asociadas</a></li>
 			<li><a class="menu2-icon hover:text-blue-500 block p-2" href="#"
 				onclick="cargarPagina('transferencia')">Transferir</a></li>
+
+            switch (pagina) {
+                 case 'inicio':
+                    iframe.src = 'servletGraficos';
+                    break;
+                case 'datosPersonales':
+                    iframe.src = 'DatosPersonales.jsp';
+                    break;
+                case 'pagarPrestamo':
+                    iframe.src = 'servletDatosCuentas';
+                    break;
+
+                    
+                case 'solicitarPrestamo':
+                    iframe.src = 'servletAgregarPrestamo';
+                    break;
+
+                case 'transferencia' :
+                	iframe.src = 'servletTransferencia';
+                	break;
+                	
+                case 'misCuentas' :
+                	iframe.src = 'servletMirarMisCuentasCliente';
+                	break;
+
+            }
+
 
 
 

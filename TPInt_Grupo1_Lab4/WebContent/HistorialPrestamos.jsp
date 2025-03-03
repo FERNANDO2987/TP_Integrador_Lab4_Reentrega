@@ -128,6 +128,7 @@
 			}
 		%>
 
+
 		<%
 			if (prestamos != null && !prestamos.isEmpty()) {
 		%>
@@ -143,6 +144,30 @@
 				<option value="finalizado">Finalizado</option>
 				<option value="rechazado">Rechazado</option>
 				<option value="pendiente">Pendiente</option>
+
+    <% if (prestamos != null && !prestamos.isEmpty()) { %>  
+    	<div class="flex space-x-4 mb-4">
+    		<form action="servletListarTodosLosPrestamos" method="get">
+    			Mayor a:
+    			<input type="number" class="form-control w-full p-2 rounded-lg border-gray-300" name="mayorA" min="0">
+    			Menor a:
+    			<input type="number" class="form-control w-full p-2 rounded-lg border-gray-300" name="menorA" min="0">
+    			<input type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" value="Filtrar" name="btnFiltro">
+    			<input type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600" value="Borrar Filtro" name="btnBorrarFiltro">
+    		</form>
+    		
+    	</div>
+        <div class="flex space-x-4 mb-4">  
+            <input type="text" id="filterNombre" class="form-control w-full p-2 rounded-lg border-gray-300" placeholder="Filtrar por Nombre..." onkeyup="filterTable()">  
+            <select id="filterEstado" class="form-control w-full p-2 rounded-lg border-gray-300" onchange="filterTable()">  
+                <option value="">Filtrar por Estado</option>  
+                <option value="vigente">Vigente</option>  
+                <option value="finalizado">Finalizado</option>  
+                <option value="rechazado">Rechazado</option>  
+                <option value="revisión">En Revisión</option>  
+            </select>  
+        </div>  
+
 
 			</select>
 		</div>

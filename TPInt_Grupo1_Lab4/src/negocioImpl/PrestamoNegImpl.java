@@ -277,6 +277,7 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 
 	@Override
+
 	public String PagarCuota(int idPrestamo) {
 	    if (idPrestamo <= 0) {
 	        System.err.println("El ID del préstamo no es válido.");
@@ -371,5 +372,23 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 
 	
+
+	public ArrayList<Prestamo> ListarPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA) {
+		if (mayorA.compareTo(BigDecimal.ZERO) < 0 || menorA.compareTo(BigDecimal.ZERO) < 0) {
+			throw new RuntimeException("No se aceptan números negativos");
+		}
+		if (mayorA.compareTo(menorA) >= 0) {
+			throw new RuntimeException("No se encontraron prestamos");
+		}
+		
+		List<Prestamo> prestamos = prestamoDao.ObtenerPrestamosFiltrados(mayorA, menorA);
+
+        if (prestamos == null || prestamos.isEmpty()) {
+            throw new RuntimeException("No se encontraron prestamos.");
+        }
+
+        return (ArrayList<Prestamo>) prestamos;
+	}	
+
 
 }
