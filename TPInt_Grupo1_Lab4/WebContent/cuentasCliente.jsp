@@ -50,6 +50,7 @@
                         <div class="card shadow">
                             <div class="card-body text-center">
                                 <h5 class="card-title"> Cuenta Nro <%= cuenta.getNroCuenta() %></h5>
+                                <h6 class="card-title">$<%= cuenta.getSaldo() %> </h3>
                                 <button name="btnCuenta" type="submit" value="<%= cuenta.getNroCuenta() %>" class="btn btn-primary">
                                     Ver Movimientos
                                 </button>
@@ -63,7 +64,7 @@
         %>
             <div class="col-12">
                 <div class="alert alert-danger text-center" role="alert">
-                    No hay cuentas activas por el momento. Solicite abrir una cuenta e inténtelo nuevamente.
+                    No hay cuentas activas por el momento. Solicite abrir una cuenta al administrador e intentelo nuevamente.
                 </div>
             </div>
         <% } %>
