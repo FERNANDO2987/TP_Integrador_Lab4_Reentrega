@@ -390,3 +390,29 @@ BEGIN
 END;
 $$
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerPrestamosFiltrados`(
+	IN p_mayor_a decimal,
+    IN p_menor_a decimal
+)
+BEGIN
+
+SELECT 
+
+ c.id AS ID_Cliente,
+        c.dni AS DNI,
+        c.nombre AS Nombre,
+        c.apellido AS Apellido,
+        p.id AS ID_Prestamo,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.estado AS Estado
+	
+FROM prestamos p
+INNER JOIN clientes c ON p.id_cliente = c.id
+WHERE p.deleted = 0 and p.importe > p_mayor_a and p.importe < p_menor_a;
+
+END$$
+DELIMITER ;
+
+
