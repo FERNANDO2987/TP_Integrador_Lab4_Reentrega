@@ -443,3 +443,154 @@ WHERE p.estado="pendiente" and p.deleted = 0;
 
 END$$
 DELIMITER ;
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorCliente`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.estado = 'aprobado' 
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorClientesPendientes`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.estado = 'pendiente' 
+        AND p.deleted = 0;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `PagarCuota`(  
+    IN p_id_prestamo INT  
+)
+BEGIN  
+    DECLARE v_monto DECIMAL(10,2);  
+    DECLARE v_cuotas_pendientes INT;  
+    DECLARE v_importe DECIMAL(10,2);  
+    DECLARE v_cuotas INT;  
+    DECLARE v_id_cuota INT;  
+    DECLARE v_nro_cuenta INT;  
+    DECLARE v_saldo_actual DECIMAL(10,2);  
+    DECLARE v_mensaje VARCHAR(255);  
+
+    -- Manejo de errores
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION  
+    BEGIN  
+        ROLLBACK;  
+        SELECT 'Error en el proceso de pago. Intente nuevamente.' AS mensaje;  
+    END;  
+
+    START TRANSACTION;  
+
+    -- Obtener datos del préstamo en una sola consulta  
+    SELECT importe, cuotas, nro_cuenta INTO v_importe, v_cuotas, v_nro_cuenta  
+    FROM prestamos  
+    WHERE id = p_id_prestamo  
+    FOR UPDATE;  -- Bloquea el registro para evitar modificaciones concurrentes  
+
+    -- Obtener la cuota más antigua no pagada  
+    SELECT id, monto INTO v_id_cuota, v_monto  
+    FROM cuotas  
+    WHERE id_prestamo = p_id_prestamo AND estado_pago = 0  
+    ORDER BY nro_cuota ASC  
+    LIMIT 1  
+    FOR UPDATE;  
+
+    -- Si no hay cuotas pendientes, finalizar  
+    IF v_monto IS NULL THEN  
+        SET v_mensaje = 'No hay más cuotas pendientes. El préstamo ya está finalizado.';  
+    ELSE  
+        -- Obtener saldo actual de la cuenta asociada  
+        SELECT saldo INTO v_saldo_actual  
+        FROM cuentas  
+        WHERE nro_cuenta = v_nro_cuenta  
+        FOR UPDATE;  
+
+        -- Verificar si hay saldo suficiente  
+        IF v_saldo_actual < v_monto THEN  
+            SET v_mensaje = 'Saldo insuficiente en la cuenta para pagar la cuota.';  
+        ELSE  
+            -- Descontar el monto pagado del saldo de la cuenta  
+            UPDATE cuentas  
+            SET saldo = saldo - v_monto  
+            WHERE nro_cuenta = v_nro_cuenta;  
+
+            -- Marcar la cuota como pagada  
+            UPDATE cuotas   
+            SET fecha_pago = CURRENT_DATE(), estado_pago = 1  
+            WHERE id = v_id_cuota;  
+
+            -- Actualizar el importe del préstamo  
+            UPDATE prestamos   
+            SET importe = GREATEST(importe - v_monto, 0)  
+            WHERE id = p_id_prestamo;  
+
+            -- Descontar una cuota  
+            UPDATE prestamos   
+            SET cuotas = GREATEST(cuotas - 1, 0)  
+            WHERE id = p_id_prestamo;  
+
+            -- Contar cuántas cuotas quedan pendientes  
+            SELECT COUNT(*) INTO v_cuotas_pendientes  
+            FROM cuotas  
+            WHERE id_prestamo = p_id_prestamo AND estado_pago = 0;  
+
+            -- Si no quedan cuotas, marcar el préstamo como finalizado  
+            IF v_cuotas_pendientes = 0 THEN  
+                UPDATE prestamos   
+                SET estado = 'finalizado'  
+                WHERE id = p_id_prestamo;  
+
+                SET v_mensaje = 'El préstamo ha sido completamente pagado y está finalizado.';  
+            ELSE  
+                SET v_mensaje = CONCAT(v_cuotas_pendientes, ' cuotas pendientes.');  
+            END IF;  
+        END IF;  
+    END IF;  
+
+    COMMIT;  
+
+    -- Retornar mensaje  
+    SELECT v_mensaje AS mensaje;  
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosDeClientesPorEstados`(IN IdCliente INT)
+BEGIN
+    SELECT 
+        p.id AS ID_Prestamo,
+        p.observaciones AS Tipo_Prestamo,
+        p.id_cliente AS ID_Cliente,
+        p.nro_cuenta AS Nro_Cuenta,
+        p.fecha_alta AS Fecha_Solicitud,
+        p.importe AS Monto_Solicitado,
+        p.cuotas AS Cuotas,
+        p.valor_cuotas AS Valor_Cuota,
+        p.estado AS Estado
+    FROM prestamos p
+    WHERE p.id_cliente = IdCliente
+        AND p.deleted = 0;
+END
