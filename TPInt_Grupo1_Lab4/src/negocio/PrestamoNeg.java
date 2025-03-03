@@ -28,6 +28,7 @@ public interface PrestamoNeg {
 	 public boolean RechazarPrestamo(int idPrestamo);
 	 public boolean AprobarPrestamo(int idPrestamo);
 		public ArrayList<Prestamo> ListarTodosLosPrestamos();
+		public ArrayList<Prestamo> ListarPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA);
 		
 		 public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
 		 public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente);

@@ -34,22 +34,57 @@ public class servletListarTodosLosPrestamos extends HttpServlet {
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Obtener la lista de prestamos
-            List<Prestamo> prestamos = prestamoNeg.ListarTodosLosPrestamos();
-
-            // Verificar si la lista de prestamos no es nula o vacía
-            if (prestamos != null && !prestamos.isEmpty()) {
-                // Establecer la lista de prestamos como un atributo en el request
-                request.setAttribute("prestamos", prestamos);
-            } else {
-                // Si no hay prestamos, establecer un mensaje de error
-                request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
-            }
-
-    
-
-            // Redirigir a la página JSP para mostrar la lista de prestamos
-            request.getRequestDispatcher("HistorialPrestamos.jsp").forward(request, response);
+        	if(request.getParameter("btnFiltro") != null)
+        	{
+        		BigDecimal mayorA, menorA;
+        		String mayorAParam = request.getParameter("mayorA");
+        	    String menorAParam = request.getParameter("menorA");
+        	    mayorA = (mayorAParam != null && !mayorAParam.isEmpty()) ? new BigDecimal(mayorAParam) : BigDecimal.valueOf(0);
+        	    menorA = (menorAParam != null && !menorAParam.isEmpty()) ? new BigDecimal(menorAParam) : BigDecimal.valueOf(99999999.99);
+        	    
+        		
+        		if(mayorA.compareTo(BigDecimal.ZERO) < 0)
+        		{
+        			request.setAttribute("error", "No se aceptan valores menores a 0.");
+        			request.setAttribute("mayorA", "");
+        		}
+        		if(menorA.compareTo(BigDecimal.ZERO) < 0)
+        		{
+        			request.setAttribute("error", "No se aceptan valores menores a 0.");
+        			request.setAttribute("menorA", "");
+        		}
+        		if( mayorA.compareTo(menorA) >= 0)
+        		{
+        			request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
+        			request.setAttribute("menorA", "");
+        		}
+        		
+        		
+        		List<Prestamo> prestamos = prestamoNeg.ListarPrestamosFiltrados(mayorA, menorA);
+        		if (prestamos != null && !prestamos.isEmpty()) {
+                    request.setAttribute("prestamos", prestamos);
+                } else {
+                    request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
+                }
+        		
+        		request.getRequestDispatcher("HistorialPrestamos.jsp").forward(request, response);
+        	}
+        	else{	
+        		// Obtener la lista de prestamos
+	            List<Prestamo> prestamos = prestamoNeg.ListarTodosLosPrestamos();
+	
+	            // Verificar si la lista de prestamos no es nula o vacía
+	            if (prestamos != null && !prestamos.isEmpty()) {
+	                // Establecer la lista de prestamos como un atributo en el request
+	                request.setAttribute("prestamos", prestamos);
+	            } else {
+	                // Si no hay prestamos, establecer un mensaje de error
+	                request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
+	            }
+	            // Redirigir a la página JSP para mostrar la lista de prestamos
+	            request.getRequestDispatcher("HistorialPrestamos.jsp").forward(request, response);
+        	}
+        	
         } catch (Exception e) {
             // Manejar excepciones y redirigir a una página de error si es necesario
             e.printStackTrace();

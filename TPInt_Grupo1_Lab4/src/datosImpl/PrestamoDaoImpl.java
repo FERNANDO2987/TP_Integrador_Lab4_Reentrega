@@ -550,6 +550,41 @@ public class PrestamoDaoImpl implements PrestamoDao{
 	    }
 	    return cuentas;
 	}
+	@Override
+	public List<Prestamo> ObtenerPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA) {
+	    List<Prestamo> listaPrestamos = new ArrayList<>();
+	    final String query = "{CALL ObtenerPrestamosFiltrados(?,?)}";
+	    cn.Open();
+
+	    try (CallableStatement cst = cn.connection.prepareCall(query)){
+	        
+	        cst.setBigDecimal(1, mayorA);
+	        cst.setBigDecimal(2, menorA);
+	        
+	        try (ResultSet rs = cst.executeQuery()) {
+	            while (rs.next()) {
+	                Prestamo prestamo = new Prestamo();
+	                prestamo.setCliente(new Cliente()); // Asegura que Cliente no sea null
+	                prestamo.getCliente().setDni(rs.getString("DNI"));
+	                prestamo.getCliente().setNombre(rs.getString("Nombre"));
+	                prestamo.getCliente().setApellido(rs.getString("Apellido"));
+	                prestamo.setId(rs.getInt("ID_Prestamo"));
+	                prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+	                prestamo.setCuotas(rs.getInt("Cuotas"));
+	                prestamo.setEstado(rs.getString("Estado"));
+
+	                listaPrestamos.add(prestamo);
+	            }
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Error al obtener la lista de prestamos: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        cn.close();
+	    }
+
+	    return listaPrestamos;
+	}
 
 
 
