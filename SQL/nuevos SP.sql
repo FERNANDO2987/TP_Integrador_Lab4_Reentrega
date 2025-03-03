@@ -444,7 +444,7 @@ WHERE p.estado="pendiente" and p.deleted = 0;
 END$$
 DELIMITER ;
 
-
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorCliente`(IN IdCliente INT)
 BEGIN
     SELECT 
@@ -461,9 +461,10 @@ BEGIN
     WHERE p.id_cliente = IdCliente
         AND p.estado = 'aprobado' 
         AND p.deleted = 0;
-END
+END;
+$$
 
-
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosPorClientesPendientes`(IN IdCliente INT)
 BEGIN
     SELECT 
@@ -480,9 +481,10 @@ BEGIN
     WHERE p.id_cliente = IdCliente
         AND p.estado = 'pendiente' 
         AND p.deleted = 0;
-END
+END;
+$$
 
-
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `PagarCuota`(  
     IN p_id_prestamo INT  
 )
@@ -575,9 +577,10 @@ BEGIN
 
     -- Retornar mensaje  
     SELECT v_mensaje AS mensaje;  
-END
+END;
+$$
 
-
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListarPrestamosDeClientesPorEstados`(IN IdCliente INT)
 BEGIN
     SELECT 
@@ -593,4 +596,5 @@ BEGIN
     FROM prestamos p
     WHERE p.id_cliente = IdCliente
         AND p.deleted = 0;
-END
+END;
+$$
