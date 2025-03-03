@@ -5,10 +5,10 @@ import java.util.List;
 
 import datos.PrestamoDao;
 import datosImpl.PrestamoDaoImpl;
-
-
-
+import entidad.Prestamo;
 import entidadDTO.PrestamoDTO;
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
 
 
 
@@ -22,32 +22,36 @@ public class Principal {
     	
     	
     	
-         PrestamoDao prestamoDao = new PrestamoDaoImpl();
-
+         PrestamoNeg prestamo = new PrestamoNegImpl();
          
-         int idCliente = 78;
-          
-       
+    	// Crear una instancia de PrestamoDao
+    	//PrestamoDao prestamo = new PrestamoDaoImpl();
 
-     
-         // Prueba del método listarPrestamosPorCliente con un ID de cliente
-         int clienteId = 78; // Cambia esto por un ID válido en tu base de datos
-         System.out.println("\n=== LISTADO DE PRÉSTAMOS POR CLIENTE ID: " + clienteId + " ===");
-         List<PrestamoDTO> prestamosCliente = prestamoDao.listarPrestamosPorCliente(clienteId);
-         for (PrestamoDTO p : prestamosCliente) {
-             System.out.println("ID Préstamo: " + p.getId());
-             System.out.println("Observaciones: " + p.getObservaciones());
-             System.out.println("Fecha Solicitud: " + p.getFechaAlta());
-             System.out.println("Importe: " + p.getImporte());
-             System.out.println("Cuotas: " + p.getCuotas());
-             System.out.println("Valor de Cuota: " + p.getValorCuotas());
-             System.out.println("Estado: " + p.getEstado());
-             System.out.println("Cuenta CBU: " + p.getCuenta().getCbu());
-             System.out.println("Saldo: " + p.getCuenta().getSaldo());
-             System.out.println("Tipo de Cuenta: " + p.getCuenta().getTipoCuenta().getDescripcion());
-          
-             System.out.println("-----------------------------------");
-         }
+    	// ID del cliente a consultar
+    	int idCliente = 78; // Cambia esto por un ID válido en tu base de datos
+
+    	// Prueba del método ListarPrestamosPorCliente con un ID de cliente
+    	System.out.println("\n=== LISTADO DE PRÉSTAMOS POR CLIENTE ID: " + idCliente + " ===");
+    	List<Prestamo> prestamosCliente = prestamo.ListarPrestamosPorClientesPendientes(idCliente);
+
+    	// Verificar si se obtuvieron resultados
+    	if (prestamosCliente.isEmpty()) {
+    	    System.out.println("No se encontraron préstamos para el cliente con ID: " + idCliente);
+    	} else {
+    	    for (Prestamo p : prestamosCliente) {
+    	        System.out.println("ID Préstamo: " + p.getId());
+    	        System.out.println("Tipo de Préstamo: " + (p.getObservaciones() != null ? p.getObservaciones() : "N/A"));
+    	        System.out.println("ID Cliente: " + p.getCliente().getId());
+ // Asumiendo que Cliente tiene este campo
+    	        System.out.println("Fecha de Solicitud: " + (p.getFechaAlta() != null ? p.getFechaAlta().toString() : "Sin fecha"));
+    	        System.out.println("Monto Solicitado: " + p.getImporte());
+    	        System.out.println("Cantidad de Cuotas: " + p.getCuotas());
+    	        System.out.println("Valor de Cuota: " + (p.getValorCuotas()!= null ? p.getValorCuotas() : "N/A"));
+    	        System.out.println("Estado: " + (p.getEstado() != null ? p.getEstado() : "Desconocido"));
+    	        System.out.println("-----------------------------------");
+    	    }
+    	}
+
         
        
 

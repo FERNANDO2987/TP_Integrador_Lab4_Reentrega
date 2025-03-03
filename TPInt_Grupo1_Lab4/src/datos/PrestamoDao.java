@@ -33,7 +33,10 @@ public interface PrestamoDao {
 	 public Prestamo obtenerPrestamoPorId(int idPrestamo);
 	 public String pagarCuota(int idPrestamo);
     public List<PrestamoDTO> listarPrestamosPorCliente(int clienteId);
-    public List<PrestamoDTO> listarPrestamosPorEstadosPendientes(int clienteId);
-    public List<PrestamoDTO> listarPrestamosPorEstadosAprobados(int clienteId);
+    
+    public List<Prestamo> listarPrestamosPorClientesAprobados(int clienteId);
+    
+    public List<Prestamo> listarPrestamosPorClientesPendientes(int clienteId);
+    public List<Prestamo> listarPrestamosDeClientesPorEstados(int clienteId);
 
 }

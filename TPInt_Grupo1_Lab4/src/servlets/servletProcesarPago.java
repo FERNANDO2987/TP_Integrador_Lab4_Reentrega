@@ -16,10 +16,12 @@ public class servletProcesarPago extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
   
-	PrestamoNeg prestamoNeg = new PrestamoNegImpl();
+	
 	
 	 private static final String MENSAJE_EXITO = "La cuota fue pagada con exito";
 	private static final String MENSAJE_ERROR = "Error al pagar la cuota";
+	
+	PrestamoNeg prestamoNeg = new PrestamoNegImpl();
 	
     public servletProcesarPago() {
         super();
@@ -36,41 +38,39 @@ public class servletProcesarPago extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    String idParam = request.getParameter("id");
-	    if (idParam != null && !idParam.isEmpty()) {
-	        try {
-	            int idPrestamo = Integer.parseInt(idParam);
+	    String idParam = request.getParameter("idPrestamo");
 
-	            // Llamada al método que paga la cuota y recibe un mensaje
-	            String mensaje = prestamoNeg.PagarCuota(idPrestamo);
-
-	            if (mensaje != null && !mensaje.isEmpty()) {
-	                // Si el mensaje indica éxito
-	                if (mensaje.contains("exito")) { // O cualquier lógica de éxito que definas en el mensaje
-	                    request.setAttribute("mensajeExito", MENSAJE_EXITO);  
-	                } else {
-	                    // Si el mensaje indica algún error
-	                    request.setAttribute("mensajeError", mensaje);  
-	                }
-	            } else {
-	                // En caso de que no se reciba un mensaje
-	                request.setAttribute("mensajeError", "Error desconocido.");
-	            }
-
-	        } catch (Exception e) {
-	            // Captura cualquier excepción y establece un mensaje de error general
-	            request.getSession().setAttribute("mensajeError", "Error inesperado: " + e.getMessage());
-	            e.printStackTrace(); // Para depuración
-	        }
-	    } else {
-	        request.getSession().setAttribute("mensajeError", "No se proporcionó un ID de préstamo.");
+	    if (idParam == null || idParam.isEmpty()) {
+	        request.setAttribute("mensajeError", "No se proporcionó un ID de préstamo.");
+	        request.getRequestDispatcher("PagarPrestamo.jsp").forward(request, response);
+	        return;
 	    }
 
-	    // Redirige al servlet que lista los clientes
-	    request.getRequestDispatcher("PagarPrestamo.jsp").forward(request, response);
+	    try {
+	        int idPrestamo = Integer.parseInt(idParam);
+
+	        // Llamada al método que paga la cuota
+	        String mensaje = prestamoNeg.PagarCuota(idPrestamo);
+
+	        if (mensaje != null && !mensaje.trim().isEmpty()) {
+                request.setAttribute("mensajeExito", MENSAJE_EXITO);
+              
+            } else {
+                request.setAttribute("mensajeError", MENSAJE_ERROR);
+            }
+
+
+	    } catch (NumberFormatException e) {
+	        request.setAttribute("mensajeError", "El ID del préstamo no es válido.");
+	    } catch (Exception e) {
+	        request.setAttribute("mensajeError", "Error inesperado: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    //request.getRequestDispatcher("DatosCuentas.jsp").forward(request, response);
+	    request.getRequestDispatcher("servletDatosCuentas").forward(request, response);
 	}
 
-	
 	
 	}
 

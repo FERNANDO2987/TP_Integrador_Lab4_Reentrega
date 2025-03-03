@@ -17,11 +17,13 @@
 
 <%
 	// Obtener la lista de préstamos del request
-	List<PrestamoDTO> prestamosPendientes = (List<PrestamoDTO>) request.getAttribute("prestamosPendientes");
-	List<PrestamoDTO> prestamosAprobados = (List<PrestamoDTO>) request.getAttribute("prestamosAprobados");
-	List<PrestamoDTO> datosPrestamos = (List<PrestamoDTO>) request.getAttribute("datosPrestamos");
+	List<Prestamo> prestamosPendientes = (List<Prestamo>) request.getAttribute("prestamosPendientes");
+	List<Prestamo> prestamosAprobados = (List<Prestamo>) request.getAttribute("prestamosAprobados");
+	List<Prestamo> datosPrestamos = (List<Prestamo>) request.getAttribute("datosPrestamos");
 	String mensajeExito = (String) request.getAttribute("mensajeExito");
 	String mensajeError = (String) request.getAttribute("mensajeError");
+	
+
 %>
 
 
@@ -40,7 +42,12 @@
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
 	rel="stylesheet">
+<link rel="stylesheet" href="path/to/your/styles.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 .bg-trigo {
@@ -60,6 +67,22 @@
 	display: flex;
 	justify-content: center;
 	margin-top: 20px;
+}
+
+.estado-vigente {
+	color: green;
+}
+
+.estado-finalizado {
+	color: blue;
+}
+
+.estado-rechazado {
+	color: red;
+}
+
+.estado-en-revision {
+	color: orange;
 }
 
 .pagination button, .pagination span {
@@ -112,355 +135,303 @@ input:required:invalid {
 
 
 
+
+
+
 	<div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md mb-12">
-
-
-
-
 		<div class="flex justify-between items-center mb-4">
-			<h2 class="text-lg font-semibold text-gray-800">Mis prestamos</h2>
+			<h2 class="text-lg font-semibold text-gray-800">Mis préstamos</h2>
 		</div>
+		
 
+		
 
 		<%
 			if (prestamosAprobados != null && !prestamosAprobados.isEmpty()) {
+				for (Prestamo prestamo : prestamosAprobados) {
 		%>
-		<%
-			for (PrestamoDTO prestamo : prestamosAprobados) {
-		%>
-
 
 		<div class="bg-gray-50 p-4 rounded-lg mb-4">
 			<h3 class="font-semibold text-gray-700">
-				Observacion:
-				<%=prestamo.getObservaciones()%></h3>
+				Observación:
+				<%=prestamo.getObservaciones()%>
+			</h3>
+			<p class="text-sm text-gray-600">
+				ID: <strong><%=prestamo.getId()%></strong>
+			</p>
 			<p class="text-sm text-gray-600">
 				Saldo otorgado: <strong>$ <%=prestamo.getImporte()%></strong>
 			</p>
 			<p class="text-sm text-gray-600">
 				Cuotas pendientes: <strong><%=prestamo.getCuotas()%></strong>
 			</p>
-			<p class="text-sm text-gray-600">
-				ID: <strong><%=prestamo.getId()%></strong>
-			</p>
+			
 			<div class="flex justify-between items-center mt-2">
-				<p class="text-red-500 text-sm">
-					Vencimiento:
-					<%=prestamo.getFechaAlta()%></p>
-
+				<p class="text-sm text-gray-600">
+					Fecha Prestamo solicitada:
+					<%=prestamo.getFechaAlta()%>
+				</p>
 
 				<a href="servletPagarPrestamo?idPrestamo=<%=prestamo.getId()%>"
-					class="btn-pagar bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+					class="btn-pagar bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
 					<i class="fas fa-hand-holding-usd"></i> Pagar
 				</a>
-
-
-
 			</div>
-
-
-
 		</div>
 
 		<%
 			}
-		%>
-		<%
-			}
-
-			else if (mensajeError != null) {
-		%>
-		<div id="successMessage"
-			class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
-			<i class="fas fa-check-circle"></i>
-			<%=mensajeError%>
-		</div>
-		<%
-			}
+			} else {
 		%>
 
-		<%
-			if (mensajeExito != null) {
-		%>
-		<div id="errorMessage"
-			class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-			<i class="fas fa-exclamation-circle"></i>
-			<%=mensajeExito%>
-		</div>
+		<p class="text-gray-600 text-center">No tienes préstamos
+			aprobados.</p>
+
 		<%
 			}
 		%>
 	</div>
 
 
+
 	<div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md mt-12">
-
-
-
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-lg font-semibold text-gray-800">Pendientes de
-				aprobacion</h2>
+				Aprobación</h2>
 		</div>
-
-
 
 		<%
 			if (prestamosPendientes != null && !prestamosPendientes.isEmpty()) {
-		%>
-		<%
-			for (PrestamoDTO prestamo : prestamosPendientes) {
+				for (Prestamo prestamo : prestamosPendientes) {
 		%>
 
 		<div class="bg-gray-50 p-4 rounded-lg mb-4">
 			<h3 class="font-semibold text-gray-700">
-				Observacion:
-				<%=prestamo.getObservaciones()%></h3>
+				Observación:
+				<%=prestamo.getObservaciones()%>
+			</h3>
 			<p class="text-sm text-gray-600">
 				Monto Solicitado: <strong>$ <%=prestamo.getImporte()%></strong>
 			</p>
 			<p class="text-sm text-gray-600">
 				Fecha Solicitud: <strong><%=prestamo.getFechaAlta()%></strong>
 			</p>
-			<div class="flex justify-between">
+
+			<div class="flex justify-between items-center mt-2">
 				<p class="text-sm text-gray-600">Estado:</p>
 				<p class="text-sm text-gray-600 ml-auto">
 					<%
-						if (prestamo.getEstado().equalsIgnoreCase("aprobado")) {
+						String estado = prestamo.getEstado().toLowerCase();
+								String estadoClase = "bg-gray-300 text-gray-800"; // Default
+								String estadoTexto = "Desconocido";
+
+								if (estado.equals("aprobado")) {
+									estadoClase = "bg-blue-500 text-white";
+									estadoTexto = "Aprobado";
+								} else if (estado.equals("finalizado")) {
+									estadoClase = "bg-green-500 text-white";
+									estadoTexto = "Finalizado";
+								} else if (estado.equals("rechazado")) {
+									estadoClase = "bg-red-500 text-white";
+									estadoTexto = "Rechazado";
+								} else if (estado.equals("pendiente")) {
+									estadoClase = "bg-yellow-400 text-gray-800";
+									estadoTexto = "En Revisión";
+								}
 					%>
-					<span class="bg-blue-500 text-white px-2 py-1 rounded">Aprobado</span>
-					<%
-						} else if (prestamo.getEstado().equalsIgnoreCase("finalizado")) {
-					%>
-					<span class="bg-green-500 text-white px-2 py-1 rounded">Finalizado</span>
-					<%
-						} else if (prestamo.getEstado().equalsIgnoreCase("rechazado")) {
-					%>
-					<span class="bg-red-500 text-white px-2 py-1 rounded">Rechazado</span>
-					<%
-						} else if (prestamo.getEstado().equalsIgnoreCase("pendiente")) {
-					%>
-					<span
-						style="background-color: #F5DEB3; color: #4B5563; padding: 0.5rem 0.75rem; border-radius: 0.25rem;">En
-						Revision</span>
-					<%
-						} else {
-					%>
-					<span class="bg-gray-300 text-gray-800 px-2 py-1 rounded">Desconocido</span>
-					<%
-						}
-					%>
+					<span class="<%=estadoClase%> px-2 py-1 rounded"> <%=estadoTexto%>
+					</span>
 				</p>
-
 			</div>
-
 		</div>
 
 		<%
 			}
-		%>
-		<%
-			}
-
-			else if (mensajeError != null) {
-		%>
-		<div id="errorMessage"
-			class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
-			<i class="fas fa-check-circle"></i>
-			<%=mensajeError%>
-		</div>
-		<%
-			}
+			} else {
 		%>
 
-		<%
-			if (mensajeExito != null) {
-		%>
-		<div id="successMessage"
-			class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-			<i class="fas fa-exclamation-circle"></i>
-			<%=mensajeExito%>
-		</div>
+		<p class="text-gray-600 text-center">No tienes préstamos
+			pendientes de aprobación.</p>
+
 		<%
 			}
 		%>
 	</div>
+
 
 
 	<div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md mt-12">
 		<h2 class="text-lg font-semibold text-gray-800 mb-4">Historial de
-			préstamos</h2>
+			Préstamos</h2>
 
-
-
-
-		<div class="flex justify-between items-center mb-4">
-			<div></div>
-
-			<div class="flex space-x-2">
-				<select id="filtroEstado" class="border-gray-300 rounded px-2 py-1">
-					<option value="">Cualquier estado</option>
+		<div class="overflow-x-auto">
+			<!-- Filtros -->
+			<div class="flex space-x-4 mb-4">
+				<input type="text" id="filterNombre"
+					class="form-control w-full p-2 rounded-lg border border-gray-300"
+					placeholder="Filtrar por Nombre..." onkeyup="filterTable()">
+				<select id="filterEstado"
+					class="form-control w-full p-2 rounded-lg border border-gray-300"
+					onchange="filterTable()">
+					<option value="">Filtrar por Estado</option>
 					<option value="aprobado">Aprobado</option>
-					<option value="pendiente">Pendiente</option>
 					<option value="finalizado">Finalizado</option>
 					<option value="rechazado">Rechazado</option>
-				</select> <select id="filtroMotivo" class="border-gray-300 rounded px-2 py-1">
-					<option value="">Cualquier motivo</option>
-					<option value="motivo1">Motivo 1</option>
-					<option value="motivo2">Motivo 2</option>
+					<option value="pendiente">Pendiente</option>
 				</select>
 			</div>
 
+			<!-- Tabla de préstamos -->
+			<table
+				class="table-auto w-full bg-white border-collapse border border-gray-300"
+				id="usersTable">
+				<thead class="bg-gray-200">
+					<tr>
+						<th class="px-4 py-2 border">ID</th>
+						<th class="px-4 py-2 border">Cuenta</th>
+						<th class="px-4 py-2 border">Fecha Solicitud</th>
+						<th class="px-4 py-2 border">Tipo</th>
+						<th class="px-4 py-2 border">Estado</th>
+						<th class="px-4 py-2 border">Monto</th>
+						<th class="px-4 py-2 border">Cuotas</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody">
+					<%
+						if (datosPrestamos != null && !datosPrestamos.isEmpty()) {
+							try {
+								for (Prestamo prestamo : datosPrestamos) {
+					%>
+					<tr>
+						<td class="px-4 py-2 border"><%=prestamo.getId()%></td>
+						<td class="px-4 py-2 border"><%=(prestamo.getCuenta().getNroCuenta())%>
+						</td>
+						<td class="border px-4 py-2"><%=prestamo.getFechaAlta()%></td>
+						<td class="border px-4 py-2"><%=prestamo.getObservaciones()%></td>
+						<td class="border px-4 py-2">
+							<%
+								String estado = (prestamo.getEstado() != null)
+													? prestamo.getEstado().trim().toLowerCase()
+													: "sin estado";
+											String estadoClase = "bg-gray-300 text-gray-700"; // Clase por defecto
+											String estadoTexto = "Sin Estado";
+
+											switch (estado) {
+												case "aprobado" :
+													estadoClase = "bg-blue-500 text-white";
+													estadoTexto = "Aprobado";
+													break;
+												case "finalizado" :
+													estadoClase = "bg-green-500 text-white";
+													estadoTexto = "Finalizado";
+													break;
+												case "rechazado" :
+													estadoClase = "bg-red-500 text-white";
+													estadoTexto = "Rechazado";
+													break;
+												case "pendiente" :
+													estadoClase = "bg-yellow-500 text-white";
+													estadoTexto = "Pendiente";
+													break;
+											}
+							%> <span
+							class="px-2 py-1 rounded <%=estadoClase%>"><%=estadoTexto%></span>
+						</td>
+						<td class="border px-4 py-2">$ <%=prestamo.getImporte()%></td>
+						<td class="border px-4 py-2"><%=prestamo.getCuotas()%></td>
+					</tr>
+					<%
+						}
+							} catch (Exception e) {
+					%>
+					<tr>
+						<td colspan="7" class="border px-4 py-2 text-center text-red-500">
+							Error al procesar los préstamos: <%=e.getMessage()%>
+						</td>
+					</tr>
+					<%
+						}
+						} else {
+					%>
+					<tr>
+						<td colspan="7" class="border px-4 py-2 text-center">No hay
+							préstamos disponibles.</td>
+					</tr>
+					<%
+						}
+					%>
+				</tbody>
+			</table>
 		</div>
 
-		<table class="w-full border-collapse border border-gray-300">
-			<thead class="bg-gray-100">
-				<tr>
-					<th class="border p-2">ID</th>
-					<th class="border p-2">Cuenta</th>
-					<th class="border p-2">Fecha Solicitud</th>
-					<th class="border p-2">Tipo</th>
-					<th class="border p-2">Estado</th>
-					<th class="border p-2">Monto</th>
-					<th class="border p-2">Cuotas</th>
-				</tr>
-			</thead>
-			<tbody id="tableBody">
-
-
-				<%
-					if (datosPrestamos != null) {
-						for (PrestamoDTO prestamo : datosPrestamos) {
-							// Verificar que los campos relevantes no sean null o valores no válidos  
-							if (prestamo.getFechaAlta() != null && prestamo.getObservaciones() != null
-									&& prestamo.getImporte() != null && prestamo.getCuotas() != 0
-									&& prestamo.getCuenta().getNroCuenta() != 0) {
-				%>
-				<tr class="border">
-					<td class="border p-2"><%=prestamo.getId()%></td>
-					<td class="border p-2"><%=prestamo.getCuenta().getNroCuenta()%></td>
-					<td class="border p-2"><%=prestamo.getFechaAlta()%></td>
-					<td class="border p-2 motivo"><%=prestamo.getObservaciones()%></td>
-
-					<td class="border p-2 estado">
-						<%
-							if (prestamo.getEstado() != null) {
-											if (prestamo.getEstado().equalsIgnoreCase("pendiente")) {
-						%> <span class="bg-blue-500 text-white px-2 py-1 rounded">Pendiente</span>
-						<%
-							} else if (prestamo.getEstado().equalsIgnoreCase("aprobado")) {
-						%> <span class="bg-yellow-500 text-white px-2 py-1 rounded">Aprobado</span>
-						<%
-							} else if (prestamo.getEstado().equalsIgnoreCase("finalizado")) {
-						%> <span class="bg-green-500 text-white px-2 py-1 rounded">Finalizado</span>
-						<%
-							} else if (prestamo.getEstado().equalsIgnoreCase("rechazado")) {
-						%> <span class="bg-red-500 text-white px-2 py-1 rounded">Rechazado</span>
-						<%
-							} else {
-						%> <span class="bg-gray-500 text-white px-2 py-1 rounded">Estado
-							desconocido</span> <%
- 	}
- 				}
- %>
-					</td>
-
-
-					<td class="border p-2">$ <%=prestamo.getImporte()%></td>
-					<td class="border p-2"><%=prestamo.getCuotas()%></td>
-				</tr>
-				<%
-					} // Cierre de la verificación de datos del prestamo
-						} // Cierre del bucle de prestamos
-					} else if (mensajeError != null) {
-				%>
-				<div id="errorMessage"
-					class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
-					<i class="fas fa-check-circle"></i>
-					<%=mensajeError%>
-				</div>
-				<%
-					}
-				%>
-
-				<%
-					if (mensajeExito != null) {
-				%>
-				<div id="successMessage"
-					class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-					<i class="fas fa-exclamation-circle"></i>
-					<%=mensajeExito%>
-				</div>
-				<%
-					}
-				%>
-
-
-			</tbody>
-
-		</table>
-		<div class="pagination mt-4">
+		<!-- Paginación -->
+		<div class="pagination mt-4 flex justify-center space-x-4">
 			<button onclick="prevPage()" id="btnPrev"
-				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Anterior</button>
-			<span id="pageNumbers"></span>
+				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+				Anterior</button>
+			<span id="pageNumbers" class="text-gray-800 font-semibold"></span>
 			<button onclick="nextPage()" id="btnNext"
-				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Siguiente</button>
+				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+				Siguiente</button>
 		</div>
-
-		<br> <br> <br> <br>
-
+		<br>
+		<br>
+		<br>
+		<br>
 	</div>
 
 
-
 	<script>
-		// Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error
-	<%if (request.getAttribute("mensajeError") != null) {%>
-		mostrarMensaje("successMessage");
-	<%} else if (request.getAttribute("mensajeExito") != null) {%>
-		mostrarMensaje("errorMessage");
-	<%}%>
-		function ocultarMensaje() {
-			// Ocultar el mensaje de éxito después de 9000 milisegundos (9 segundos)
-			var mensaje = document.getElementById("successMessage");
-			if (mensaje) {
-				setTimeout(function() {
-					mensaje.style.display = "none";
-				}, 9000);
-			}
+		function filterTable() {
+			var nombreFiltro = document.getElementById("filterNombre").value
+					.toLowerCase();
+			var estadoFiltro = document.getElementById("filterEstado").value
+					.toLowerCase();
+			var table = document.getElementById("usersTable");
+			var tr = table.getElementsByTagName("tr");
 
-			// Ocultar el mensaje de error después de 9000 milisegundos (9 segundos)
-			var errorMensaje = document.getElementById("errorMessage");
-			if (errorMensaje) {
-				setTimeout(function() {
-					errorMensaje.style.display = "none";
-				}, 9000);
-			}
-		}
+			for (var i = 1; i < tr.length; i++) { // Comenzamos en 1 para saltar el encabezado
+				var tdNombre = tr[i].getElementsByTagName("td")[2]; // Columna de Nombre y Apellido
+				var tdEstado = tr[i].getElementsByTagName("td")[5]; // Columna de Estado
+				if (tdNombre && tdEstado) {
+					var nombreTexto = tdNombre.textContent.toLowerCase();
+					var estadoTexto = tdEstado.textContent.toLowerCase();
 
-		function mostrarMensaje(tipo) {
-			var mensaje = document.getElementById(tipo);
-			if (mensaje) {
-				mensaje.style.display = "block"; // Mostrar el mensaje
-				// Ocultar el mensaje después de 5000 milisegundos (5 segundos)
-				setTimeout(function() {
-					mensaje.style.display = "none";
-				}, 5000);
+					var coincideNombre = nombreTexto.includes(nombreFiltro);
+					var coincideEstado = estadoFiltro === ""
+							|| estadoTexto.includes(estadoFiltro);
+
+					if (coincideNombre && coincideEstado) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
 			}
 		}
 
-		window.addEventListener("load", function() {
-			// Llamar a la función mostrarMensaje cuando se cargue la página
-			if (document.getElementById("successMessage")) {
-				mostrarMensaje("successMessage");
-			} else if (document.getElementById("errorMessage")) {
-				mostrarMensaje("errorMessage");
-			}
-
-			// Ocultar mensajes si son visibles
-			ocultarMensaje();
-		});
+		window.onload = function() {
+			setTimeout(function() {
+				const successMessage = document
+						.getElementById('successMessage');
+				const errorMessage = document.getElementById('errorMessage');
+				if (successMessage) {
+					successMessage.style.display = 'none';
+				}
+				if (errorMessage) {
+					errorMessage.style.display = 'none';
+				}
+			}, 5000);
+		};
 	</script>
+
+
+
+
+
 </body>
+
+
 
 
 </body>
@@ -473,56 +444,45 @@ input:required:invalid {
 <script
 	src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
 
-<script>
-	// Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error
-<%if (request.getAttribute("mensajeError") != null) {%>
-	mostrarMensaje("successMessage");
-<%} else if (request.getAttribute("mensajeExito") != null) {%>
-	mostrarMensaje("errorMessage");
-<%}%>
-	function ocultarMensaje() {
-		// Ocultar el mensaje de éxito después de 9000 milisegundos (9 segundos)
-		var mensaje = document.getElementById("successMessage");
-		if (mensaje) {
-			setTimeout(function() {
-				mensaje.style.display = "none";
-			}, 9000);
+
+
+	<script>
+		// Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error
+	<%if (request.getAttribute("mensajeExito") != null) {%>
+		mostrarMensaje("successMessage");
+	<%} else if (request.getAttribute("mensajeError") != null) {%>
+		mostrarMensaje("errorMessage");
+	<%}%>
+		function ocultarMensaje() {
+			var mensaje = document.getElementById("successMessage");
+			if (mensaje) {
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 9000);
+			}
+
+			var errorMensaje = document.getElementById("errorMessage");
+			if (errorMensaje) {
+				setTimeout(function() {
+					errorMensaje.style.display = "none";
+				}, 9000);
+			}
 		}
 
-		// Ocultar el mensaje de error después de 9000 milisegundos (9 segundos)
-		var errorMensaje = document.getElementById("errorMessage");
-		if (errorMensaje) {
-			setTimeout(function() {
-				errorMensaje.style.display = "none";
-			}, 9000);
+		// Función para mostrar el mensaje y luego ocultarlo  
+		function mostrarMensaje(tipo) {
+			var mensaje = document.getElementById(tipo);
+			if (mensaje) {
+				mensaje.style.display = "block"; // Mostrar el mensaje  
+				// Ocultar el mensaje después de 3 segundos (3000 milisegundos)  
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 9000);
+			}
 		}
-	}
+		
 
-	function mostrarMensaje(tipo) {
-		var mensaje = document.getElementById(tipo);
-		if (mensaje) {
-			mensaje.style.display = "block"; // Mostrar el mensaje
-			// Ocultar el mensaje después de 5000 milisegundos (5 segundos)
-			setTimeout(function() {
-				mensaje.style.display = "none";
-			}, 5000);
-		}
-	}
-
-	window.addEventListener("load", function() {
-		// Llamar a la función mostrarMensaje cuando se cargue la página
-		if (document.getElementById("successMessage")) {
-			mostrarMensaje("successMessage");
-		} else if (document.getElementById("errorMessage")) {
-			mostrarMensaje("errorMessage");
-		}
-
-		// Ocultar mensajes si son visibles
-		ocultarMensaje();
-	});
-</script>
-
-
+	</script>
 
 <script>
 	$('.btn-pagar').click(function() {

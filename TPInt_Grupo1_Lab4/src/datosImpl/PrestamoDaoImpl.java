@@ -13,7 +13,7 @@ import java.util.List;
 import datos.PrestamoDao;
 import entidad.Cliente;
 import entidad.Cuenta;
-import entidad.Movimiento;
+
 import entidad.Prestamo;
 import entidad.TipoCuenta;
 
@@ -464,10 +464,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 	    cn.Open(); // Abrimos la conexión
 	    String query = "{CALL ObtenerPrestamosPorCliente(?)}";
 
-	    try (CallableStatement cst = cn.connection.prepareCall(query)) {
-	        cst.setInt(1, clienteId);
-
-	        try (ResultSet rs = cst.executeQuery()) {
+	    try (CallableStatement cst = cn.connection.prepareCall(query); ResultSet rs = cst.executeQuery()) {
 	            while (rs.next()) {
 	                // Datos del préstamo
 	                int idPrestamo = rs.getInt("id");
@@ -517,7 +514,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 
 	                // Agregar a la lista
 	                prestamos.add(prestamoDTO);
-	            }
+	            
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -529,151 +526,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 	}
 
 
-	
-	
-	
-	
-	@Override
-	public List<PrestamoDTO> listarPrestamosPorEstadosPendientes(int clienteId) {
-		   List<PrestamoDTO> prestamos = new ArrayList<>();
 
-		    cn.Open(); // Abrimos la conexión
-		    String query = "{CALL ObtenerPrestamosPorEstadosPendientes(?)}";
-
-		    try (CallableStatement cst = cn.connection.prepareCall(query)) {
-		        cst.setInt(1, clienteId);
-
-		        try (ResultSet rs = cst.executeQuery()) {
-		            while (rs.next()) {
-		                // Datos del préstamo
-		                int idPrestamo = rs.getInt("id");
-		                String tipoMovimiento = rs.getString("Tipo_Prestamo");
-		                int idCliente = rs.getInt("ID_Cliente");
-		                int nroCuenta = rs.getInt("Nro_Cuenta"); // ✅ Corregido: Se obtiene como int
-
-		                LocalDate fechaSolicitud = (rs.getDate("Fecha_Solicitada_Prestamo") != null)
-		                        ? rs.getDate("Fecha_Solicitada_Prestamo").toLocalDate()
-		                        : null;
-
-		                BigDecimal importe = rs.getBigDecimal("Importe_Prestamo_Solicitado");
-		                int cuotas = rs.getInt("Cantidad_Cuotas_APagar");
-		                BigDecimal valorCuotas = rs.getBigDecimal("Valor_Cuota_Prestamo");
-		                String estado = rs.getString("Estado_Prestamo");
-
-		                // Datos de la cuenta
-		                int nroCuentaAsociada = rs.getInt("Cuenta_Asociada"); // ✅ Corregido: Se obtiene como int
-		                String tipoCuentaDescripcion = rs.getString("Tipo_Cuenta");
-		                String cbu = rs.getString("CBU");
-		                BigDecimal saldo = rs.getBigDecimal("Saldo");
-
-		                // Creación de objetos
-		                TipoCuenta tipoCuenta = new TipoCuenta();
-		                tipoCuenta.setDescripcion(tipoCuentaDescripcion);
-
-		                Cuenta cuenta = new Cuenta();
-		                cuenta.setNroCuenta(nroCuentaAsociada); // ✅ Corregido: Ahora es int
-		                cuenta.setCbu(cbu);
-		                cuenta.setSaldo(saldo);
-		                cuenta.setTipoCuenta(tipoCuenta);
-
-		                Cliente cliente = new Cliente();
-		                cliente.setId(idCliente); // ✅ Correcto
-
-		                // Asignar valores a PrestamoDTO
-		                PrestamoDTO prestamoDTO = new PrestamoDTO();
-		                prestamoDTO.setId(idPrestamo);
-		                prestamoDTO.setCliente(cliente);
-		                prestamoDTO.setObservaciones(tipoMovimiento);
-		                prestamoDTO.setFechaAlta(fechaSolicitud);
-		                prestamoDTO.setImporte(importe);
-		                prestamoDTO.setCuotas(cuotas);
-		                prestamoDTO.setValorCuotas(valorCuotas);
-		                prestamoDTO.setEstado(estado);
-		                prestamoDTO.setCuenta(cuenta);
-
-		                // Agregar a la lista
-		                prestamos.add(prestamoDTO);
-		            }
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    } finally {
-		        cn.close();
-		    }
-
-		    return prestamos;
-	}
-
-	@Override
-	public List<PrestamoDTO> listarPrestamosPorEstadosAprobados(int clienteId) {
-		   List<PrestamoDTO> prestamos = new ArrayList<>();
-
-		    cn.Open(); // Abrimos la conexión
-		    String query = "{CALL ObtenerPrestamosPorEstadosAprobados(?)}";
-
-		    try (CallableStatement cst = cn.connection.prepareCall(query)) {
-		        cst.setInt(1, clienteId);
-
-		        try (ResultSet rs = cst.executeQuery()) {
-		            while (rs.next()) {
-		                // Datos del préstamo
-		                int idPrestamo = rs.getInt("id");
-		                String tipoMovimiento = rs.getString("Tipo_Prestamo");
-		                int idCliente = rs.getInt("ID_Cliente");
-		                int nroCuenta = rs.getInt("Nro_Cuenta"); // ✅ Corregido: Se obtiene como int
-
-		                LocalDate fechaSolicitud = (rs.getDate("Fecha_Solicitada_Prestamo") != null)
-		                        ? rs.getDate("Fecha_Solicitada_Prestamo").toLocalDate()
-		                        : null;
-
-		                BigDecimal importe = rs.getBigDecimal("Importe_Prestamo_Solicitado");
-		                int cuotas = rs.getInt("Cantidad_Cuotas_APagar");
-		                BigDecimal valorCuotas = rs.getBigDecimal("Valor_Cuota_Prestamo");
-		                String estado = rs.getString("Estado_Prestamo");
-
-		                // Datos de la cuenta
-		                int nroCuentaAsociada = rs.getInt("Cuenta_Asociada"); // ✅ Corregido: Se obtiene como int
-		                String tipoCuentaDescripcion = rs.getString("Tipo_Cuenta");
-		                String cbu = rs.getString("CBU");
-		                BigDecimal saldo = rs.getBigDecimal("Saldo");
-
-		                // Creación de objetos
-		                TipoCuenta tipoCuenta = new TipoCuenta();
-		                tipoCuenta.setDescripcion(tipoCuentaDescripcion);
-
-		                Cuenta cuenta = new Cuenta();
-		                cuenta.setNroCuenta(nroCuentaAsociada); // ✅ Corregido: Ahora es int
-		                cuenta.setCbu(cbu);
-		                cuenta.setSaldo(saldo);
-		                cuenta.setTipoCuenta(tipoCuenta);
-
-		                Cliente cliente = new Cliente();
-		                cliente.setId(idCliente); // ✅ Correcto
-
-		                // Asignar valores a PrestamoDTO
-		                PrestamoDTO prestamoDTO = new PrestamoDTO();
-		                prestamoDTO.setId(idPrestamo);
-		                prestamoDTO.setCliente(cliente);
-		                prestamoDTO.setObservaciones(tipoMovimiento);
-		                prestamoDTO.setFechaAlta(fechaSolicitud);
-		                prestamoDTO.setImporte(importe);
-		                prestamoDTO.setCuotas(cuotas);
-		                prestamoDTO.setValorCuotas(valorCuotas);
-		                prestamoDTO.setEstado(estado);
-		                prestamoDTO.setCuenta(cuenta);
-
-		                // Agregar a la lista
-		                prestamos.add(prestamoDTO);
-		            }
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    } finally {
-		        cn.close();
-		    }
-
-		    return prestamos;
-	}
 
 	// Método para pagar una cuota del préstamo
 	public String pagarCuota(int idPrestamo) {
@@ -702,5 +555,184 @@ public class PrestamoDaoImpl implements PrestamoDao {
 
 		return mensaje;
 	}
+
+	@Override
+	public List<Prestamo> listarPrestamosPorClientesAprobados(int clienteId) {
+	    List<Prestamo> listaPrestamos = new ArrayList<>();
+	    final String query = "{CALL ListarPrestamosPorCliente(?)}"; // Llamada al SP
+
+	    try {
+	        if (cn == null) {
+	            throw new IllegalStateException("La conexión 'cn' es nula.");
+	        }
+
+	        cn.Open();
+
+	        if (cn.connection == null) {
+	            throw new IllegalStateException("La conexión a la base de datos no se ha establecido correctamente.");
+	        }
+
+	        try (CallableStatement cst = cn.connection.prepareCall(query)) {
+	            cst.setInt(1, clienteId); // Asigna el parámetro de entrada al SP
+
+	            try (ResultSet rs = cst.executeQuery()) {
+	                while (rs.next()) {
+	                    Prestamo prestamo = new Prestamo();
+	                    prestamo.setCliente(new Cliente()); // Inicializa Cliente para evitar NullPointerException
+
+	                    // Manejo de valores nulos en columnas de Cliente
+	                    prestamo.getCliente().setId(rs.getInt("ID_Cliente"));
+
+	                    // Manejo de valores de Prestamo
+	                    prestamo.setId(rs.getInt("ID_Prestamo"));
+	                    prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+	                    prestamo.setCuotas(rs.getInt("Cuotas"));
+	                    prestamo.setEstado(rs.getString("Estado") != null ? rs.getString("Estado") : "Desconocido");
+	                    prestamo.setValorCuotas(rs.getBigDecimal("Valor_Cuota"));
+
+	                    if (rs.getDate("Fecha_Solicitud") != null) {
+	                        prestamo.setFechaAlta(rs.getDate("Fecha_Solicitud").toLocalDate());
+	                    } else {
+	                        prestamo.setFechaAlta(null); // Permite valores NULL
+	                    }
+
+	                    prestamo.setObservaciones(rs.getString("Tipo_Prestamo") != null ? rs.getString("Tipo_Prestamo") : "Sin observaciones");
+
+	                    listaPrestamos.add(prestamo);
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Error al obtener los préstamos del cliente: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        if (cn != null) {
+	            cn.close();
+	        }
+	    }
+
+	    return listaPrestamos;
+	}
+
+	@Override
+	public List<Prestamo> listarPrestamosPorClientesPendientes(int clienteId) {
+		   List<Prestamo> listaPrestamos = new ArrayList<>();
+		    final String query = "{CALL ListarPrestamosPorClientesPendientes(?)}"; // Llamada al SP
+
+		    try {
+		        if (cn == null) {
+		            throw new IllegalStateException("La conexión 'cn' es nula.");
+		        }
+
+		        cn.Open();
+
+		        if (cn.connection == null) {
+		            throw new IllegalStateException("La conexión a la base de datos no se ha establecido correctamente.");
+		        }
+
+		        try (CallableStatement cst = cn.connection.prepareCall(query)) {
+		            cst.setInt(1, clienteId); // Asigna el parámetro de entrada al SP
+
+		            try (ResultSet rs = cst.executeQuery()) {
+		                while (rs.next()) {
+		                    Prestamo prestamo = new Prestamo();
+		                    prestamo.setCliente(new Cliente()); // Inicializa Cliente para evitar NullPointerException
+
+		                    // Manejo de valores nulos en columnas de Cliente
+		                    prestamo.getCliente().setId(rs.getInt("ID_Cliente"));
+
+		                    // Manejo de valores de Prestamo
+		                    prestamo.setId(rs.getInt("ID_Prestamo"));
+		                    prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+		                    prestamo.setCuotas(rs.getInt("Cuotas"));
+		                    prestamo.setEstado(rs.getString("Estado") != null ? rs.getString("Estado") : "Desconocido");
+		                    prestamo.setValorCuotas(rs.getBigDecimal("Valor_Cuota"));
+
+		                    if (rs.getDate("Fecha_Solicitud") != null) {
+		                        prestamo.setFechaAlta(rs.getDate("Fecha_Solicitud").toLocalDate());
+		                    } else {
+		                        prestamo.setFechaAlta(null); // Permite valores NULL
+		                    }
+
+		                    prestamo.setObservaciones(rs.getString("Tipo_Prestamo") != null ? rs.getString("Tipo_Prestamo") : "Sin observaciones");
+
+		                    listaPrestamos.add(prestamo);
+		                }
+		            }
+		        }
+		    } catch (Exception e) {
+		        System.err.println("Error al obtener los préstamos del cliente: " + e.getMessage());
+		        e.printStackTrace();
+		    } finally {
+		        if (cn != null) {
+		            cn.close();
+		        }
+		    }
+
+		    return listaPrestamos;
+	}
+
+	@Override
+	public List<Prestamo> listarPrestamosDeClientesPorEstados(int clienteId){
+		   List<Prestamo> listaPrestamos = new ArrayList<>();
+		    final String query = "{CALL ListarPrestamosDeClientesPorEstados(?)}"; // Llamada al SP
+
+		    try {
+		        if (cn == null) {
+		            throw new IllegalStateException("La conexión 'cn' es nula.");
+		        }
+
+		        cn.Open();
+
+		        if (cn.connection == null) {
+		            throw new IllegalStateException("La conexión a la base de datos no se ha establecido correctamente.");
+		        }
+
+		        try (CallableStatement cst = cn.connection.prepareCall(query)) {
+		            cst.setInt(1, clienteId); // Asigna el parámetro de entrada al SP
+
+		            try (ResultSet rs = cst.executeQuery()) {
+		                while (rs.next()) {
+		                    Prestamo prestamo = new Prestamo();
+		                    prestamo.setCliente(new Cliente()); // Inicializa Cliente para evitar NullPointerException
+		                    prestamo.setCuenta(new Cuenta());
+
+		                    // Manejo de valores nulos en columnas de Cliente
+		                    prestamo.getCliente().setId(rs.getInt("ID_Cliente"));
+		                    
+		                    prestamo.getCuenta().setNroCuenta(rs.getInt("Nro_Cuenta"));
+
+		                    // Manejo de valores de Prestamo
+		                    prestamo.setId(rs.getInt("ID_Prestamo"));
+		                    prestamo.setImporte(rs.getBigDecimal("Monto_Solicitado"));
+		               
+		                    prestamo.setCuotas(rs.getInt("Cuotas"));
+		                    prestamo.setEstado(rs.getString("Estado") != null ? rs.getString("Estado") : "Desconocido");
+		                    prestamo.setValorCuotas(rs.getBigDecimal("Valor_Cuota"));
+
+		                    if (rs.getDate("Fecha_Solicitud") != null) {
+		                        prestamo.setFechaAlta(rs.getDate("Fecha_Solicitud").toLocalDate());
+		                    } else {
+		                        prestamo.setFechaAlta(null); // Permite valores NULL
+		                    }
+
+		                    prestamo.setObservaciones(rs.getString("Tipo_Prestamo") != null ? rs.getString("Tipo_Prestamo") : "Sin observaciones");
+
+		                    listaPrestamos.add(prestamo);
+		                }
+		            }
+		        }
+		    } catch (Exception e) {
+		        System.err.println("Error al obtener los préstamos del cliente: " + e.getMessage());
+		        e.printStackTrace();
+		    } finally {
+		        if (cn != null) {
+		            cn.close();
+		        }
+		    }
+
+		    return listaPrestamos;
+	}
+
 
 }

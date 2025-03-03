@@ -71,7 +71,7 @@ input:required:invalid {
 			Préstamo</h2>
 
 
-       		<!-- Mostrar mensaje de éxito -->
+    		<!-- Mostrar mensaje de éxito -->
 		<%
 			String mensajeExito = (String) request.getAttribute("mensajeExito");
 			if (mensajeExito != null) {
@@ -96,6 +96,7 @@ input:required:invalid {
 			}
 		%>
 
+
 	
 
 		<%
@@ -111,8 +112,11 @@ input:required:invalid {
 
 			<div class="mt-2 text-gray-700">
 				<p class="font-bold">
-					Cuota a pagar: $
+					Cuota a pagar:
 					<%=prestamo.getCuotas()%></p>
+				<p class="font-bold">
+					Valor Cuota: $
+					<%=prestamo.getValorCuotas()%></p>
 				<p class="font-bold">
 					Deuda pendiente: $
 					<%=prestamo.getImporte()%></p>
@@ -130,7 +134,7 @@ input:required:invalid {
 			<div class="mt-4">
 				<label class="block text-gray-700 font-medium mb-2">Selecciona
 					una cuenta</label> <select name="nroCuenta"
-					class="w-full p-2 border border-gray-300 rounded">
+					class="w-full p-2 border border-gray-300 rounded" required>
 					<option value="">Selecciona una cuenta</option>
 
 					<%
@@ -159,10 +163,13 @@ input:required:invalid {
 			
 				<div class="mt-6">
 					<button type="submit"
-						class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
+						class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
 						onclick="return confirm('¿Está seguro de que deseas Pagar la cuota?')">
 						Confirmar Pago</button>
 				</div>
+				
+				
+				
 		</form>
 
 		<%
@@ -175,20 +182,43 @@ input:required:invalid {
 	</div>
 	
 		<script>
-		window.onload = function() {
-			// Esperar a que el DOM esté completamente cargado  
-			setTimeout(function() {
-				var successMessage = document.getElementById('successMessage');
-				var errorMessage = document.getElementById('errorMessage');
-				if (successMessage) {
-					successMessage.style.display = 'none'; // Ocultar mensaje de éxito  
-				}
-				if (errorMessage) {
-					errorMessage.style.display = 'none'; // Ocultar mensaje de error  
-				}
-			}, 5000); // 5000 milisegundos = 5 segundos  
-		};
+		// Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error
+	<%if (request.getAttribute("mensajeExito") != null) {%>
+		mostrarMensaje("successMessage");
+	<%} else if (request.getAttribute("mensajeError") != null) {%>
+		mostrarMensaje("errorMessage");
+	<%}%>
+		function ocultarMensaje() {
+			var mensaje = document.getElementById("successMessage");
+			if (mensaje) {
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 5000);
+			}
+
+			var errorMensaje = document.getElementById("errorMessage");
+			if (errorMensaje) {
+				setTimeout(function() {
+					errorMensaje.style.display = "none";
+				}, 9000);
+			}
+		}
+
+		// Función para mostrar el mensaje y luego ocultarlo  
+		function mostrarMensaje(tipo) {
+			var mensaje = document.getElementById(tipo);
+			if (mensaje) {
+				mensaje.style.display = "block"; // Mostrar el mensaje  
+				// Ocultar el mensaje después de 3 segundos (3000 milisegundos)  
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 9000);
+			}
+		}
+		
+	 
 	</script>
+
 
 </body>
 </html>
