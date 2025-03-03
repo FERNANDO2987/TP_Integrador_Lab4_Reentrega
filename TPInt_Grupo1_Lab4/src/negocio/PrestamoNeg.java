@@ -22,7 +22,6 @@ public interface PrestamoNeg {
 
 	public ArrayList<Prestamo> ListarPrestamos();
 
-
 	public Map<String, BigDecimal> ObtenerMontosPendientes();
 
 	public boolean RechazarPrestamo(int idPrestamo);
@@ -35,29 +34,20 @@ public interface PrestamoNeg {
 
 	public Prestamo ObtenerPrestamoPorId(int idPrestamo);
 
-
-
-
 	public String PagarCuota(int idPrestamo);
 
 	public ArrayList<Prestamo> ListarPrestamosPorClientesAprobados(int clienteId);
-    public ArrayList<Prestamo> ListarPrestamosPorClientesPendientes(int clienteId);
-    public ArrayList<Prestamo> ListarPrestamosDeClientesPorEstados(int clienteId);
 
-	 public Map<String, BigDecimal> ObtenerMontosPendientes();
-	 public boolean RechazarPrestamo(int idPrestamo);
-	 public boolean AprobarPrestamo(int idPrestamo);
-		public ArrayList<Prestamo> ListarTodosLosPrestamos();
-		public ArrayList<Prestamo> ListarPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA);
-		
-		 public List<Prestamo> ObtenerMovimientosPorFecha(LocalDate fechaDesde, LocalDate fechaHasta);
-		 public ArrayList<CuentaDTO> ObtenerDatosCliente(int idCliente);
-			public List<CuentaDTO> obtenerEstadosPendientes(int idCliente);
-			public List<CuentaDTO> obtenerEstadosVigentes(int idCliente) ;
-			public Prestamo ObtenerPrestamoPorId(int idPrestamo);
-	 
-	
-	
+	public ArrayList<Prestamo> ListarPrestamosPorClientesPendientes(int clienteId);
+
+	public ArrayList<Prestamo> ListarPrestamosDeClientesPorEstados(int clienteId);
+
+
+	public ArrayList<Prestamo> ListarPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA);
+
+
+
+
 
 
 }
