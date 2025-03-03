@@ -396,8 +396,22 @@ public class PrestamoNegImpl implements PrestamoNeg{
 
 
 
+	@Override
+	public ArrayList<Prestamo> ListarPrestamosFiltrados(BigDecimal mayorA, BigDecimal menorA) {
+		if (mayorA.compareTo(BigDecimal.ZERO) < 0 || menorA.compareTo(BigDecimal.ZERO) < 0) {
+			throw new RuntimeException("No se aceptan números negativos");
+		}
+		if (mayorA.compareTo(menorA) >= 0) {
+			throw new RuntimeException("No se encontraron prestamos");
+		}
+		
+		List<Prestamo> prestamos = prestamoDao.ObtenerPrestamosFiltrados(mayorA, menorA);
 
-	
-	
+        if (prestamos == null || prestamos.isEmpty()) {
+            throw new RuntimeException("No se encontraron prestamos.");
+        }
+
+        return (ArrayList<Prestamo>) prestamos;
+	}	
 
 }
