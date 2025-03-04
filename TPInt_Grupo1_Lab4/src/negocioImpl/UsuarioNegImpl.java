@@ -6,6 +6,7 @@ import java.util.List;
 import datos.UsuarioDao;
 import datosImpl.UsuarioDaoImpl;
 import entidad.Usuario;
+import excepciones.UsuarioNoLogueadoException;
 import negocio.UsuarioNeg;
 
 public class UsuarioNegImpl implements UsuarioNeg {
@@ -22,7 +23,7 @@ public class UsuarioNegImpl implements UsuarioNeg {
 		
 	}
 	
-	public Usuario iniciarSesion(String nombreUsuario, String contrasena)
+	public Usuario iniciarSesion(String nombreUsuario, String contrasena) throws UsuarioNoLogueadoException
 	{
 	    Usuario usuario = new Usuario();
 	    usuario.setUsuario(nombreUsuario);
@@ -34,9 +35,11 @@ public class UsuarioNegImpl implements UsuarioNeg {
 	        // Mostrar el valor de admin en la consola
 	        System.out.println("Usuario: " + usuarioValido.getUsuario() + " | Admin: " + usuarioValido.isAdmin());
 	        return usuarioValido;
-	    } else {
-	        System.out.println("Inicio de sesión fallido para el usuario: " + nombreUsuario);
-	        return null;
+	    } else {		
+	    	UsuarioNoLogueadoException usuarioNoLogueadoException = new UsuarioNoLogueadoException();
+	    	{final long serialVersionUID = 1L;};
+	    	throw usuarioNoLogueadoException;
+	        
 	    }
 	}
 
