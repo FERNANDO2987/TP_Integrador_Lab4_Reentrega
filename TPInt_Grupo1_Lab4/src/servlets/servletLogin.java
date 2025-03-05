@@ -55,8 +55,8 @@ public class servletLogin extends HttpServlet {
 
 	        	try {
 	            	UsuarioNegImpl clienteNegocio = new UsuarioNegImpl();
-	            	Usuario usuarioSesion = clienteNegocio.iniciarSesion(usuario, contrasenia);
-	            	HttpSession session = request.getSession();
+	            	
+	            	
 	                session.setAttribute("usuario", usuarioSesion);
 	             // Redirige dependiendo del tipo de usuario  
 
@@ -76,6 +76,8 @@ public class servletLogin extends HttpServlet {
 	        }  
 	    }  
 	}
-
-
+	}
 }
+
+
+

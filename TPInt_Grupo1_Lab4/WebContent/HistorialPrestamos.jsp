@@ -294,8 +294,14 @@
 		<div class="mt-6 p-4 bg-white shadow rounded-lg">
 			<canvas id="prestamosChart"></canvas>
 		</div>
+		<br>
+			<br>
+				<br>
+					<br>
+					
+		
 	</div>
-	</div>
+	
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
@@ -403,6 +409,55 @@
 		};
 	</script>
 
+
+
+
+
+	<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Obtener la lista de préstamos desde el servidor
+    const prestamos = <%= prestamos != null ? prestamos.size() : 0 %>;
+
+    if (prestamos > 0) {
+        // Inicializar el objeto de estados
+        let estados = { "aprobado": 0, "finalizado": 0, "rechazado": 0, "pendiente": 0 };
+
+        <% for (Prestamo prestamo : prestamos) { %>
+            estados["<%= prestamo.getEstado() %>"]++;
+        <% } %>
+
+        // Configuración del gráfico con Chart.js
+        const ctx = document.getElementById("prestamosChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: Object.keys(estados),
+                datasets: [{
+                    label: "Cantidad de Préstamos",
+                    data: Object.values(estados),
+                    backgroundColor: ["#3B82F6", "#10B981", "#EF4444", "#F59E0B"],
+                    borderColor: ["#1E40AF", "#047857", "#B91C1C", "#B45309"],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 
 
 </body>
