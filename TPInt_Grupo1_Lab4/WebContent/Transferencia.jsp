@@ -51,37 +51,38 @@
 			<form method="post" action="servletTransferencia">
 				<div class="mb-3">
 					<label for="cuentaOrigen" class="form-label">Cuenta Origen</label>
-					<select class="form-control" id="cuentaOrigen" name="cuentaOrigen"
-						required>
-						<option selected disabled>Seleccione una cuenta de origen</option>
-						<%
-							for (Cuenta cuenta : cuentas) {
-						%>
-						<option value="<%=cuenta.getCbu()%>">Nro Cuenta:
-							<%=cuenta.getNroCuenta()%> Cbu:
-							<%=cuenta.getCbu()%>
-						</option>
-						<%
-							}
-						%>
+					<select class="form-control" id="cuentaOrigen" name="cuentaOrigen" required>
+    				<option disabled>Seleccione una cuenta de origen</option>
+					    <%
+					        String cuentaOrigenSeleccionada = (String) request.getAttribute("cuentaOrigenSeleccionada");
+					        for (Cuenta cuenta : cuentas) {
+					            String selected = (cuentaOrigenSeleccionada != null && cuentaOrigenSeleccionada.equals(cuenta.getCbu())) ? "selected" : "";
+					    %>
+					    <option value="<%=cuenta.getCbu()%>" <%=selected%>>Nro Cuenta: <%=cuenta.getNroCuenta()%> CBU: <%=cuenta.getCbu()%></option>
+					    <%
+					        }
+					    %>
 					</select>
+
 				</div>
 				<div class="mb-3">
 					<label for="cuentaDestino" class="form-label">Cuenta
-						Destino</label> <input type="text" class="form-control"
-						name="cuentaDestino" id="cuentaDestino"
-						placeholder="Ingrese el CBU de la cuenta que recibira el dinero"
-						required>
+						Destino</label> <input type="text" class="form-control" name="cuentaDestino" id="cuentaDestino"
+       					placeholder="Ingrese el CBU de la cuenta que recibirá el dinero" required
+       					value="<%= request.getAttribute("cuentaDestinoIngresada") != null ? request.getAttribute("cuentaDestinoIngresada") : "" %>">
+
 				</div>
 				<div class="mb-3">
-					<label for="monto" class="form-label">Monto</label> <input
-						type="number" class="form-control" id="monto" name="monto"
-						placeholder="Ingrese el monto" min="1" step="0.01" required>
+					<label for="monto" class="form-label">Monto</label> <input type="number" class="form-control" id="monto" name="monto"
+       				placeholder="Ingrese el monto" min="1" step="0.01" required
+       				value="<%= request.getAttribute("montoIngresado") != null ? request.getAttribute("montoIngresado") : "" %>">
+
 				</div>
 				<div class="mb-3">
-					<label for="detalle" class="form-label">Detalle</label> <input
-						type="text" class="form-control" id="detalle" name="detalle"
-						placeholder="Ingrese un detalle opcional">
+					<label for="detalle" class="form-label">Detalle</label> <input type="text" class="form-control" id="detalle" name="detalle"
+       				placeholder="Ingrese un detalle opcional"
+       				value="<%= request.getAttribute("detalleIngresado") != null ? request.getAttribute("detalleIngresado") : "" %>">
+
 				</div>
 				<button type="submit" name="btnTransferir" id="btnTransferir"
 					class="btn btn-primary w-100">Realizar Transferencia</button>

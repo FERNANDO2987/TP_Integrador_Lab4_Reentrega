@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import entidad.Usuario;
-
+import excepciones.UsuarioNoLogueadoException;
 import negocioImpl.UsuarioNegImpl;
 
 /**
@@ -37,12 +37,13 @@ public class servletLogin extends HttpServlet {
 
 
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UsuarioNoLogueadoException {  
 	    if (request.getParameter("btnAceptar") != null) {  
 	        String usuario = request.getParameter("usuario");  
 	        String contrasenia = request.getParameter("contrasenia");  
 
 	        if (usuario != null && !usuario.isEmpty() && contrasenia != null && !contrasenia.isEmpty()) {  
+
 	        
 	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
 
@@ -51,13 +52,25 @@ public class servletLogin extends HttpServlet {
 	                session.setAttribute("usuario", usuarioSesion);  
 
 	                // Redirige dependiendo del tipo de usuario  
+
+	        	try {
+	            	UsuarioNegImpl clienteNegocio = new UsuarioNegImpl();
+	            	Usuario usuarioSesion = clienteNegocio.iniciarSesion(usuario, contrasenia);
+	            	HttpSession session = request.getSession();
+	                session.setAttribute("usuario", usuarioSesion);
+	             // Redirige dependiendo del tipo de usuario  
+
 	                String destino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
 	                RequestDispatcher rd = request.getRequestDispatcher(destino);  
-	                rd.forward(request, response);  
-	            } else {  
-	                // Si el usuario no existe o las credenciales son incorrectas  
-	                response.sendRedirect("Login.jsp?error=true");  
-	            }  
+	                rd.forward(request, response);
+	            }catch(UsuarioNoLogueadoException e) {
+	            	System.out.println(e.getMessage());
+	            	e.printStackTrace();
+	            	response.sendRedirect("Login.jsp?error=true");
+	            }catch(Exception e) {
+	            	e.printStackTrace();
+	            	response.sendRedirect("Login.jsp?error=true");
+	            }
 	        } else {  
 	            response.sendRedirect("Login.jsp?error=true");  
 	        }  

@@ -1,3 +1,5 @@
+
+
 INSERT INTO `bdbanco`.`provincia` (`nombre`) VALUES
 ('Buenos Aires'),
 ('CABA'),
@@ -77,12 +79,12 @@ INSERT INTO `bdbanco`.`clientes` (`dni`, `cuil`, `nombre`, `apellido`, `sexo`, `
 ('20111222333', '20111222333', 'Sofía', 'Gómez', 'F', 1, '1988-07-03', 'Calle Belgrano 3030', 6, 6, 'sofia.gomez@mail.com', '1156789012', '2024-07-25 15:30:00', 0, NULL),
 ('20444555666', '20444555666', 'Diego', 'Fernández', 'M', 1, '1979-11-28', 'Av. Pellegrini 4040', 1, 1, 'diego.fernandez@mail.com', '1189012345', '2024-07-30 10:30:00', 0, NULL),
 ('20777888999', '20777888999', 'Valentina', 'Díaz', 'F', 1, '1992-04-18', 'Calle Moreno 5050', 8, 8, 'valentina.diaz@mail.com', '1178901234', '2024-08-03 11:45:00', 0, NULL),
-('20222333444', '20222333444', 'Nicolás', 'García', 'M', 1, '1987-09-09', 'Av. Colón 6060', 9, 9, 'nicolas.garcia@mail.com', '1167890123', '2024-08-07 14:00:00', 0, NULL),
-('20555666777', '20555666777', 'Camila', 'Ruiz', 'F', 1, '1998-01-25', 'Calle San Martín 7070', 10, 10, 'camila.ruiz@mail.com', '1134567890', '2024-08-11 09:15:00', 0, NULL),
-('20888999000', '20888999000', 'Leonardo', 'Álvarez', 'M', 1, '1980-06-12', 'Av. Rivadavia 8080', 11, 11, 'leonardo.alvarez@mail.com', '1145678901', '2024-08-15 12:30:00', 0, NULL),
-('20333444555', '20333444555', 'Isabella', 'Romero', 'F', 1, '1993-10-05', 'Calle Belgrano 9090', 12, 12, 'isabella.romero@mail.com', '1198765432', '2024-08-19 15:00:00', 0, NULL),
-('20666777888', '20666777888', 'Gabriel', 'Sánchez', 'M', 1, '1977-03-20', 'Av. Pellegrini 1000', 13, 13, 'gabriel.sanchez@mail.com', '1156789012', '2024-08-23 10:45:00', 0, NULL),
-('20999000111', '20999000111', 'Martina', 'Torres', 'F', 1, '1996-08-14', 'Calle Moreno 1100', 14, 14, 'martina.torres@mail.com', '1189012345', '2024-08-27 11:15:00', 0, NULL),
+('20222333444', '20222333444', 'Nicolás', 'García', 'M', 1, '1987-09-09', 'Av. Colón 6060', 9, 9, 'nicolas.garcia@mail.com', '1167890124', '2024-08-07 14:00:00', 0, NULL),
+('20555666777', '20555666777', 'Camila', 'Ruiz', 'F', 1, '1998-01-25', 'Calle San Martín 7070', 10, 10, 'camila.ruiz@mail.com', '1134567880', '2024-08-11 09:15:00', 0, NULL),
+('20888999000', '20888999000', 'Leonardo', 'Álvarez', 'M', 1, '1980-06-12', 'Av. Rivadavia 8080', 11, 11, 'leonardo.alvarez@mail.com', '1145678900', '2024-08-15 12:30:00', 0, NULL),
+('20333444555', '20333444555', 'Isabella', 'Romero', 'F', 1, '1993-10-05', 'Calle Belgrano 9090', 12, 12, 'isabella.romero@mail.com', '1198765457', '2024-08-19 15:00:00', 0, NULL),
+('20666777888', '20666777888', 'Gabriel', 'Sánchez', 'M', 1, '1977-03-20', 'Av. Pellegrini 1000', 13, 13, 'gabriel.sanchez@mail.com', '1156789022', '2024-08-23 10:45:00', 0, NULL),
+('20999000111', '20999000111', 'Martina', 'Torres', 'F', 1, '1996-08-14', 'Calle Moreno 1100', 14, 14, 'martina.torres@mail.com', '1189012340', '2024-08-27 11:15:00', 0, NULL),
 ('9988776655', '9988776655', 'Ricardo', 'Silva', 'M', 2, '1989-06-25', 'Calle Corrientes 1300', 1, 1, 'ricardo.silva@mail.com', '1112344321', '2024-09-01 14:30:00', 0, NULL);
 
 -- Usuario administrador sin cliente asociado
@@ -159,7 +161,7 @@ INSERT INTO `bdbanco`.`movimientos` (`detalle`, `importe`, `id_tipos_movimiento`
 ('Transferencia recibida', 1500.00, 4, 7, '2024-10-15 14:15:00'),
 ('Transferencia enviada', 2000.00, 4, 10, '2024-10-20 09:45:00'),
 ('Transferencia recibida', 2800.00, 4, 13, '2024-10-25 12:00:00'),
--- Pagos de préstamo
+-- Pagos de préstamotipos_movimiento
 ('Pago de préstamo', 50000.00, 3, 1, '2025-09-01 10:00:00'),
 ('Pago de préstamo', 33333.33, 3, 2, '2025-10-02 11:30:00');
 
@@ -168,8 +170,8 @@ INSERT INTO `bdbanco`.`prestamos` (`id`, `observaciones`, `id_cliente`, `nro_cue
 (2, 'Préstamo para vivienda', 2, 2, '2024-10-02', 100000.00, 3, 33333.33, 'aprobado');
 
 INSERT INTO `bdbanco`.`cuotas` (`id_prestamo`, `nro_cuota`, `monto`, `estado_pago`, `fecha_pago`, `create_date`, `deleted`, `delete_date`) VALUES
-(1, 1, 50000.00, 1, '2025-09-01 10:00:00', '2024-09-01 10:00:00', 0, NULL),
-(2, 1, 33333.33, 1, '2025-10-02 11:30:00', '2024-10-02 11:30:00', 0, NULL),
+(1, 1, 50000.00, 1, '2024-09-01', '2024-09-01 10:00:00', 0, NULL),
+(2, 1, 33333.33, 1, '2024-10-02', '2024-10-02 11:30:00', 0, NULL),
 (2, 2, 33333.33, 0, NULL, '2024-10-02 11:30:00', 0, NULL),
 (2, 3, 33333.34, 0, NULL, '2024-10-02 11:30:00', 0, NULL);
 

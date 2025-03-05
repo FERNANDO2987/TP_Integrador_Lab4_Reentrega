@@ -45,12 +45,13 @@ public class servletTransferencia extends HttpServlet {
 		
 		Usuario userLogged =  (Usuario) request.getSession().getAttribute("usuario");
 		List<Cuenta> lista = cuentaNeg.leerLasCuentasDelCliente(userLogged.getCliente().getId());
-		
-		System.out.println("DO GET ----");
-		System.out.println(userLogged.toString());
-		System.out.println("tamanio lista cuentas: " + lista.size());
-		
 		request.setAttribute("listaDeMisCuentas", lista);
+		
+		request.setAttribute("cuentaOrigenSeleccionada", request.getAttribute("cuentaOrigenSeleccionada"));
+	    request.setAttribute("cuentaDestinoIngresada", request.getAttribute("cuentaDestinoIngresada"));
+	    request.setAttribute("montoIngresado", request.getAttribute("montoIngresado"));
+	    request.setAttribute("detalleIngresado", request.getAttribute("detalleIngresado"));
+	    
 		request.getRequestDispatcher("Transferencia.jsp").forward(request, response);
 	}
 
@@ -60,6 +61,11 @@ public class servletTransferencia extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("btnTransferir") != null)
 		{
+			request.setAttribute("cuentaOrigenSeleccionada", request.getParameter("cuentaOrigen"));
+			request.setAttribute("cuentaDestinoIngresada", request.getParameter("cuentaDestino"));
+			request.setAttribute("montoIngresado", request.getParameter("monto"));
+			request.setAttribute("detalleIngresado", request.getParameter("detalle"));
+		
 			System.out.println("Boton Transferir presionado");
 		Cuenta cuentaOrigen = new Cuenta();
 		Cuenta cuentaDestino = new Cuenta();
@@ -118,6 +124,10 @@ public class servletTransferencia extends HttpServlet {
 		System.out.println("todo logrado");
 		transferenciaNeg.agregarTransferencia(transferencia);
 		request.setAttribute("errorTransfer", new String("Transferencia Realizada con Exito"));
+		
+		
+		
+
 		doGet(request, response);
 		
 		}
