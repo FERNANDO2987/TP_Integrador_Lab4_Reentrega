@@ -46,7 +46,7 @@ public class servletLogin extends HttpServlet {
 	        
 	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
 
-	            if (usuarioSesion != null) {  // Asegúrate de que la sesión sea válida  
+	            if (usuarioSesion != null) {  
 	                HttpSession session = request.getSession();  
 	                session.setAttribute("usuario", usuarioSesion);  
 

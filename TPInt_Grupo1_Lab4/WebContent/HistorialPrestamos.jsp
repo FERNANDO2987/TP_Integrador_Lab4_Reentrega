@@ -31,7 +31,7 @@
 <script
 	src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- <script src="https://cdn.tailwindcss.com"></script>
+
 <title>Historial de Prestamos</title>
 <style>
 .alert {
@@ -92,6 +92,14 @@
 	background-color: #007bff;
 	color: white;
 }
+
+.custom-width {
+	width: 10px; /* Ancho deseado */
+}
+
+.custom-height {
+	height: 40px; /* Altura deseada */
+}
 </style>
 </head>
 <body class="bg-gray-100">
@@ -132,45 +140,74 @@
 		<%
 			if (prestamos != null && !prestamos.isEmpty()) {
 		%>
-		<div class="flex space-x-4 mb-4">
-			<input type="text" id="filterNombre"
-				class="form-control w-full p-2 rounded-lg border-gray-300"
-				placeholder="Filtrar por Nombre..." onkeyup="filterTable()">
+
+
+		<div class="overflow-x-auto">
+
+
+			<!-- Filtro por Nombre -->
+			<div class="mb-4">
+				<input type="text" id="filterNombre"
+					style="width: 70%; height: 50px; padding: 12px; font-size: 16px;"
+					class="rounded-lg border border-gray-300"
+					placeholder="Filtrar por Nombre..." onkeyup="filterTable()">
+
+			</div>
+
+			<!-- Filtro por Estado -->
+
+
 			<select id="filterEstado"
-				class="form-control w-full p-2 rounded-lg border-gray-300"
-				onchange="filterTable()">
+				style="width: 70%; height: 50px; padding: 12px; font-size: 16px;"
+				class="rounded-lg border border-gray-300" onchange="filterTable()">
 				<option value="">Filtrar por Estado</option>
 				<option value="aprobado">Aprobado</option>
 				<option value="finalizado">Finalizado</option>
 				<option value="rechazado">Rechazado</option>
 				<option value="pendiente">Pendiente</option>
-
-    <% if (prestamos != null && !prestamos.isEmpty()) { %>  
-    	<div class="flex space-x-4 mb-4">
-    		<form action="servletListarTodosLosPrestamos" method="get">
-    			Mayor a:
-    			<input type="number" class="form-control w-full p-2 rounded-lg border-gray-300" name="mayorA" min="0">
-    			Menor a:
-    			<input type="number" class="form-control w-full p-2 rounded-lg border-gray-300" name="menorA" min="0">
-    			<input type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" value="Filtrar" name="btnFiltro">
-    			<input type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600" value="Borrar Filtro" name="btnBorrarFiltro">
-    		</form>
-    		
-    	</div>
-        <div class="flex space-x-4 mb-4">  
-            <input type="text" id="filterNombre" class="form-control w-full p-2 rounded-lg border-gray-300" placeholder="Filtrar por Nombre..." onkeyup="filterTable()">  
-            <select id="filterEstado" class="form-control w-full p-2 rounded-lg border-gray-300" onchange="filterTable()">  
-                <option value="">Filtrar por Estado</option>  
-                <option value="vigente">Vigente</option>  
-                <option value="finalizado">Finalizado</option>  
-                <option value="rechazado">Rechazado</option>  
-                <option value="revisión">En Revisión</option>  
-            </select>  
-        </div>  
-
-
 			</select>
+
+
+			<%
+				if (prestamos != null && !prestamos.isEmpty()) {
+			%>
+			<div class="mb-4">
+				<!-- Rango de valores -->
+				<div class="flex flex-col items-start space-y-4">
+					<form action="servletListarTodosLosPrestamos" method="get"
+						class="flex flex-col space-y-4">
+						<div></div>
+						<div class="flex items-center space-x-4">
+							<label class="w-20">Mayor a:</label> <input type="number"
+								class="rounded-lg border border-gray-300 px-4 py-2 w-40"
+								name="mayorA" min="0"> 
+						</div>
+
+						<div class="flex items-center space-x-4">
+							<label class="w-20">Menor a:</label> <input type="number"
+								class="rounded-lg border border-gray-300 px-4 py-2 w-40"
+								name="menorA" min="0">
+								
+								<input type="submit"
+								class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700"
+								value="Filtrar" name="btnFiltro">
+								
+								 <input type="submit"
+								class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700"
+								value="Borrar Filtro" name="btnBorrarFiltro">
+								
+								
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<%
+				}
+			%>
 		</div>
+
+
 
 		<div class="overflow-x-auto">
 			<table
@@ -188,7 +225,9 @@
 				</thead>
 				<tbody id="tableBody">
 					<%
-						for (Prestamo prestamo : prestamos) {
+						if (prestamos != null && !prestamos.isEmpty()) {
+								int aprobado = 0, finalizado = 0, rechazado = 0, pendiente = 0;
+								for (Prestamo prestamo : prestamos) {
 					%>
 					<tr>
 						<td class="px-4 py-2 border"><%=prestamo.getId()%></td>
@@ -208,34 +247,32 @@
 							%> <span class="bg-red-500 text-white px-2 py-1 rounded">Rechazado</span>
 							<%
 								} else if (prestamo.getEstado().equals("pendiente")) {
-							%> <span class="bg-orange-500 text-white px-2 py-1 rounded">Pendiente</span> <%
- 	                     } else {
-                               %> <span class="bg-gray-300 text-gray-700 px-2 py-1 rounded">Sin
-								Estado</span> <!-- Cambié "Desconocido" por "Sin Estado" --> <%
- 	                            }
-                               %>
+							%> <span class="bg-orange-500 text-white px-2 py-1 rounded">Pendiente</span>
+							<%
+								} else {
+							%> <span class="bg-gray-300 text-gray-700 px-2 py-1 rounded">Sin
+								Estado</span> <%
+ 	}
+ %>
 						</td>
 					</tr>
 					<%
 						}
+							} else {
 					%>
-					
+					<div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"
+						role="alert">
+						<i class="fas fa-info-circle"></i> No se encontraron historial de
+						prestamos.
+					</div>
 					<%
-			} 
-    
-			}else {
-		%>
-		<div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"
-			role="alert">
-			<i class="fas fa-info-circle"></i> No se encontraron historial de
-			prestamos.
-		</div>
-		<%
-			}
-		%>
+						}
+						}
+					%>
 				</tbody>
 			</table>
 		</div>
+
 
 		<div class="pagination mt-4">
 			<button onclick="prevPage()" id="btnPrev"
@@ -244,7 +281,7 @@
 			<button onclick="nextPage()" id="btnNext"
 				class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Siguiente</button>
 		</div>
-		
+
 
 		<br> <br>
 
@@ -258,51 +295,54 @@
 			<canvas id="prestamosChart"></canvas>
 		</div>
 	</div>
-
+	</div>
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
 
-	<script>  
-function filterTable() {
-    var nombreFiltro = document.getElementById("filterNombre").value.toLowerCase();
-    var estadoFiltro = document.getElementById("filterEstado").value.toLowerCase();
-    var table = document.getElementById("usersTable");
-    var tr = table.getElementsByTagName("tr");
+	<script>
+		function filterTable() {
+			var nombreFiltro = document.getElementById("filterNombre").value
+					.toLowerCase();
+			var estadoFiltro = document.getElementById("filterEstado").value
+					.toLowerCase();
+			var table = document.getElementById("usersTable");
+			var tr = table.getElementsByTagName("tr");
 
-    for (var i = 1; i < tr.length; i++) { // Comenzamos en 1 para saltar el encabezado
-        var tdNombre = tr[i].getElementsByTagName("td")[2]; // Columna de Nombre y Apellido
-        var tdEstado = tr[i].getElementsByTagName("td")[5]; // Columna de Estado
-        if (tdNombre && tdEstado) {
-            var nombreTexto = tdNombre.textContent.toLowerCase();
-            var estadoTexto = tdEstado.textContent.toLowerCase();
+			for (var i = 1; i < tr.length; i++) { // Comenzamos en 1 para saltar el encabezado
+				var tdNombre = tr[i].getElementsByTagName("td")[2]; // Columna de Nombre y Apellido
+				var tdEstado = tr[i].getElementsByTagName("td")[5]; // Columna de Estado
+				if (tdNombre && tdEstado) {
+					var nombreTexto = tdNombre.textContent.toLowerCase();
+					var estadoTexto = tdEstado.textContent.toLowerCase();
 
-            var coincideNombre = nombreTexto.includes(nombreFiltro);
-            var coincideEstado = estadoFiltro === "" || estadoTexto.includes(estadoFiltro);
+					var coincideNombre = nombreTexto.includes(nombreFiltro);
+					var coincideEstado = estadoFiltro === ""
+							|| estadoTexto.includes(estadoFiltro);
 
-            if (coincideNombre && coincideEstado) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
+					if (coincideNombre && coincideEstado) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}
+		}
 
-
-window.onload = function() {  
-    setTimeout(function() {  
-        const successMessage = document.getElementById('successMessage');  
-        const errorMessage = document.getElementById('errorMessage');  
-        if (successMessage) {  
-            successMessage.style.display = 'none';  
-        }  
-        if (errorMessage) {  
-            errorMessage.style.display = 'none';  
-        }  
-    }, 5000);  
-};  
-</script>
+		window.onload = function() {
+			setTimeout(function() {
+				const successMessage = document
+						.getElementById('successMessage');
+				const errorMessage = document.getElementById('errorMessage');
+				if (successMessage) {
+					successMessage.style.display = 'none';
+				}
+				if (errorMessage) {
+					errorMessage.style.display = 'none';
+				}
+			}, 5000);
+		};
+	</script>
 
 
 	<script>
@@ -362,6 +402,8 @@ window.onload = function() {
 			displayPage(currentPage);
 		};
 	</script>
+
+
 
 </body>
 </html>

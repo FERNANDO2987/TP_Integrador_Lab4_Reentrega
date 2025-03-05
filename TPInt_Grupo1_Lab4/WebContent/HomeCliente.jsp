@@ -240,7 +240,7 @@ html, body {
 
 			switch (pagina) {
 			case 'inicio':
-				iframe.src = 'servletGraficos';
+				iframe.src = '';
 				break;
 			case 'datosPersonales':
 				iframe.src = 'DatosPersonales.jsp';

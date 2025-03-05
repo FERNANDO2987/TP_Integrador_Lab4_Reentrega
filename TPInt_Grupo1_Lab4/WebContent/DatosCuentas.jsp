@@ -382,33 +382,39 @@ input:required:invalid {
 
 
 	<script>
-		function filterTable() {
-			var nombreFiltro = document.getElementById("filterNombre").value
-					.toLowerCase();
-			var estadoFiltro = document.getElementById("filterEstado").value
-					.toLowerCase();
-			var table = document.getElementById("usersTable");
-			var tr = table.getElementsByTagName("tr");
+	function filterTable() {  
+	    const nombreFiltro = document.getElementById("filterNombre").value.toLowerCase();
+	    const estadoFiltro = document.getElementById("filterEstado").value.toLowerCase();
+	    const table = document.getElementById("usersTable");  
+	    const rows = table.getElementsByTagName("tr");  
 
-			for (var i = 1; i < tr.length; i++) { // Comenzamos en 1 para saltar el encabezado
-				var tdNombre = tr[i].getElementsByTagName("td")[2]; // Columna de Nombre y Apellido
-				var tdEstado = tr[i].getElementsByTagName("td")[5]; // Columna de Estado
-				if (tdNombre && tdEstado) {
-					var nombreTexto = tdNombre.textContent.toLowerCase();
-					var estadoTexto = tdEstado.textContent.toLowerCase();
+	    for (let i = 1; i < rows.length; i++) {  
+	        let cells = rows[i].getElementsByTagName("td");  
+	        let foundNombre = false;  
+	        let foundEstado = false;  
 
-					var coincideNombre = nombreTexto.includes(nombreFiltro);
-					var coincideEstado = estadoFiltro === ""
-							|| estadoTexto.includes(estadoFiltro);
+	        for (let j = 0; j < cells.length; j++) {  
+	            let text = cells[j].textContent || cells[j].innerText;  
 
-					if (coincideNombre && coincideEstado) {
-						tr[i].style.display = "";
-					} else {
-						tr[i].style.display = "none";
-					}
-				}
-			}
-		}
+	            if (text.toLowerCase().includes(nombreFiltro)) {  
+	                foundNombre = true;  
+	            }  
+	            if (text.toLowerCase().includes(estadoFiltro)) {  
+	                foundEstado = true;  
+	            }  
+	        }  
+
+	        // Mostrar la fila si coincide con ambos filtros (o si están vacíos)
+	        if ((nombreFiltro === "" || foundNombre) && (estadoFiltro === "" || foundEstado)) {  
+	            rows[i].style.display = "";  
+	        } else {  
+	            rows[i].style.display = "none";  
+	        }  
+	    }  
+	}  
+
+
+
 
 		window.onload = function() {
 			setTimeout(function() {
