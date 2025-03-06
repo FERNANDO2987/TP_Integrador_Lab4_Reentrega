@@ -23,30 +23,41 @@ LEFT JOIN clientes CLI ON CLI.id = CUE.id_cliente;
 
 -- PARTE DE TRANSFERENCIA
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarPrestamo`(
-	IN p_idCliente int,
-    IN p_nroCuenta int,
-    IN p_importe decimal(10,2),
-    IN p_cuotas int,
-    IN p_observaciones varchar(255)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_AgregarTransferencia`(
+    IN cbuOrigen VARCHAR(255), 
+    IN cbuDestino VARCHAR(255), 
+    IN montoInput DECIMAL(10,2), 
+    IN detalleInput VARCHAR(255)
 )
 BEGIN
-	INSERT INTO `bdbanco`.`prestamos`
-	(`id_cliente`,
-	`nro_cuenta`,
-	`importe`,
-	`cuotas`,
-	`valor_cuotas`,
-    `observaciones`)
-	VALUES
-	(p_idCliente,
-	p_nroCuenta,
-	p_importe,
-	p_cuotas,
-	(p_importe/p_cuotas),
-    p_observaciones);
+	DECLARE cuentaOrigen INT DEFAULT 0;
+    DECLARE cuentaDestino INT DEFAULT 0;
+    
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        ROLLBACK; 
+    START TRANSACTION;
 
-END$$
+		-- HACER EL MOVIMIENTO DEL LADO ORIGEN
+		
+		SELECT nro_cuenta INTO cuentaOrigen FROM cuentas WHERE cbu LIKE cbuOrigen;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput * (-1), 4, cuentaOrigen, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo - montoInput WHERE cbu LIKE cbuOrigen;
+
+		-- HACER EL MOVIMIENTO DEL LADO DESTINO
+		
+		SELECT nro_cuenta INTO cuentaDestino FROM cuentas WHERE cbu LIKE cbuDestino;
+		
+		INSERT INTO movimientos (detalle, importe, id_tipos_movimiento, nro_cuenta, create_date)
+		VALUES (detalleInput, montoInput, 4, cuentaDestino, CURDATE());
+		
+		UPDATE cuentas SET saldo = saldo + montoInput WHERE cbu LIKE cbuDestino;
+
+    COMMIT;
+END
+$$
 DELIMITER ;
 
 -- PARTE DE TIPOS CUENTA
