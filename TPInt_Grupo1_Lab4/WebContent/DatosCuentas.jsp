@@ -214,7 +214,7 @@ input:required:invalid {
 				Monto Solicitado: <strong>$ <%=prestamo.getImporte()%></strong>
 			</p>
 			<p class="text-sm text-gray-600">
-				Fecha Solicitud: <strong><%=prestamo.getFechaAlta()%></strong>
+				Cantidad de cuotas: <strong><%=prestamo.getCuotas() %></strong>
 			</p>
 
 			<div class="flex justify-between items-center mt-2">
@@ -289,11 +289,11 @@ input:required:invalid {
 					<tr>
 						<th class="px-4 py-2 border">ID</th>
 						<th class="px-4 py-2 border">Cuenta</th>
-						<th class="px-4 py-2 border">Fecha Solicitud</th>
+						<th class="px-4 py-2 border">Fecha de Alta</th>
 						<th class="px-4 py-2 border">Tipo</th>
 						<th class="px-4 py-2 border">Estado</th>
-						<th class="px-4 py-2 border">Monto</th>
-						<th class="px-4 py-2 border">Cuotas</th>
+						<th class="px-4 py-2 border">Monto Adeudado</th>
+						<th class="px-4 py-2 border">Cuotas Pendientes</th>
 					</tr>
 				</thead>
 				<tbody id="tableBody">
@@ -306,7 +306,7 @@ input:required:invalid {
 						<td class="px-4 py-2 border"><%=prestamo.getId()%></td>
 						<td class="px-4 py-2 border"><%=(prestamo.getCuenta().getNroCuenta())%>
 						</td>
-						<td class="border px-4 py-2"><%=prestamo.getFechaAlta()%></td>
+						<td class="border px-4 py-2"><%=prestamo.getFechaAlta()==null?"": prestamo.getFechaAlta()%></td>
 						<td class="border px-4 py-2"><%=prestamo.getObservaciones()%></td>
 						<td class="border px-4 py-2">
 							<%
