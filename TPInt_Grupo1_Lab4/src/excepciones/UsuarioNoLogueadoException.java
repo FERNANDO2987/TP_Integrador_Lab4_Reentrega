@@ -12,4 +12,9 @@ public class UsuarioNoLogueadoException extends RuntimeException {
 		return "Usuario no logueado";
 	}
 	
+	  // Constructor con mensaje personalizado
+    public UsuarioNoLogueadoException(String mensaje) {
+        super(mensaje);
+    }
+	
 }

@@ -23,25 +23,28 @@ public class UsuarioNegImpl implements UsuarioNeg {
 		
 	}
 	
-	public Usuario iniciarSesion(String nombreUsuario, String contrasena) throws UsuarioNoLogueadoException
-	{
+	public Usuario iniciarSesion(String nombreUsuario, String contrasena) throws UsuarioNoLogueadoException {
+	    if (nombreUsuario == null || nombreUsuario.trim().isEmpty() || contrasena == null || contrasena.trim().isEmpty()) {
+	        throw new UsuarioNoLogueadoException("Usuario o contraseña no pueden ser vacíos.");
+	    }
+
 	    Usuario usuario = new Usuario();
 	    usuario.setUsuario(nombreUsuario);
 	    usuario.setPassword(contrasena);
-	    
+
 	    Usuario usuarioValido = usuarioDao.loguear(usuario);
-	    
+
 	    if (usuarioValido != null) {
 	        // Mostrar el valor de admin en la consola
 	        System.out.println("Usuario: " + usuarioValido.getUsuario() + " | Admin: " + usuarioValido.isAdmin());
 	        return usuarioValido;
-	    } else {		
-	    	UsuarioNoLogueadoException usuarioNoLogueadoException = new UsuarioNoLogueadoException();
-	    	{final long serialVersionUID = 1L;};
-	    	throw usuarioNoLogueadoException;
-	        
+	    } else {
+	        // Lanzamos la excepción cuando el usuario no existe
+	        throw new UsuarioNoLogueadoException("Usuario o contraseña incorrectos.");
 	    }
 	}
+
+
 
 	@Override
 	public boolean AgregarUsuario(Usuario usuario) {

@@ -37,46 +37,42 @@ public class servletLogin extends HttpServlet {
 
 
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UsuarioNoLogueadoException {  
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    if (request.getParameter("btnAceptar") != null) {  
 	        String usuario = request.getParameter("usuario");  
 	        String contrasenia = request.getParameter("contrasenia");  
 
 	        if (usuario != null && !usuario.isEmpty() && contrasenia != null && !contrasenia.isEmpty()) {  
+	            try {
+	                Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
 
-	        
-	            Usuario usuarioSesion = usuarioNegocio.iniciarSesion(usuario, contrasenia);  
+	                if (usuarioSesion != null) {  
+	                    HttpSession session = request.getSession();  
+	                    session.setAttribute("usuario", usuarioSesion);  
 
-	            if (usuarioSesion != null) {  
-	                HttpSession session = request.getSession();  
-	                session.setAttribute("usuario", usuarioSesion);  
-
-	                // Redirige dependiendo del tipo de usuario  
-
-	        	try {
-	            	UsuarioNegImpl clienteNegocio = new UsuarioNegImpl();
-	            	
-	            	
-	                session.setAttribute("usuario", usuarioSesion);
-	             // Redirige dependiendo del tipo de usuario  
-
-	                String destino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
-	                RequestDispatcher rd = request.getRequestDispatcher(destino);  
-	                rd.forward(request, response);
-	            }catch(UsuarioNoLogueadoException e) {
-	            	System.out.println(e.getMessage());
-	            	e.printStackTrace();
-	            	response.sendRedirect("Login.jsp?error=true");
-	            }catch(Exception e) {
-	            	e.printStackTrace();
-	            	response.sendRedirect("Login.jsp?error=true");
+	                    // Redirige dependiendo del tipo de usuario  
+	                    String destino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
+	                    RequestDispatcher rd = request.getRequestDispatcher(destino);  
+	                    rd.forward(request, response);
+	                } else {  
+	                    response.sendRedirect("Login.jsp?error=true");  
+	                }
+	            } catch (UsuarioNoLogueadoException e) {
+	                // Manejo específico de excepción para usuario no logueado
+	                System.out.println(e.getMessage());
+	                e.printStackTrace();
+	                response.sendRedirect("Login.jsp?error=true");
+	            } catch (Exception e) {
+	                // Manejo genérico de otras excepciones
+	                e.printStackTrace();
+	                response.sendRedirect("Login.jsp?error=true");
 	            }
-	        } else {  
+	        } else {
 	            response.sendRedirect("Login.jsp?error=true");  
-	        }  
+	        }
 	    }  
 	}
-	}
+
 }
 
 

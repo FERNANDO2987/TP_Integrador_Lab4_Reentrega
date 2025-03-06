@@ -157,9 +157,7 @@
 					<input type="hidden" name="usuarioID"
 						value="<%=usuario.getCliente().getId()%>"> <input
 						type="submit" class="btn btn-primary btn-block" name=btnSubmit
-						value="Solicitar Prestamo"> <a
-						class="btn btn-secondary w-100 mt-1" href="HomeUsuario.jsp">
-						Volver al Home </a>
+						value="Solicitar Prestamo">
 				</form>
 			</div>
 		</div>
