@@ -151,7 +151,15 @@ public class servletAgregarPrestamo extends HttpServlet {
 	            request.getRequestDispatcher("pagina.jsp").forward(request, response);
 	            return;
 	        }
-
+	        
+	        if (!imp.trim().matches("\\d+(\\.\\d+)?") || !cuo.trim().matches("^(100|[1-9]\\d?)$"))
+	        {
+	        	request.getSession().setAttribute("errorMessage", "Solo ingresar números");
+	        	request.setAttribute("monto", "");
+	        	request.setAttribute("cuotas", "");
+	            request.getRequestDispatcher("pagina.jsp").forward(request, response);
+	            return;
+	        }
 	        // Convertir datos
 	        try {
 	            int cuotas = Integer.parseInt(cuo);
