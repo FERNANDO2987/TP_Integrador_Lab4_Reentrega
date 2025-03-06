@@ -197,7 +197,7 @@ input:required:invalid {
 									if (paises != null && !paises.isEmpty()) {
 										for (Pais pais : paises) {
 							%>
-							<option value="<%=pais.getId()%>"><%=pais.getNombre()%></option>
+							<option value="<%=pais.getId()%>" <%=cliente.getPaisNacimiento().getNombre().equals(pais.getNombre()) ? "selected" : "" %>><%=pais.getNombre()%></option>
 							<%
 								}
 									} else {
@@ -252,7 +252,7 @@ input:required:invalid {
 									if (localidades != null && !localidades.isEmpty()) {
 										for (Localidad localidad : localidades) {
 							%>
-							<option value="<%=localidad.getId()%>"><%=localidad.getNombre()%></option>
+							<option value="<%=localidad.getId()%>" <%=cliente.getLocalidad().getNombre().equals(localidad.getNombre()) ? "selected" : "" %>><%=localidad.getNombre()%></option>
 							<%
 								}
 									} else {
@@ -279,7 +279,7 @@ input:required:invalid {
 									if (provincias != null && !provincias.isEmpty()) {
 										for (Provincia provincia : provincias) {
 							%>
-							<option value="<%=provincia.getId()%>"><%=provincia.getNombre()%></option>
+							<option value="<%=provincia.getId()%>" <%=cliente.getProvincia().getNombre().equals(provincia.getNombre()) ? "selected" : ""%>><%=provincia.getNombre()%></option>
 							<%
 								}
 									} else {
