@@ -178,7 +178,12 @@ html, body {
 
   <!-- Contenido principal -->
     <div class="content" id="contenidoPrincipal">
-        <h5>Bienvenido, <%= nombreUsuario %></h5>
+        <div class="container d-flex justify-content-center align-items-center vh-100" style="width: 100%;">
+		    <div class="card shadow-lg p-4 text-center">
+		        <h1 class="mb-3 fs-1 fw-bold">Bienvenido al gestor administrativo,</h2>
+		        <p class="text-muted">abra el panel de opciones desde el ícono del lado superior izquierdo.</p>
+		    </div>
+		</div>
     </div>
 
 

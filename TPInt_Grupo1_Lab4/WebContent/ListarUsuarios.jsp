@@ -91,7 +91,7 @@
 		<div class="mb-4">
 			<input type="text" id="searchInput"
 				class="form-control w-full p-2 rounded-lg border-gray-300"
-				placeholder="Buscar cliente..." onkeyup="filterTable()">
+				placeholder="Buscar usuario..." onkeyup="filterTable()">
 		</div>
 
 		<%
