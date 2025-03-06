@@ -12,6 +12,10 @@
 <style>
 .eye-icon {
 	cursor: pointer;
+	
+	/* Oculta el mensaje de error por defecto */  
+.error-message {  
+	display: none; 
 }
 </style>
 <script>
@@ -26,7 +30,13 @@
 			eyeIcon.src = "https://cdn-icons-png.flaticon.com/128/2767/2767146.png"; // Ojo cerrado  
 		}
 	}
+	
+	
+
 </script>
+
+
+	
 </head>
 <body
 	class="h-screen flex items-center justify-center bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100">
@@ -36,15 +46,97 @@
 		<h2 class="text-center text-3xl font-extrabold mb-6">Iniciar
 			Sesión</h2>
 
-		<%
-			String error = request.getParameter("error");
-			if ("true".equals(error)) {
-		%>
-		<div class="mb-4 p-3 bg-red-500 text-white text-sm rounded">
-			Usuario y/o contraseña no válidos. Inténtalo de nuevo.</div>
-		<%
-			}
-		%>
+
+<% 
+   String error = request.getParameter("error");
+   String success = request.getParameter("success");
+%>
+
+<% 
+   if ("true".equals(error)) {
+%>
+   <div id="errorMessage" class="mb-4 p-3 bg-red-500 text-white text-sm rounded">
+      Usuario y/o contraseña no válidos. Inténtalo de nuevo.
+   </div>
+<% 
+   }
+%>
+
+<% 
+   if ("true".equals(success)) {
+%>
+   <div id="successMessage" class="mb-4 p-3 bg-green-500 text-white text-sm rounded">
+      ¡Inicio de sesión exitoso! Redirigiendo...
+   </div>
+<% 
+   }
+%>
+
+		
+		<script>
+   // Llamar a la función mostrarMensaje si se ha definido el mensaje de error
+   <% if ("true".equals(request.getParameter("error"))) { %>
+      mostrarMensaje("errorMessage");
+   <% } %>
+
+   function ocultarMensaje() {
+      // Ocultar el mensaje de éxito
+      var mensaje = document.getElementById("successMessage");
+      if (mensaje) {
+         setTimeout(function() {
+            mensaje.style.display = "none";
+         }, 4000);
+      }
+
+      // Ocultar el mensaje de error
+      var errorMensaje = document.getElementById("errorMessage");
+      if (errorMensaje) {
+         setTimeout(function() {
+            errorMensaje.style.display = "none";
+         }, 4000);
+      }
+   }
+
+   // Función para mostrar el mensaje y luego ocultarlo
+   function mostrarMensaje(tipo) {
+      var mensaje = document.getElementById(tipo);
+      if (mensaje) {
+         mensaje.style.display = "block"; // Mostrar el mensaje  
+         // Ocultar el mensaje después de 9 segundos (9000 milisegundos)  
+         setTimeout(function() {
+            mensaje.style.display = "none";
+         }, 4000);
+      }
+   }
+</script>
+
+
+<script>
+   // Llamar a la función ocultarMensaje cuando se cargue la página.
+   window.onload = function() {
+      ocultarMensaje(); // Llamamos a la función para ocultar los mensajes después de que la página haya cargado.
+   };
+
+   // Función para ocultar los mensajes después de un tiempo.
+   function ocultarMensaje() {
+      var mensajeExito = document.getElementById("successMessage");
+      var mensajeError = document.getElementById("errorMessage");
+
+      // Si el mensaje de éxito existe, ocultarlo después de 4 segundos.
+      if (mensajeExito) {
+         setTimeout(function() {
+            mensajeExito.style.display = "none";
+         }, 4000); // El mensaje se ocultará después de 4 segundos.
+      }
+
+      // Si el mensaje de error existe, ocultarlo después de 4 segundos.
+      if (mensajeError) {
+         setTimeout(function() {
+            mensajeError.style.display = "none";
+         }, 4000); // El mensaje se ocultará después de 4 segundos.
+      }
+   }
+</script>
 
 		<form action="servletLogin" method="post" class="space-y-4">
 			<div>
@@ -73,11 +165,11 @@
 				name="btnAceptar" id="btnAceptar">Iniciar sesión</button>
 		</form>
 
-		<div class="mt-4 text-center">
-			<a href="#" class="text-blue-400 hover:underline">¿Olvidaste tu
-				contraseña?</a>
-		</div>
+		
 	</div>
+	
+
+	
 
 </body>
 </html>

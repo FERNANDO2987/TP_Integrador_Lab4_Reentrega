@@ -51,7 +51,7 @@ public class servletLogin extends HttpServlet {
 	                    session.setAttribute("usuario", usuarioSesion);  
 
 	                    // Redirige dependiendo del tipo de usuario  
-	                    String destino = usuarioSesion.isAdmin() ? "Home.jsp" : "HomeCliente.jsp";
+	                    String destino = usuarioSesion.isAdmin() ? "Home.jsp?success=true" : "HomeCliente.jsp?success=true";
 	                    RequestDispatcher rd = request.getRequestDispatcher(destino);  
 	                    rd.forward(request, response);
 	                } else {  
