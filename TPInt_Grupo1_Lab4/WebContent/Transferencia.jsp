@@ -56,7 +56,7 @@
 					    <%
 					        String cuentaOrigenSeleccionada = (String) request.getAttribute("cuentaOrigenSeleccionada");
 					        for (Cuenta cuenta : cuentas) {
-					            String selected = (cuentaOrigenSeleccionada != null && cuentaOrigenSeleccionada.equals(cuenta.getCbu())) ? "selected" : "";
+					            String selected = (cuentaOrigenSeleccionada != null && cuentaOrigenSeleccionada.equals(cuenta.getCbu()) && !(stringAlert.equals("Transferencia Realizada con Exito"))) ? "selected" : "";
 					    %>
 					    <option value="<%=cuenta.getCbu()%>" <%=selected%>>Nro Cuenta: <%=cuenta.getNroCuenta()%> CBU: <%=cuenta.getCbu()%></option>
 					    <%
@@ -69,19 +69,22 @@
 					<label for="cuentaDestino" class="form-label">Cuenta
 						Destino</label> <input type="text" class="form-control" name="cuentaDestino" id="cuentaDestino"
        					placeholder="Ingrese el CBU de la cuenta que recibirá el dinero" required
-       					value="<%= request.getAttribute("cuentaDestinoIngresada") != null ? request.getAttribute("cuentaDestinoIngresada") : "" %>">
+       					value="<%= request.getAttribute("cuentaDestinoIngresada") != null && !(stringAlert.equals("Transferencia Realizada con Exito")) ? request.getAttribute("cuentaDestinoIngresada") : "" %>">
 
 				</div>
 				<div class="mb-3">
 					<label for="monto" class="form-label">Monto</label> <input type="number" class="form-control" id="monto" name="monto"
        				placeholder="Ingrese el monto" min="1" step="0.01" required
-       				value="<%= request.getAttribute("montoIngresado") != null ? request.getAttribute("montoIngresado") : "" %>">
+       				value="<%= (request.getAttribute("montoIngresado") != null && !("Transferencia Realizada con Exito".equals(stringAlert))) ? request.getAttribute("montoIngresado") : "" %>">
+
 
 				</div>
 				<div class="mb-3">
 					<label for="detalle" class="form-label">Detalle</label> <input type="text" class="form-control" id="detalle" name="detalle"
        				placeholder="Ingrese un detalle opcional"
-       				value="<%= request.getAttribute("detalleIngresado") != null ? request.getAttribute("detalleIngresado") : "" %>">
+       				value="<%= (request.getAttribute("detalleIngresado") != null && !("Transferencia Realizada con Exito".equals(stringAlert))) ? request.getAttribute("detalleIngresado") : "" %>">
+
+
 
 				</div>
 				<button type="submit" name="btnTransferir" id="btnTransferir"
