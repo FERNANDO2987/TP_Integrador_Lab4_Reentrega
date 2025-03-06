@@ -146,7 +146,8 @@ public class servletAgregarPrestamo extends HttpServlet {
 	            cuo == null || cuo.trim().isEmpty() || 
 	            tipoPrestamo == null || tipoPrestamo.trim().isEmpty() || 
 	            cliente.getId() == -1 || cuenta.getNroCuenta() == -1) {
-	            request.setAttribute("errorMessage", "Todos los campos son obligatorios.");
+	        	
+	        	request.getSession().setAttribute("errorMessage", "Todos los camposson obligatorios.");
 	            request.getRequestDispatcher("pagina.jsp").forward(request, response);
 	            return;
 	        }
@@ -169,22 +170,23 @@ public class servletAgregarPrestamo extends HttpServlet {
 
 	            // Definir mensajes de éxito/error
 	            if (estado) {
-	                request.setAttribute("successMessage", "Objeto agregado correctamente.");
+	            	request.getSession().setAttribute("successMessage", "Solicitud realizada correctamente.");
 	            } else {
-	                request.setAttribute("errorMessage", "Error al agregar el objeto.");
+	            	request.getSession().setAttribute("errorMessage", "Error al solicitar prestamo.");
 	            }
 	        } catch (NumberFormatException e) {
-	            request.setAttribute("errorMessage", "Formato de número incorrecto.");
+	        	request.getSession().setAttribute("errorMessage", "Error al solicitar prestamo.");
 	        }
 
 	        // Volver a cargar la página con los mensajes
 	        request.getRequestDispatcher("SolicitarPrestamo.jsp").forward(request, response);
 
 	    } catch (Exception e) {
-	        request.setAttribute("errorMessage", "Error inesperado: " + e.getMessage());
+	    	request.getSession().setAttribute("errorMessage", "Error al solicitar prestamo." + e.getMessage());
 	        e.printStackTrace();
 	        request.getRequestDispatcher("pagina.jsp").forward(request, response);
 	    }
+
 	}
 
 

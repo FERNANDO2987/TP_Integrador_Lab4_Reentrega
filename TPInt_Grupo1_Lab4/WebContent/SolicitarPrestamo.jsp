@@ -12,12 +12,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<link
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<title>Solicitar Prestamo</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .dropdown-toggle::after {
 	display: none; /* Quitar el icono del dropdown */
@@ -37,12 +34,10 @@
 }
 </style>
 
-<!-- jQuery and DataTables -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script>  
+    <!-- jQuery and DataTables -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>  
         function ocultarMensaje() {  
             var mensaje = document.getElementById("successMessage");  
             if (mensaje) {  
@@ -52,25 +47,24 @@
             }  
         }  
     </script>
-<script>
+    <script>
     $(document).ready(function() {  
         // Mostrar el mensaje si existe  
-        var mensajeExito = '<%=request.getAttribute("successMessage") != null ? request.getAttribute("successMessage") : ""%>';  
+        var mensajeExito = '<%= session.getAttribute("successMessage") != null ? session.getAttribute("successMessage") : "" %>';  
         if (mensajeExito) {  
             $('#successMessage').show(); // Mostrar el mensaje  
             ocultarMensaje(); // Llama a la función para ocultar el mensaje  
         }  
         
         // Mostrar el mensaje de error si existe  
-        var mensajeError = '<%=request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : ""%>
-	';
-						if (mensajeError) {
-							$('#errorMessage').show(); // Mostrar el mensaje de error  
-							ocultarMensaje("errorMessage"); // Llama a la función para ocultar el mensaje  
-						}
-					});
-</script>
-<script type="text/javascript"></script>
+        var mensajeError = '<%= session.getAttribute("errorMessage") != null ? session.getAttribute("errorMessage") : "" %>';  
+        if (mensajeError) {  
+            $('#errorMessage').show(); // Mostrar el mensaje de error  
+            ocultarMensaje("errorMessage"); // Llama a la función para ocultar el mensaje  
+        }  
+    });  
+    </script>
+    <script type="text/javascript"></script> 
 
 </head>
 <body>
@@ -99,14 +93,15 @@
 	%>
 
 
-	<!-- Mensaje de éxito -->
-	<div class="alert alert-success" role="alert" id="successMessage"
-		style="display: none;">${successMessage}</div>
+ 	<!-- Mensaje de exito -->
+    <div class="alert alert-success" role="alert" id="successMessage" style="display:none;">
+        ${successMessage}
+    </div>
 
-	<!-- Mensaje de error -->
-	<div class="alert alert-danger" role="alert" id="errorMessage"
-		style="display: none;">${errorMessage}</div>
-
+    <!-- Mensaje de error -->
+    <div class="alert alert-danger" role="alert" id="errorMessage" style="display:none;">
+        ${errorMessage}
+    </div>
 
 
 	<div class="container mt-5">
@@ -124,7 +119,7 @@
 								if (listaDeOrigen != null && !listaDeOrigen.isEmpty()) {
 									for (Cuenta c : listaDeOrigen) {
 							%>
-							<option value="<%=c.getNroCuenta()%>"><%=c.toString()%></option>
+							<option value="<%=c.getNroCuenta()%>">Nro de cuenta: <%=c.getNroCuenta()%> - CBU: <%=c.getCbu()%> - Tipo de cuenta: <%=c.getTipoCuenta().getDescripcion()%></option>
 							<%
 								}
 								} else {
@@ -177,15 +172,11 @@
 	</script>
 
 	<!-- Bootstrap JS and dependencies -->
-	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
