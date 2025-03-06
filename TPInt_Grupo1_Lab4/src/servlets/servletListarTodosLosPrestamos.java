@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,8 @@ public class servletListarTodosLosPrestamos extends HttpServlet {
        
 	 PrestamoNeg prestamoNeg = new PrestamoNegImpl();
 	 
+	 
+
 	 
     public servletListarTodosLosPrestamos() {
         super();
@@ -61,12 +64,15 @@ public class servletListarTodosLosPrestamos extends HttpServlet {
         		
         		
         		List<Prestamo> prestamos = prestamoNeg.ListarPrestamosFiltrados(mayorA, menorA);
-        		if (prestamos != null && !prestamos.isEmpty()) {
-                    request.setAttribute("prestamos", prestamos);
-                } else {
-                    request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
+        		  // Asegurar que prestamos no sea null
+                if (prestamos == null) {
+                    prestamos = new ArrayList<>();
                 }
-        		
+                request.setAttribute("prestamos", prestamos);
+
+                if (prestamos.isEmpty()) {
+                    request.setAttribute("error", "No se encontraron Historiales de Préstamos.");
+                }
         		request.getRequestDispatcher("HistorialPrestamos.jsp").forward(request, response);
         	}
         	else{	
@@ -74,13 +80,15 @@ public class servletListarTodosLosPrestamos extends HttpServlet {
 	            List<Prestamo> prestamos = prestamoNeg.ListarTodosLosPrestamos();
 	
 	            // Verificar si la lista de prestamos no es nula o vacía
-	            if (prestamos != null && !prestamos.isEmpty()) {
-	                // Establecer la lista de prestamos como un atributo en el request
-	                request.setAttribute("prestamos", prestamos);
-	            } else {
-	                // Si no hay prestamos, establecer un mensaje de error
-	                request.setAttribute("error", "No se encontraron Historiales de Prestamos.");
+	            if (prestamos == null) {
+	                prestamos = new ArrayList<>();
 	            }
+	            request.setAttribute("prestamos", prestamos);
+
+	            if (prestamos.isEmpty()) {
+	                request.setAttribute("error", "No se encontraron Historiales de Préstamos.");
+	            }
+
 	            // Redirigir a la página JSP para mostrar la lista de prestamos
 	            request.getRequestDispatcher("HistorialPrestamos.jsp").forward(request, response);
         	}

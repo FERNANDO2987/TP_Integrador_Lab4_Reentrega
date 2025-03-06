@@ -15,6 +15,33 @@
 		return;
 	}
 %>
+
+
+	<!-- Mostrar mensaje de éxito -->
+		<%
+			String mensajeExito = (String) request.getAttribute("mensajeExito");
+			if (mensajeExito != null) {
+		%>
+		<div id="successMessage" class="alert alert-success mb-4">
+			<i class="fas fa-check-circle"></i>
+			<%=mensajeExito%>
+		</div>
+		<%
+			}
+		%>
+
+		<%
+			String mensajeError = (String) request.getAttribute("mensajeError");
+			if (mensajeError != null) {
+		%>
+		<div id="errorMessage" class="alert alert-error mb-4">
+			<i class="fas fa-exclamation-circle"></i>
+			<%=mensajeError%>
+		</div>
+		<%
+			}
+		%>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -100,6 +127,34 @@
 .custom-height {
 	height: 40px; /* Altura deseada */
 }
+
+.alert {
+	font-size: 1.2rem;
+	padding: 20px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 16px;
+}
+
+.alert-success {
+	background-color: #28a745; /* Color verde */
+	color: white;
+}
+
+.alert-error {
+	background-color: #dc3545; /* Color rojo */
+	color: white;
+}
+
+input:invalid {
+	border-color: red;
+}
+
+/* Si prefieres un borde rojo sin mostrar el mensaje de error */
+input:required:invalid {
+	border-color: red;
+}
 </style>
 </head>
 <body class="bg-gray-100">
@@ -112,29 +167,7 @@
 			List<Prestamo> prestamos = (List<Prestamo>) request.getAttribute("prestamos");
 		%>
 
-		<%
-			String mensajeExito = (String) request.getAttribute("mensajeExito");
-			if (mensajeExito != null) {
-		%>
-		<div id="successMessage" class="alert alert-success mb-4">
-			<i class="fas fa-check-circle"></i>
-			<%=mensajeExito%>
-		</div>
-		<%
-			}
-		%>
-
-		<%
-			String mensajeError = (String) request.getAttribute("mensajeError");
-			if (mensajeError != null) {
-		%>
-		<div id="errorMessage" class="alert alert-error mb-4">
-			<i class="fas fa-exclamation-circle"></i>
-			<%=mensajeError%>
-		</div>
-		<%
-			}
-		%>
+	
 
 
 		<%
@@ -422,9 +455,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Inicializar el objeto de estados
         let estados = { "aprobado": 0, "finalizado": 0, "rechazado": 0, "pendiente": 0 };
 
-        <% for (Prestamo prestamo : prestamos) { %>
-            estados["<%= prestamo.getEstado() %>"]++;
-        <% } %>
+              <% if (prestamos != null) { %>
+            <% for (Prestamo prestamo : prestamos) { %>
+                estados["<%= prestamo.getEstado() %>"]++;
+            <% } %>
+            <% } %>
 
         // Configuración del gráfico con Chart.js
         const ctx = document.getElementById("prestamosChart").getContext("2d");
@@ -458,7 +493,41 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+<script>
+		// Llamar a la función mostrarMensaje si se ha definido el mensaje exitoso o de error
+	<%if (request.getAttribute("mensajeExito") != null) {%>
+		mostrarMensaje("successMessage");
+	<%} else if (request.getAttribute("mensajeError") != null) {%>
+		mostrarMensaje("errorMessage");
+	<%}%>
+		function ocultarMensaje() {
+			var mensaje = document.getElementById("successMessage");
+			if (mensaje) {
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 9000);
+			}
 
+			var errorMensaje = document.getElementById("errorMessage");
+			if (errorMensaje) {
+				setTimeout(function() {
+					errorMensaje.style.display = "none";
+				}, 9000);
+			}
+		}
+
+		// Función para mostrar el mensaje y luego ocultarlo  
+		function mostrarMensaje(tipo) {
+			var mensaje = document.getElementById(tipo);
+			if (mensaje) {
+				mensaje.style.display = "block"; // Mostrar el mensaje  
+				// Ocultar el mensaje después de 3 segundos (3000 milisegundos)  
+				setTimeout(function() {
+					mensaje.style.display = "none";
+				}, 9000);
+			}
+		}
+	</script>
 
 </body>
 </html>
