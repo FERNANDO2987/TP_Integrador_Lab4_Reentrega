@@ -71,21 +71,21 @@ INSERT INTO `bdbanco`.`paises` (`nombre`) VALUES
 
 -- Asumiendo que '1' es el ID de Argentina en la tabla `paises`.
 INSERT INTO `bdbanco`.`clientes` (`dni`, `cuil`, `nombre`, `apellido`, `sexo`, `id_pais`, `fecha_nacimiento`, `direccion`, `id_localidad`, `id_provincia`, `correo`, `telefono`, `create_date`, `deleted`, `delete_date`) VALUES
-('20325486982', '20325486982', 'Juan', 'Pérez', 'M', 1, '1985-05-15', 'Av. Rivadavia 123', 1, 1, 'juan.perez@mail.com', '1123456789', '2024-07-01 10:00:00', 0, NULL),
-('20555123456', '20555123456', 'Ana', 'González', 'F', 1, '1990-08-22', 'Calle Ficticia 456', 2, 2, 'ana.gonzalez@mail.com', '1167890123', '2024-07-05 11:30:00', 0, NULL),
-('20765432100', '20765432100', 'Carlos', 'Rodríguez', 'M', 1, '1975-02-10', 'Calle Libertador 789', 3, 3, 'carlos.rodriguez@mail.com', '1134567890', '2024-07-10 14:15:00', 0, NULL),
-('20554433221', '20554433221', 'Lucía', 'López', 'F', 1, '1995-12-30', 'Av. San Martín 1010', 4, 4, 'lucia.lopez@mail.com', '1145678901', '2024-07-15 09:45:00', 0, NULL),
-('20987654321', '20987654321', 'Martín', 'Martínez', 'M', 1, '1982-03-11', 'Calle San Juan 2020', 5, 5, 'martin.martinez@mail.com', '1198765432', '2024-07-20 12:00:00', 0, NULL),
-('20111222333', '20111222333', 'Sofía', 'Gómez', 'F', 1, '1988-07-03', 'Calle Belgrano 3030', 6, 6, 'sofia.gomez@mail.com', '1156789012', '2024-07-25 15:30:00', 0, NULL),
-('20444555666', '20444555666', 'Diego', 'Fernández', 'M', 1, '1979-11-28', 'Av. Pellegrini 4040', 1, 1, 'diego.fernandez@mail.com', '1189012345', '2024-07-30 10:30:00', 0, NULL),
-('20777888999', '20777888999', 'Valentina', 'Díaz', 'F', 1, '1992-04-18', 'Calle Moreno 5050', 8, 8, 'valentina.diaz@mail.com', '1178901234', '2024-08-03 11:45:00', 0, NULL),
-('20222333444', '20222333444', 'Nicolás', 'García', 'M', 1, '1987-09-09', 'Av. Colón 6060', 9, 9, 'nicolas.garcia@mail.com', '1167890124', '2024-08-07 14:00:00', 0, NULL),
-('20555666777', '20555666777', 'Camila', 'Ruiz', 'F', 1, '1998-01-25', 'Calle San Martín 7070', 10, 10, 'camila.ruiz@mail.com', '1134567880', '2024-08-11 09:15:00', 0, NULL),
-('20888999000', '20888999000', 'Leonardo', 'Álvarez', 'M', 1, '1980-06-12', 'Av. Rivadavia 8080', 11, 11, 'leonardo.alvarez@mail.com', '1145678900', '2024-08-15 12:30:00', 0, NULL),
-('20333444555', '20333444555', 'Isabella', 'Romero', 'F', 1, '1993-10-05', 'Calle Belgrano 9090', 12, 12, 'isabella.romero@mail.com', '1198765457', '2024-08-19 15:00:00', 0, NULL),
-('20666777888', '20666777888', 'Gabriel', 'Sánchez', 'M', 1, '1977-03-20', 'Av. Pellegrini 1000', 13, 13, 'gabriel.sanchez@mail.com', '1156789022', '2024-08-23 10:45:00', 0, NULL),
-('20999000111', '20999000111', 'Martina', 'Torres', 'F', 1, '1996-08-14', 'Calle Moreno 1100', 14, 14, 'martina.torres@mail.com', '1189012340', '2024-08-27 11:15:00', 0, NULL),
-('9988776655', '9988776655', 'Ricardo', 'Silva', 'M', 2, '1989-06-25', 'Calle Corrientes 1300', 1, 1, 'ricardo.silva@mail.com', '1112344321', '2024-09-01 14:30:00', 0, NULL);
+('32548698', '20-32548698-2', 'Juan', 'Pérez', 'M', 1, '1985-05-15', 'Av. Rivadavia 123', 1, 1, 'juan.perez@mail.com', '1123456789', '2024-07-01 10:00:00', 0, NULL),
+('55512345', '20-55512345-6', 'Ana', 'González', 'F', 1, '1990-08-22', 'Calle Ficticia 456', 2, 2, 'ana.gonzalez@mail.com', '1167890123', '2024-07-05 11:30:00', 0, NULL),
+('76543210', '20-76543210-0', 'Carlos', 'Rodríguez', 'M', 1, '1975-02-10', 'Calle Libertador 789', 3, 3, 'carlos.rodriguez@mail.com', '1134567890', '2024-07-10 14:15:00', 0, NULL),
+('55443322', '20-55443322-1', 'Lucía', 'López', 'F', 1, '1995-12-30', 'Av. San Martín 1010', 4, 4, 'lucia.lopez@mail.com', '1145678901', '2024-07-15 09:45:00', 0, NULL),
+('98765432', '20-98765432-1', 'Martín', 'Martínez', 'M', 1, '1982-03-11', 'Calle San Juan 2020', 5, 5, 'martin.martinez@mail.com', '1198765432', '2024-07-20 12:00:00', 0, NULL),
+('11122233', '20-11122233-3', 'Sofía', 'Gómez', 'F', 1, '1988-07-03', 'Calle Belgrano 3030', 6, 6, 'sofia.gomez@mail.com', '1156789012', '2024-07-25 15:30:00', 0, NULL),
+('44455566', '20-44455566-6', 'Diego', 'Fernández', 'M', 1, '1979-11-28', 'Av. Pellegrini 4040', 1, 1, 'diego.fernandez@mail.com', '1189012345', '2024-07-30 10:30:00', 0, NULL),
+('77788899', '20-77788899-9', 'Valentina', 'Díaz', 'F', 1, '1992-04-18', 'Calle Moreno 5050', 8, 8, 'valentina.diaz@mail.com', '1178901234', '2024-08-03 11:45:00', 0, NULL),
+('22233344', '20-22233344-4', 'Nicolás', 'García', 'M', 1, '1987-09-09', 'Av. Colón 6060', 9, 9, 'nicolas.garcia@mail.com', '1167890124', '2024-08-07 14:00:00', 0, NULL),
+('55566677', '20-55566677-7', 'Camila', 'Ruiz', 'F', 1, '1998-01-25', 'Calle San Martín 7070', 10, 10, 'camila.ruiz@mail.com', '1134567880', '2024-08-11 09:15:00', 0, NULL),
+('88899900', '20-88899900-0', 'Leonardo', 'Álvarez', 'M', 1, '1980-06-12', 'Av. Rivadavia 8080', 11, 11, 'leonardo.alvarez@mail.com', '1145678900', '2024-08-15 12:30:00', 0, NULL),
+('33344455', '20-33344455-5', 'Isabella', 'Romero', 'F', 1, '1993-10-05', 'Calle Belgrano 9090', 12, 12, 'isabella.romero@mail.com', '1198765457', '2024-08-19 15:00:00', 0, NULL),
+('66677788', '20-66677788-8', 'Gabriel', 'Sánchez', 'M', 1, '1977-03-20', 'Av. Pellegrini 1000', 13, 13, 'gabriel.sanchez@mail.com', '1156789022', '2024-08-23 10:45:00', 0, NULL),
+('99900011', '20-99900011-1', 'Martina', 'Torres', 'F', 1, '1996-08-14', 'Calle Moreno 1100', 14, 14, 'martina.torres@mail.com', '1189012340', '2024-08-27 11:15:00', 0, NULL),
+('99887766', '20-99887766-5', 'Ricardo', 'Silva', 'M', 2, '1989-06-25', 'Calle Corrientes 1300', 1, 1, 'ricardo.silva@mail.com', '1112344321', '2024-09-01 14:30:00', 0, NULL);
 
 -- Usuario administrador sin cliente asociado
 INSERT INTO `bdbanco`.`usuarios` (`usuario`, `pass`, `admin`, `create_date`, `deleted`, `delete_date`, `id_cliente`) VALUES
