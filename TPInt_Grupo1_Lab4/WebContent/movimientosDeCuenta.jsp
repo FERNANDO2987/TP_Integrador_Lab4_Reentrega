@@ -89,7 +89,7 @@ h2 {
 						<td><%=mov.getId()%></td>
 						<td><%=mov.getCreateDate()%></td>
 						<td><%=mov.getTipoMovimiento().getDescripcion()%></td>
-						<td><%=mov.getImporte()%></td>
+						<td>$<%=mov.getImporte()%></td>
 						<td><%=mov.getDetalle()%></td>
 					</tr>
 					<%

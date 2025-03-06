@@ -116,7 +116,7 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="modal-body">ï¿½Estï¿½ seguro de que desea modificar
+							<div class="modal-body">¿Esta seguro de que desea modificar
 								esta cuenta?</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
@@ -142,8 +142,8 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<div class="alert alert-danger">ï¿½Estï¿½ seguro de que desea
-									eliminar esta cuenta? Esta acciï¿½n no se puede deshacer.</div>
+								<div class="alert alert-danger">¿Esta seguro de que desea
+									eliminar esta cuenta? Esta accion no se puede deshacer.</div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
@@ -205,7 +205,7 @@
 							<div class="modal-body text-center">
 								<i class="fas fa-exclamation-triangle text-warning"
 									style="font-size: 2rem;"></i>
-								<p class="mt-3">ï¿½Estï¿½ seguro de que desea crear esta cuenta?</p>
+								<p class="mt-3">¿Esta seguro de que desea crear esta cuenta?</p>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
