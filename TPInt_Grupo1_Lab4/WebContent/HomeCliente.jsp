@@ -186,7 +186,12 @@ html, body {
 
     <!-- Contenido principal -->
     <div class="content" id="contenidoPrincipal">
-        <h5>Bienvenido, <%= nombreUsuario %></h5>
+    	<div class="container d-flex justify-content-center align-items-center vh-100">
+		    <div class="card shadow-lg p-4 text-center">
+		        <h1 class="mb-3 fs-1 fw-bold">Bienvenido a tu banca en línea, <%= nombreUsuario%></h2>
+		        <p class="text-muted">Accede a tu cuenta y gestiona tus finanzas de manera segura y rápida.</p>
+		    </div>
+		</div>
     </div>
 
 	<!-- Barra lateral -->
@@ -215,13 +220,6 @@ html, body {
 
 
 		</ul>
-	</div>
-
-	<!-- Contenido principal -->
-	<div class="content" id="contenidoPrincipal">
-		<h5>
-			Bienvenido,
-			<%=nombreUsuario%></h5>
 	</div>
 
 
