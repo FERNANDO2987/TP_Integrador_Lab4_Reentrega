@@ -142,12 +142,13 @@ input:required:invalid {
 					%>
 					<%
 						for (Cuenta cuenta : cuentas) {
+							if(prestamo.getCuenta().getNroCuenta() == cuenta.getNroCuenta()){
 					%>
 					<option value="<%=cuenta.getNroCuenta()%>">Nº
 						<%=cuenta.getNroCuenta()%> - Saldo: $<%=cuenta.getSaldo()%>
 					</option>
 					<%
-						}
+							}}
 					%>
 					<%
 						} else {
